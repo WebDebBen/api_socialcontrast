@@ -1,0 +1,344 @@
+.main-body {
+    padding: 0 2rem;
+}
+.mt-1r{
+    margin-top: 1rem;
+}
+
+.m-1r{
+    margin: 1rem;
+}
+
+.pt-1r{
+    padding-top: 1rem;
+}
+
+.mb-1r{
+    margin-bottom: 1rem;
+}
+
+.mb-2r{
+    margin-bottom: 2rem;
+}
+
+.ml-1r{
+    margin-left: 1rem;
+}
+
+.mr-1r{
+    margin-right: 1rem;
+}
+
+.mt-24{
+    margin-top: 24px;
+}
+
+.mt-30{
+    margin-top: 30px;
+}
+
+.mt-10{
+    margin-top: 10px;
+}
+
+.hide{
+    display: none !important;
+}
+
+.table-box{
+    width: 33.33%;
+}
+
+.table-list{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.btn{
+    margin-right: 8px;
+}
+
+.flex-display{
+    display: flex;
+    align-items: flex-end;
+}
+
+
+
+
+
+
+
+
+
+
+
+.database-gen .row{
+    margin: 1rem 0;
+}
+
+.table-prop-item{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.table-prop-item .fa-arrows{
+    width: 50px;
+    cursor: pointer;
+}
+
+.field-props-wrap{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.field-prpos{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.add-props-edit{
+    font-size: 14px;
+    color: #000;
+}
+
+.column-detail-modal .modal-body{
+    padding: 1rem 3rem;
+}
+
+.full-width{
+    width: 100%;
+}
+
+.field-required{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#table-property >.table-prop-item:not(:first-child) label{
+    opacity: 0;
+}
+
+table{
+    width: 100%;
+}
+
+.table-name-wrap > td{
+    padding: 0;
+    border: none;
+    background: #007bff;
+    color: white;
+}
+
+
+
+
+.database-gen .row{
+    margin: 1rem 0;
+}
+
+.table-prop-item{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.table-prop-item .fa-arrows-alt{
+    width: 50px;
+    cursor: pointer;
+}
+
+.field-props-wrap{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.field-prpos{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.add-props-edit{
+    font-size: 14px;
+    color: #000;
+}
+
+.column-detail-modal .modal-body{
+    padding: 1rem 3rem;
+}
+
+.full-width{
+    width: 100%;
+}
+
+.field-required{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#table-property >.table-prop-item:not(:first-child) label{
+    opacity: 0;
+}
+
+.align-center{
+    align-items: center;
+}
+
+
+
+
+
+
+
+.formbuilder-icon-file,
+.formbuilder-icon-header,
+.formbuilder-icon-hidden,
+.formbuilder-icon-paragraph,
+.formbuilder-icon-autocomplete,
+.formbuilder-icon-button,
+.description-wrap,
+.placeholder-wrap,
+.access-wrap
+{
+    display: none !important;
+}
+
+
+.form-group.component{
+    padding: 3px;
+    border: solid 1px #ced4da;
+    padding-left: 10px;
+}
+
+.form-group.component i{
+    margin-right: 7px;
+    margin-top: -2px;
+}
+
+
+
+#components{
+    min-height: 600px;
+    margin-top: 5px;
+  }
+  #target, #json_zone{
+    min-height: 500px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    background-color: white;
+  }
+
+  #temp{
+    width: 500px;
+    background: white;
+    border: 1px dotted #ccc;
+    border-radius: 10px;
+  }
+
+  .popover-content form {
+    margin: 0 auto;
+    width: 213px;
+  }
+  .popover-content form .btn{
+    margin-right: 10px
+  }
+  #source, #json_zone{
+    min-height: 500px;
+  }
+
+  .popover{
+    width: 100% !important;
+  }
+
+  .nav.nav-tabs a{
+    padding:5px 7px 2px 7px;
+    color: #000;
+  }
+
+  .nav.nav-tabs li a{
+    border: solid 1px #ccc;
+  }
+
+.nav.nav-tabs li a.active{
+    border-bottom: solid 2px #fff
+}
+
+.nav-tabs{
+    border-bottom: none;
+    position: relative;
+    z-index: 1111;
+}
+
+#source {
+    min-height: 500px;
+    border: solid 1px #ccc;
+    background-color: #fff;
+}
+
+.form-group.form-component{
+    transition: all 0.1s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    cursor: pointer;
+}
+
+.form-group.component{
+    cursor: pointer;
+}
+
+.valtype .radio, .valtype .checkbox{
+    margin-right: 1rem;
+}
+
+.valtype .radio input, .valtype .checkbox input{
+    margin-right: 5px;
+}
+
+.condition-wrap{
+    text-align: center;
+    border-radius: 18px;
+    color: white;
+    font-weight: bold;
+}
+
+.action-start{
+    margin-top: 1rem;
+    background: #ff976f;
+}
+
+.action-end{
+    margin-top: 1rem;
+    background-color:#ff6f6f;
+}
+
+.full-width{
+    position: relative;
+    width: 100%;
+}
+
+.check_item, .radio_item, .select_item{
+    border: solid 1px #ced4da;
+    padding: 11px 0;
+    margin-bottom: 1rem;
+    border-radius: 11px;
+    position: relative;
+}
+
+.check_label, .radio_label, .select_label{
+    position: absolute;
+    left: 50%;
+    margin-left: -51px;
+    top: -14px;
+    background: #f4f6f9;
+    padding: 0 7px;
+    z-index: 1;
+}
+
+.modal{
+    z-index: 999999;
+}

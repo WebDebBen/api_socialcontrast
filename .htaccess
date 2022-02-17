@@ -1,0 +1,9 @@
+Options +FollowSymLinks
+RewriteEngine on
+
+RewriteRule ^([a-z0-9_-]+)/([a-z0-9_-]+)/([a-z0-9_-]+)/([a-z0-9_-]+)/([a-z0-9_-]+)/([a-z0-9_-]+)(/)?$ index.php?page=$1&type=$2&module=$3&interface_name=$4&action=$5&id=$6 [L]
+RewriteRule ^([a-z0-9_-]+)/([a-z0-9_-]+)/([a-z0-9_-]+)/([a-z0-9_-]+)/([a-z0-9_-]+)(/)?$ index.php?page=$1&type=$2&module=$3&interface_name=$4&id=$5 [L]
+RewriteRule ^([a-z0-9_-]+)/([a-z0-9_-]+)/([a-z0-9_-]+)/([a-z0-9_-]+)(/)?$ index.php?page=$1&type=$2&module=$3&interface_name=$4 [L]
+RewriteRule ^([a-z0-9_-]+)/([a-z0-9_-]+)/([a-z0-9_-]+)(/)?$ index.php?page=$1&action=$2&id=$3 [L]
+RewriteRule ^([a-z0-9_-]+)/([a-z0-9_-]+)(/)?$ index.php?page=$1&action=$2 [L]
+RewriteRule ^([a-z0-9_-]+)(/)?$ index.php?page=$1 [L]
