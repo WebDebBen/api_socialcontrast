@@ -24,8 +24,9 @@ $(document).ready(function(){
     $("#gen_php").on("click", generate_php );
     $("#gen_json").on("click", generate_json );
     $("#run_btn").on("click", run_obj );
-
+    $("#save_btn").on("click", save_obj );
     $("#check_table").on("click", select_table_name );
+    $("#select_table").on("click", select_table );
 
     add_column_block();
     add_column_block();
@@ -33,8 +34,22 @@ $(document).ready(function(){
     init_table_list();
 });
 
-function init_table_list(){
-    
+function select_table(){
+    $.ajax({
+        url: "/plugins/plugin_builder/include/classes/table_generate.php",
+        data: {
+            type: "table_info",
+            table: $("#table_list_sel").val()
+        },
+        type: "post",
+        dataType: "json",
+        success: function(res ){
+            
+        }
+    });
+}
+
+function init_table_list(){ 
     $.ajax({
         url: "/plugins/plugin_builder/include/classes/table_generate.php",
         data: {
@@ -56,42 +71,12 @@ function select_table_name(){
     window.open("/admin/plugins/plugin_product_catalog/" + table_name, "_blank");
 }
 
-/*
-function select_table_name(e){
-    if (confirm("Are you really change the table?")){
-        sel_table = $(this).val();
-        if (sel_table == "new" ){
-            new_table_structure();
-        }else{
-            update_table_structure()
-        }
-    }else{
-        $(this).val(sel_table );
-    }
-}
-
-function new_table_structure(){
-    $("#table-name-input").val("");
-    $("#primary-key-input").val("id");
-    $("#table-property").html("");
-    add_column_block();
-    add_column_block();
-}
-
-function update_table_structure(){
-    $.ajax({
-        url: "/plugins/plugin_builder/settings/tables/" + sel_table + ".json",
-        data: {},
-        type: "post",
-        dataType: "json",
-        success: function(data ){
-            console.log(data );
-        }
-    })
-}*/
-
 function run_obj(){
     generate_content("run" );
+}
+
+function save_obj(){
+    generate_content("save");
 }
 
 function formatHTML(html) {
@@ -160,6 +145,9 @@ function generate_content(type ){
                 if (type == "run" ){
                     //location.href = "/admin/plugins/" + $("#plugin_path").val() + "/" + res["data"]; 
                     window.open( "/admin/plugins/" + $("#plugin_path").val() + "/" + res["data"], "_blank");///admin/plugins/plugin_product_catalog/" + table_name, "_blank");
+                }else if($type == "save"){
+                    toastr.success("successfuly saved!");
+                    $("<option>").attr("value", res["data"]).text(res["data"]).appendTo($("#table_list_sel"));
                 }else{
                     $("#generated_content").html("");
                     var pre = $("<pre>").addClass("code").appendTo($("#generated_content"));

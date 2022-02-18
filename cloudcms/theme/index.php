@@ -265,6 +265,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 
+
 <!-- Select2 -->
 <script src="plugins/select2/js/select2.full.min.js"></script>
 <script src="assets/js/jquery.highlight.js"></script>

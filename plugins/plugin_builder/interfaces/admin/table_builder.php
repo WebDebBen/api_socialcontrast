@@ -12,7 +12,8 @@
             </select>
         </div>
         <div class="col-md-2">
-            <button class="btn btn-primary" id="check_table">Check Table</button>
+            <button class="btn btn-success" id="select_table">Select Table</button>
+            <button class="btn btn-primary" id="check_table">Preview Table</button>
         </div>
     </div>
     <hr>
@@ -57,6 +58,7 @@
     <div class="row mt-24">
         <div class="col-md-6">
             <button class="btn btn-success" id="run_btn">Run Now</button>
+            <button class="btn btn-primary" id="save_btn">Save Table</button>
         </div>
         <div class="col-md-6">
             <label class="mr-1r">View: </label>
@@ -128,6 +130,7 @@
                                         <option value="double">Double</option>
                                         <option value="varchar(255)">Password</option>
                                         <option value="text">Text Area</option>
+                                        <option value="varchar(300)">Image</option>
                                         <option value="tinyint">Check</option>
                                         <option value="date">Date</option>
                                         <option value="datetime">Datetime</option>
@@ -221,6 +224,7 @@
                         <option value="double">Double</option>
                         <option value="password">Password</option>
                         <option value="text">Text Area</option>
+                        <option value="varchar(300)">Image</option>
                         <option value="boolean">Check</option>
                         <option value="date">Date</option>
                         <option value="datetime">Datetime</option>

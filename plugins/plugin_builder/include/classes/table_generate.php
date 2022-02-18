@@ -26,9 +26,21 @@ switch($type ){
     case "run":
         generate_run($json_data );
         break;
+    case "save":
+        generate_save($json_data );
+        break;
     case "table_list":
         get_table_list();
         break;
+    case "table_info":
+        get_table_info($table );
+        break;
+}
+
+function get_table_info($table){
+    $db = $GLOBALS["db"];
+    $table_info = $db->table_info($table );
+    echo  json_encode($table_info );
 }
 
 function get_table_list(){
@@ -72,4 +84,9 @@ function generate_json($data ){
 function generate_run($data ){
     $run = generate_content($data, "run");
     echo json_encode($run );
+}
+
+function generate_save($data ){
+    $run = generate_content($data, "save");
+    echo json_encode($json );
 }

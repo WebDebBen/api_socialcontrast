@@ -1,0 +1,1 @@
+{"table_name":"profiles","primary_key":"id","columns":[{"title":"name","type":"varchar(255)","requried":"true","default_value":"","show_table":"true","editor_table":"true"},{"title":"photo","type":"varchar(300)","requried":"true","default_value":"","show_table":"true","editor_table":"true"}]}

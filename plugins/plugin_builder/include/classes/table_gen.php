@@ -20,8 +20,15 @@
             case "run":
                 $result = run_content($data );
                 break;
+            case "save":
+                $result = save_content($data );
+                break;
         } 
         return $result;
+    }
+
+    function save_content($data ){
+        return run_content($data );
     }
 
     function run_content($data ){
