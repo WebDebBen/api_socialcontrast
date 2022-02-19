@@ -1,0 +1,1 @@
+<?php $query = "CREATE TABLE IF NOT EXISTS ``(`` int(10) NOT NULL auto_increment,PRIMARY KEY(``));" ?>

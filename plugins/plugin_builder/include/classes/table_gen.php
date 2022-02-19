@@ -106,6 +106,7 @@
     }
 
     function generate_content_sql($data, $flag = true ){
+        $refs = isset($data["refs"]) ? $data["refs"] : [];
         $table_name = $data["table_name"];
         $primary_key = $data["primary_key"];
         $columns = $data["columns"];
@@ -129,76 +130,90 @@
             $str .= ", {$endln}{$tab} {$field_item }";
         }
         $str .= ",{$endln}{$tab}PRIMARY KEY(`{$primary_key}`){$endln});";
+        foreach($refs as $ref){ 
+            $str .= " {$endln}alter table `{$table_name}` add foreign key (`{$ref['field']}`) references {$ref['ref_table']} ({$ref['ref_field']});";
+        }
+
         $str .= $php_str_end;
+
         return $str;
     }
 
     function generate_content_html($data, $flag = true ){
+        $endln = $flag ? "\n" : "";
+        $tab = $flag ? "\t" : "";
+
         $table_name = $data["table_name"];
         $primary_key = $data["primary_key"];
         $columns = $data["columns"];
 
         $header = '<script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>' . "\n";
         $header .= '<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">';
+        $header .= '<script src="http://hayageek.github.io/jQuery-Upload-File/4.0.11/jquery.uploadfile.min.js"></script>;';
+        $header .= '<link href="http://hayageek.github.io/jQuery-Upload-File/4.0.11/uploadfile.css" rel="stylesheet">';
         $header .= '<script type="text/javascript" charset="utf-8" src="assets/js/apis/' . $table_name . '.js"></script>' . "\n";
 
         $body = "<div class='main-body'>" . "\n";
-            $body .= '<h1 class="mt-1r">DataTables Editor <span>' . $table_name . '</span></h1>' . "\n";
-            $body .= '<div class="row mt-1r mb-1r"><div class="col-md-12"><button class="btn btn-success" id="' . $table_name . '_new">New</button></div></div>' . "\n";
-            $body .= '<div class="row mt-2r">' . "\n";
-                $body .= '<div class="col-md-12">' . "\n";
-                    $body .= '<table cellpadding="0" cellspacing="0" border="0" class="display" id="' . $table_name . '_table" width="100%">' . "\n"; 
-                        $body .= '<thead><tr>' . "\n";
+            $body .= $tab . '<h1 class="mt-1r">DataTables Editor <span>' . $table_name . '</span></h1>' . "\n";
+            $body .= $tab . '<div class="row mt-1r mb-1r"><div class="col-md-12"><button class="btn btn-success" id="' . $table_name . '_new">New</button><button class="btn btn-success" id="export_excel">Export</button></div></div>' . "\n";
+            $body .= $tab . '<div class="row mt-2r">' . "\n";
+                $body .= $tab . $tab . '<div class="col-md-12">' . "\n";
+                    $body .= $tab . $tab . '<table cellpadding="0" cellspacing="0" border="0" class="display" id="' . $table_name . '_table" width="100%">' . "\n"; 
+                        $body .= $tab . $tab . $tab . '<thead><tr>' . "\n";
                             foreach($columns as $col ){
-                                $body .= "<th>{$col['title']}</th>" . "\n";
+                                $body .= $tab . $tab . $tab . $tab . "<th>{$col['title']}</th>" . "\n";
                             }
-                            $body .= "<th>Action</th>" . "\n";
-                        $body .= '</tr></thead>' . "\n";
-                        $body .= "<tbody id='" . $table_name . "_body'>" . "\n";
-                        $body .= "</tbody>" . "\n";
-                    $body .= '</table>' . "\n";
-                $body .= '</div>' . "\n";
-            $body .= "</div>" . "\n";
+                            $body .= $tab . $tab . $tab . $tab . "<th>Action</th>" . "\n";
+                        $body .= $tab . $tab . $tab . '</tr></thead>' . "\n";
+                        $body .= $tab . $tab . $tab . "<tbody id='" . $table_name . "_body'>" . "\n";
+                        $body .= $tab . $tab . $tab . "</tbody>" . "\n";
+                    $body .= $tab . $tab . '</table>' . "\n";
+                $body .= $tab . $tab . '</div>' . "\n";
+            $body .= $tab . "</div>" . "\n";
         $body .= "</div>" . "\n";
 
         // modal div
         $body .= '<div class="modal column-detail-modal" tabindex="-1" role="dialog" id="edit-modal">' . "\n";
-            $body .= '<div class="modal-dialog" role="document">' . "\n";
-                $body .= '<div class="modal-content">' . "\n";
-                    $body .= '<div class="modal-header">' . "\n";
-                        $body .= '<h5 class="modal-title">' . $table_name . ' Table</h5>' . "\n";
-                        $body .= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' . "\n";
-                            $body .= '<span aria-hidden="true">&times;</span>' . "\n";
-                        $body .= '</button>' . "\n";
-                    $body .= '</div>' . "\n";
+            $body .= $tab . '<div class="modal-dialog" role="document">' . "\n";
+                $body .= $tab . $tab . '<div class="modal-content">' . "\n";
+                    $body .= $tab . $tab . $tab . '<div class="modal-header">' . "\n";
+                        $body .= $tab . $tab . $tab . $tab . '<h5 class="modal-title">' . $table_name . ' Table</h5>' . "\n";
+                        $body .= $tab . $tab . $tab . $tab . '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' . "\n";
+                            $body .= $tab . $tab . $tab . $tab . $tab . '<span aria-hidden="true">&times;</span>' . "\n";
+                        $body .= $tab . $tab . $tab . $tab . '</button>' . "\n";
+                    $body .= $tab . $tab . $tab . '</div>' . "\n";
 
-                    $body .= '<form class="form">' . "\n";
-                        $body .= '<div class="modal-body">' . "\n";
+                    $body .= $tab . $tab . $tab . '<form class="form">' . "\n";
+                        $body .= $tab . $tab . $tab . '<div class="modal-body">' . "\n";
                             foreach($columns as $col ){
                                 extract($col );
-                                $body .= '<div class="form-group row">' . "\n";
-                                    $body .= '<label for="field-default-value" class="col-sm-4 col-form-label text-right">' . $title . '</label>' . "\n";
-                                    $body .= '<div class="col-sm-8">' . "\n";
+                                $body .= $tab . $tab . $tab . $tab . '<div class="form-group row">' . "\n";
+                                    $body .= $tab . $tab . $tab . $tab . $tab . '<label for="field-default-value" class="col-sm-4 col-form-label text-right">' . $title . '</label>' . "\n";
+                                    $body .= $tab . $tab . $tab . $tab . $tab . '<div class="col-sm-8">' . "\n";
                                         if ($type == 'boolean'){
-                                            $body .= '<input type="checkbox" class="form-control" data-type="checkbox" id="' . $table_name . '_field_' . $title . '">' . "\n";
+                                            $body .= $tab . $tab . $tab . $tab . $tab . '<input type="checkbox" class="form-control" data-type="checkbox" id="' . $table_name . '_field_' . $title . '">' . "\n";
                                         }else if($type == 'date' || $type == 'datetime'){
-                                            $body .= '<input type="text" class="form-control" data-type="date" id="' . $table_name . '_field_' . $title . '">' . "\n";
+                                            $body .= $tab . $tab . $tab . $tab . $tab . '<input type="text" class="form-control" data-type="date" id="' . $table_name . '_field_' . $title . '">' . "\n";
+                                        }else if($type == 'varchar(300)'){
+                                            //$body .= '<input type="file" class="form-control" data-type="file" id="' . $table_name . '_field_' . $title . '">' . "\n";
+                                            $body .= $tab . $tab . $tab . $tab . $tab . '<div id="' . $table_name . '_field_' . $title . '_upload" data-type="file">Select File</div>';
+                                            $body .= $tab . $tab . $tab . $tab . $tab . '<button class="btn btn-primary" type="button" id="' . $table_name . '_field_' . $title . '_btn">Upload</button>';
                                         }else{
-                                            $body .= '<input type="text" class="form-control" data-type="string" id="' . $table_name . '_field_' . $title . '">' . "\n";
+                                            $body .= $tab . $tab . $tab . $tab . $tab . '<input type="text" class="form-control" data-type="string" id="' . $table_name . '_field_' . $title . '">' . "\n";
                                         }
-                                    $body .= '</div>' . "\n";
-                                $body .= '</div>' . "\n";
+                                    $body .= $tab . $tab . $tab . $tab . '</div>' . "\n";
+                                $body .= $tab . $tab . $tab . '</div>' . "\n";
                             }
-                        $body .= '</div>' . "\n";
-                    $body .= '</form>' . "\n";
+                        $body .= $tab . $tab . $tab . '</div>' . "\n";
+                    $body .= $tab . $tab . '</form>' . "\n";
 
-                    $body .= '<div class="modal-footer">' . "\n";
-                        $body .= '<input type="hidden" id="data-id" value="-1"/>' . "\n";
-                        $body .= '<button type="button" class="btn btn-primary" id="save_record">Save</button>' . "\n";
-                        $body .= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>' . "\n";
-                    $body .= '</div>' . "\n";
-                $body .= '</div>' . "\n";
-            $body .= '</div>' . "\n";
+                    $body .= $tab . '<div class="modal-footer">' . "\n";
+                        $body .= $tab . $tab . $tab . '<input type="hidden" id="data-id" value="-1"/>' . "\n";
+                        $body .= $tab . $tab . $tab . '<button type="button" class="btn btn-primary" id="save_record">Save</button>' . "\n";
+                        $body .= $tab . $tab . $tab . '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>' . "\n";
+                    $body .= $tab . $tab . $tab . '</div>' . "\n";
+                $body .= $tab . $tab . '</div>' . "\n";
+            $body .= $tab . '</div>' . "\n";
         $body .= '</div>' . "\n";
 
         $html = $header.$body;
@@ -208,12 +223,15 @@
     function generate_content_javascript($data, $flag = true ){
         $endln = $flag ? "\n" : "";
         $tab = $flag ? "\t" : "";
-
+        
         $table_name = $data["table_name"];
         $primary_key = $data["primary_key"];
         $columns = $data["columns"];
 
+        $uploads = [];
+
         $js = 'base_url = "/plugins/' . PLUGIN_PATH . '/interfaces/php/' . $table_name . '.php";';
+        $js .= $endln . 'upload_url = "/plugins/plugin_builder/include/classes/upload.php";';
         $js .= $endln . 'var table;';
         $js .= $endln . 'var sel_tr;';
         $js .= $endln . '$(document).ready(function(){';
@@ -221,14 +239,43 @@
             $js .= $endln . $tab . '$("#' . $table_name . '_new").on("click", new_record);';
             $js .= $endln . $tab . '$("#' . $table_name . '_body").on("click", ".edit-item", edit_record );';
             $js .= $endln . $tab . '$("#' . $table_name . '_body").on("click", ".delete-item", delete_record );';
+            $js .= $endln . $tab . '$("#export_excel").on("click", export_excel );';
             $js .= $endln . $tab . '$("#save_record").on("click", save_record );';
+
+            /*$js .= $endln . $tab . 'var extraObj = $("#profiles_field_' . $title . '_upload").uploadFile({';
+                $js .= $endln . $tab . $tab . 'url:upload_url, fileName:"apifile", autoSubmit:false });';    
+            $js .= $endln . $tab . '$("#profiles_field_photo_btn").click(function(){extraObj.startUpload();});';*/
+
         $js .= $endln . '});';
+        
+        $js .= $endln . $tab . 'function export_excel(){';
+            $js .= $endln . $tab . $tab . '$.ajax({';
+                $js .= $endln . $tab . $tab . $tab . 'url: expot_url,';
+                $js .= $endln . $tab . $tab . $tab . 'data:{';
+                    $js .= $endln . $tab . $tab . $tab . $tab . 'table: "profiles",';
+                $js .= $endln . $tab . $tab . '},';
+                $js .= $endln . $tab . $tab . 'type: "post",';
+                $js .= $endln . $tab . $tab . 'dataType: "json",';
+                $js .= $endln . $tab . $tab . 'success: function(data){';
+                    $js .= $endln . $tab . $tab . $tab . 'if (data["status"] == "success" ){';
+                        $js .= $endln . $tab . $tab . $tab . $tab . $tab . 'window.open("/plugins/excels/" + data["file"], "_blank");';
+                    $js .= $endln . $tab . $tab . $tab . $tab . '}else{';
+                        $js .= $endln . $tab . $tab . $tab . 'toastr.error("failed");';
+                        $js .= $endln . $tab . $tab . $tab . '}';
+                $js .= $endln . $tab . $tab . $tab . '}';
+            $js .= $endln . $tab . $tab . '});';
+        $js .= $endln . $tab . '}';
 
         $js .= $endln . 'function save_record(){';
             $js .= $endln . $tab . 'var id = $("#data-id").val();';
             foreach($columns as $col ){
                 extract($col );
-                $js .= $endln . $tab . 'var tr_' . $title . ' = $("#' . $table_name . '_field_' . $title . '").val()';
+                if ($type == 'varchar(300)'){
+                    array_push($uploads, $title );
+                    $js .= $endln . $tab . 'var tr_' . $title . ' = $("#' . $table_name . '_field_' . $title . '_upload").attr("data-file");';
+                }else{
+                    $js .= $endln . $tab . 'var tr_' . $title . ' = $("#' . $table_name . '_field_' . $title . '").val();';
+                }
             }
             $js .= $endln . $tab . '$.ajax({';
                 $js .= $endln . $tab . $tab . 'url: base_url,';
@@ -245,18 +292,26 @@
                 $js .= $endln . $tab . $tab . 'success: function(data){';
                     $js .= $endln . $tab . $tab . $tab . 'if (data["status"] == "success" ){';
                         $js .= $endln . $tab . $tab . $tab . $tab . 'if (id == "-1"){';
-                            $js .= $endln . $tab . $tab . $tab . $tab . $tab . 'var table_id = data["insert_id"];';
+                            $js .= $endln . $tab . $tab . $tab . $tab . $tab . 'var table_id = data["id"];';
                             $js .= $endln . $tab . $tab . $tab . $tab . $tab . 'table.row.add( [';
                             foreach($columns as $col ){
                                 extract($col );
-                                $js .= 'tr_' . $title . ', ';
-                            }
-                            $js .= "'" . '<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="' .
-                            "table_id" . '"><i class="fa fa-edit"></i></button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id"' . "table_id" . '"><i class="fa fa-trash"></i></button>' . "'" . ']).draw( false );';
+                                if ($type == "varchar(300)"){
+                                    $js .= '"<img width=\'100\' src=\'/plugins/uploads/" + tr_' . $title . ' + "\'>", ';
+                                }else{
+                                    $js .= 'tr_' . $title . ', ';
+                                }                                
+                            }//elete-item" data-id="' + table_id + '"
+                            $js .= "'" . '<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="\'' .
+                            " + table_id + '" . '"><i class="fa fa-edit"></i></button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id="' . "'+ table_id + '" . '"><i class="fa fa-trash"></i></button>' . "'" . ']).draw( false );';
                         $js .= $endln . $tab . $tab . $tab . $tab . '}else{';
                             foreach($columns as $col ){
                                 extract($col );
-                                $js .= $endln . $tab . $tab . $tab . $tab . $tab . '$("#' . $table_name . '_table tr.selected").find(".' . $table_name. '_td_' . $title . '").text(tr_' . $title . ' );';
+                                if ($type == 'varchar(300)'){
+                                    $js .= $endln . $tab . $tab . $tab . $tab . $tab . '$("#' . $table_name . '_table tr.selected").find(".' . $table_name. '_td_' . $title . '").html("<img width=\'100\' src=\'/plugins/uploads/" + tr_' . $title . ' + "\'>");';
+                                }else{
+                                    $js .= $endln . $tab . $tab . $tab . $tab . $tab . '$("#' . $table_name . '_table tr.selected").find(".' . $table_name. '_td_' . $title . '").text(tr_' . $title . ' );';
+                                }
                             }
                         $js .= $endln . $tab . $tab . $tab . $tab . '}';
                         $js .= $endln . $tab . $tab . $tab . $tab . '$("#edit-modal").modal("hide");';
@@ -267,6 +322,7 @@
         $js .= $endln . '}';
 
         $js .= $endln . 'function new_record(){';
+            $js .= $endln . $tab . '$(".ajax-file-upload-statusbar").remove();';
             $js .= $endln . $tab . '$("#data-id").val("-1");';
             $js .= $endln . $tab . '$("#edit-modal").modal("show");';
         $js .= $endln . '}';
@@ -293,6 +349,7 @@
         $js .= $endln . '}';
 
         $js .= $endln . 'function edit_record(){';
+            $js .= $endln . $tab . '$(".ajax-file-upload-statusbar").remove();';
             $js .= $endln . $tab . "var id = $(this).attr('data-id');";
             $js .= $endln . $tab . "sel_tr = $(this).parent().parent();";
             $js .= $endln . $tab . '$("#data-id").val(id );';
@@ -326,7 +383,13 @@
                 $js .= $endln . $tab . $tab . "var tr = $('<tr>').attr('data-id', item[0]).appendTo(parent );";
                 foreach($columns as $key=> $col ){
                     extract($col );
-                    $js .= $endln . $tab . $tab . $tab . '$("<td>").text(item[' . ($key + 1) . ']).addClass("' . $table_name . '_td_' . $title . '").appendTo(tr);';
+                    if ($type == "varchar(300)"){
+                        //$js .= $endln . $tab . $tab . $tab . '$("<td>").text(item[' . ($key + 1) . ']).addClass("' . $table_name . '_td_' . $title . '").appendTo(tr);';
+                        $js .= $endln . $tab . $tab . $tab . '$("<td>").html("<img width=\'100\' src=\'/plugins/uploads/" + item[' . ($key + 1) . '] + "\'>").addClass("profiles_td_photo").appendTo(tr)';
+                    }else{
+                        $js .= $endln . $tab . $tab . $tab . '$("<td>").text(item[' . ($key + 1) . ']).addClass("' . $table_name . '_td_' . $title . '").appendTo(tr);';
+                    }
+                    
                 }
                 $js .= $endln . $tab . $tab . 'var td = $("<td>").appendTo(tr );';
                 $js .= $endln . $tab . $tab . '$("<button>").addClass("btn btn-xs btn-sm btn-primary mr-6 edit-item")';
@@ -348,6 +411,20 @@
                 $js .= $endln . $tab . $tab . "}";
             $js .= $endln . $tab . "});";
         $js .= $endln . "}"; 
+
+        $js .= $endln . '$(document).ready(function(){';
+            foreach($uploads as $item ){
+                $js .= $endln . $tab . 'var extraObj = $("#' . $table_name . '_field_' . $item . '_upload").uploadFile({';
+                    $js .= $endln .$tab .$tab . 'url:upload_url, fileName:"apifile", autoSubmit:false,returnType:"json",';
+                    $js .= 'onSuccess:function(files,data,xhr,pd){';
+                        $js .= 'if (data["status"] == "success"){$("#' . $table_name . '_field_' . $item . '_upload").attr("data-file", data["file"] );}';
+                        $js .= 'else{$("#' . $table_name . '_field_' . $item . '_upload").attr("data-file", "" );}';
+                    $js .= '}});';
+                $js .= $endln . $tab . '$("#' . $table_name . '_field_' . $item . '_btn").click(function(){extraObj.startUpload();});';
+            }
+
+        $js .= $endln . '});';
+
         return $js;
     }
 

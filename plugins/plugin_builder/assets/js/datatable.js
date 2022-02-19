@@ -27,12 +27,38 @@ $(document).ready(function(){
     $("#save_btn").on("click", save_obj );
     $("#check_table").on("click", select_table_name );
     $("#select_table").on("click", select_table );
+    $("#table-list-md").on("change", dispaly_table_fields );
 
     add_column_block();
     add_column_block();
 
     init_table_list();
 });
+
+function dispaly_table_fields(){
+    $.ajax({
+        url: "/plugins/plugin_builder/include/classes/table_generate.php",
+        data: {
+            type: "table_info",
+            table: $(this).val()
+        },
+        type: "post",
+        dataType: "json",
+        success: function(res ){
+            var columns = res["columns"];
+            $(".ref_field_item").remove();
+            for (var i = 0;i < columns.length; i++){
+                var item = columns[i];
+                var column_name = item["column_name"];
+                var column_type = item["column_type"]
+                $("<option>").addClass("ref_field_item")
+                        .attr("value", column_name).text(column_name + ":" + column_type)
+                        .attr("data-type", column_type)
+                        .appendTo($("#field-list-md"));
+            }
+        }
+    });
+}
 
 function select_table(){
     $.ajax({
@@ -44,7 +70,35 @@ function select_table(){
         type: "post",
         dataType: "json",
         success: function(res ){
-            
+            $("#table-name-input").val(res["table_name"]);
+            var columns = res["columns"];
+
+            var parent = $("#table-property");
+            $(parent).html("");
+            for (var i = 0;i < columns.length; i++){
+                var item = columns[i];
+                var max_length = item["character_maximum_length"];
+                var column_name = item["column_name"];
+                var data_type = item["data_type"];
+                var column_key = item["column_key"];
+                var column_type = item["column_type"] 
+                var ref_table = item["referenced_table_name"];
+                var ref_field = item["referenced_column_name"];
+                if (column_key == "PRI"){
+                    $("#primary-key-input").val(column_name);
+                }else{
+                    var template = $("#table-prop-item-template .table-prop-item").clone(); 
+                    $(template).find(".field-title-input").val(column_name);
+                    $(template).find(".field-type-input").val(column_type);
+                    $(template).find(".field-default-value-input").val(item["column_default"]);
+                    $(template).find(".field-props-wrap").attr("data-table", ref_table );
+                    $(template).find(".field-props-wrap").attr("data-field", ref_field );
+                    $(template).find(".field-props-wrap").attr("data-type", column_type); 
+                    $(template).find(".reference_table_span").text(ref_table ? ref_table : "None" );
+                    $(template).find(".reference_field_span").text(ref_field ? ref_field : "None" );
+                    $(template).appendTo($(parent));
+                }
+            }
         }
     });
 }
@@ -58,9 +112,17 @@ function init_table_list(){
         type: "post",
         dataType: "json",
         success: function(res ){
+            var all = res["all"];
+            $(".ref_table_item").remove();
+            for(var i = 0; i < all.length; i++ ){
+                var item = all[i];
+                $("<option value='" + item + "'>").addClass("ref_table_item").text(item).appendTo($("#table-list-md"));
+            }
+
+            var made = res["made"];
             $("#table_list_sel").html("");
-            for(var i = 0; i < res.length; i++ ){
-                $("<option>").attr("value", res[i]).text(res[i]).appendTo($("#table_list_sel"));
+            for(var i = 0; i < made.length; i++ ){
+                $("<option>").attr("value", made[i]).text(made[i]).appendTo($("#table_list_sel"));
             }
         }
     });
@@ -143,9 +205,8 @@ function generate_content(type ){
         success: function(res ){
             if (res["status"] == "success" ){
                 if (type == "run" ){
-                    //location.href = "/admin/plugins/" + $("#plugin_path").val() + "/" + res["data"]; 
-                    window.open( "/admin/plugins/" + $("#plugin_path").val() + "/" + res["data"], "_blank");///admin/plugins/plugin_product_catalog/" + table_name, "_blank");
-                }else if($type == "save"){
+                    window.open( "/admin/plugins/" + $("#plugin_path").val() + "/" + res["data"], "_blank");
+                }else if(type == "save"){
                     toastr.success("successfuly saved!");
                     $("<option>").attr("value", res["data"]).text(res["data"]).appendTo($("#table_list_sel"));
                 }else{
@@ -196,6 +257,15 @@ function save_config(){
     var default_value = $("#field-default-value-md").val();
     var show_table = $("#table_yes").is(":checked");
     var editor_table = $("#editor_yes").is(":checked");
+    var ref_table = $("#table-list-md").val();
+    var ref_field = $("#field-list-md").val();
+    var ref_field_type = $("#field-list-md option:selected").attr("data-type");
+    if (ref_field == "") ref_table = "";
+
+    if (ref_field_type != type ){
+        toastr.error("The field type of reference table must match with the field type of current table");
+        return;
+    }
 
     $(sel_item).find(".field-title-input").val(title )
     $(sel_item).attr("data-columnname", title );
@@ -204,6 +274,9 @@ function save_config(){
     $(sel_item).find(".field-show-table-input").prop("checked", show_table );
     $(sel_item).find(".field-show-editor-input").prop("checked", editor_table );
     $(sel_item).find(".field-type-input").val(type);
+    $(sel_item).attr("data-table", ref_table ).attr("data-field", ref_field).attr("data-type", ref_field_type);
+    $(sel_item).find(".reference_table_span").text(ref_table == "" ? "NONE" : ref_table );
+    $(sel_item).find(".reference_field_span").text(ref_field == "" ? "NONE" : ref_field );
 
     $("#column-detail-modal").modal("hide");
 }
@@ -217,6 +290,37 @@ function edit_field_config(obj ){
     var default_value = $(parent).find(".field-default-value-input").val();
     var show_table = $(parent ).find(".field-show-table-input").is(":checked");
     var editor_table = $(parent).find(".field-show-editor-input").is(":checked");
+    var ref_table = $(parent).attr("data-table");
+    if (ref_table != "" ){
+        $.ajax({
+            url: "/plugins/plugin_builder/include/classes/table_generate.php",
+            data: {
+                type: "table_info",
+                table: ref_table
+            },
+            type: "post",
+            dataType: "json",
+            success: function(res ){
+                var columns = res["columns"];
+                $(".ref_field_item").remove();
+                for (var i = 0;i < columns.length; i++){
+                    var item = columns[i];
+                    var column_name = item["column_name"];
+                    var column_type = item["column_type"]
+                    $("<option>").addClass("ref_field_item")
+                            .attr("value", column_name).text(column_name + ":" + column_type)
+                            .attr("data-type", column_type)
+                            .appendTo($("#field-list-md"));
+                }
+                var ref_field = $(parent).attr("data-field");
+                $("#field-list-md").val(ref_field);
+            }
+        });
+    }
+    
+    
+    $("#table-list-md").val(ref_table);
+    
 
     $("#field-title-md").val(title );
     $("#field-column-name-md").val(title );
@@ -268,6 +372,7 @@ function get_jsondata(){
     }
 
     var columns = [];
+    var refs = [];
     var cols = $("#table-property .table-prop-item");
     for(var i = 0;i < cols.length; i++ ){
         var col = cols[i];
@@ -277,6 +382,9 @@ function get_jsondata(){
         var default_value = $(col).find(".field-default-value-input").val();
         var show_table = $(col ).find(".field-show-table-input").is(":checked");
         var editor_table = $(col).find(".field-show-editor-input").is(":checked");
+        var ref_obj = $(col ).find(".field-props-wrap");
+        var ref_table = $(ref_obj).attr("data-table") ? $(ref_obj).attr("data-table") : "";
+        var ref_field = $(ref_obj).attr("data-field") ? $(ref_obj).attr("data-field") : "";
 
         if (title == "" ){
             return {"status": false, "error": "Title is required"};
@@ -284,6 +392,9 @@ function get_jsondata(){
             return {"status": false, "error": "Title only can be letter and number"};
         }
 
+        if (ref_table != "" && ref_field != "" ){
+            refs.push({field: title, ref_table: ref_table, ref_field: ref_field });
+        }
         columns.push({
             title: title,
             type: type,
@@ -299,7 +410,8 @@ function get_jsondata(){
         data: {
             table_name: table_name.toLowerCase(),
             primary_key: primary_key,
-            columns: columns
+            columns: columns,
+            refs: refs
         }
     }
 }

@@ -143,6 +143,25 @@
                                     <input type="text" class="form-control" id="field-default-value-md">
                                 </div>
                             </div>
+                            <hr>
+                            <div class="form-group row">
+                                <label for="table-list" class="col-sm-4 col-form-label">Refereance Table</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="table-list-md">
+                                        <option value="">Select Table</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="field-list" class="col-sm-4 col-form-label">Reference Field</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="field-list-md">
+                                        <option value="">Select Field</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr>
                         </div>
                     </div>
                     <div class="row">
@@ -252,13 +271,10 @@
             </div>
             <div class="field-add-props">
                 <a href="javascript:;" class="add-props-edit">
-                    SQL column name : 
-                    <span class="column-name-span">Not set</span>
-                    Default : 
-                    <span class="column-default-span">None</span>
-                    Required :
-                    <span class="column-required-span"> No</span>
-                    Edit ... 
+                    Refrence Info - Table: 
+                    <span class="reference_table_span font-bold">None</span>
+                    , Field: 
+                    <span class="reference_field_span font-bold">None</span>
                 </a>
             </div>
         </div>

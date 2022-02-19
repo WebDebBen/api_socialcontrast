@@ -74,32 +74,32 @@
                         ic.EXTRA, ic.COLUMN_NAME, ic.COLUMN_DEFAULT, ic.IS_NULLABLE, ic.DATA_TYPE, ic.CHARACTER_MAXIMUM_LENGTH,
                         ic.COLUMN_TYPE, ic.COLUMN_KEY, ik.REFERENCED_TABLE_NAME, ik.REFERENCED_COLUMN_NAME
                     FROM INFORMATION_SCHEMA.COLUMNS ic
-                    LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ik on ik.REFERENCED_TABLE_SCHEMA = '" . DB_NAME . 
+                    LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ik on ik.REFERENCED_TABLE_SCHEMA = '" . API_DB_NAME . 
                     "' and ik.TABLE_NAME = ic.TABLE_NAME and ik.COLUMN_NAME=ic.COLUMN_NAME
                     WHERE ic.TABLE_NAME = '" . $table_name . "' ORDER BY ic.ORDINAL_POSITION";
 
             $result = $this->conn->query($query );
             $info = [];
             if ($result ){
-            $info["table_name"] = $table_name;
-            $info["columns"] = [];
-            while($row = $result->fetch(PDO::FETCH_BOTH)){
-                $item = [];
-                $item["column_name"] = $row["COLUMN_NAME"];
-                $item["column_default"] = $row["COLUMN_DEFAULT"];
-                $item["extra"] = $row["EXTRA"];
-                $item["is_nullable"] = $row["IS_NULLABLE"];
-                $item["data_type"] = $row["DATA_TYPE"];
-                $item["character_maximum_length"] = $row["CHARACTER_MAXIMUM_LENGTH"];
-                $item["column_type"] = $row["COLUMN_TYPE"];
-                $item["column_key"] = $row["COLUMN_KEY"];
-                $item["referenced_table_name"] = $row["REFERENCED_TABLE_NAME"];
-                $item["referenced_column_name"] = $row["REFERENCED_COLUMN_NAME"];
-                $info["columns"][] = $item;
-            }
-            return $info;
+                $info["table_name"] = $table_name;
+                $info["columns"] = [];
+                while($row = $result->fetch(PDO::FETCH_BOTH)){
+                    $item = [];
+                    $item["column_name"] = $row["COLUMN_NAME"];
+                    $item["column_default"] = $row["COLUMN_DEFAULT"];
+                    $item["extra"] = $row["EXTRA"];
+                    $item["is_nullable"] = $row["IS_NULLABLE"];
+                    $item["data_type"] = $row["DATA_TYPE"];
+                    $item["character_maximum_length"] = $row["CHARACTER_MAXIMUM_LENGTH"];
+                    $item["column_type"] = $row["COLUMN_TYPE"];
+                    $item["column_key"] = $row["COLUMN_KEY"];
+                    $item["referenced_table_name"] = $row["REFERENCED_TABLE_NAME"];
+                    $item["referenced_column_name"] = $row["REFERENCED_COLUMN_NAME"];
+                    $info["columns"][] = $item;
+                }
+                return $info;
             }else{
-            return false;
+                return false;
             }
         }
     }  

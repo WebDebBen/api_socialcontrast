@@ -44,8 +44,10 @@ function get_table_info($table){
 }
 
 function get_table_list(){
-    $dirs = scandir($_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_product_catalog/interfaces/admin");
+    $db = $GLOBALS["db"];
+    $table_list = $db->show_tables();
 
+    $dirs = scandir($_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_product_catalog/interfaces/admin");
     $tables = [];
     foreach($dirs as $item ){
         if ($item != "." && $item != ".." && strpos($item, ".php") > 0 ){
@@ -53,7 +55,7 @@ function get_table_list(){
             array_push($tables, $substr );
         }
     }
-    echo json_encode($tables );
+    echo json_encode(["all"=>$table_list, "made"=>$tables]);
 }
 
 function generate_sql($data ){
@@ -86,7 +88,7 @@ function generate_run($data ){
     echo json_encode($run );
 }
 
-function generate_save($data ){
+function generate_save($data ){ 
     $run = generate_content($data, "save");
-    echo json_encode($json );
+    echo json_encode($run );
 }
