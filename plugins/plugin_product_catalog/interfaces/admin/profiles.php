@@ -1,5 +1,5 @@
 <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css"><script src="http://hayageek.github.io/jQuery-Upload-File/4.0.11/jquery.uploadfile.min.js"></script>;<link href="http://hayageek.github.io/jQuery-Upload-File/4.0.11/uploadfile.css" rel="stylesheet"><script type="text/javascript" charset="utf-8" src="assets/js/apis/profiles.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css"><script type="text/javascript" charset="utf-8" src="assets/js/apis/profiles.js"></script>
 <div class='main-body'>
 	<h1 class="mt-1r">DataTables Editor <span>profiles</span></h1>
 	<div class="row mt-1r mb-1r"><div class="col-md-12"><button class="btn btn-success" id="profiles_new">New</button><button class="btn btn-success" id="export_excel">Export</button></div></div>

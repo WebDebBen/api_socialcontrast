@@ -27,8 +27,11 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/jquery.highlight.css">
   <link rel="stylesheet" href="assets/css/toastr.css">
+  <link rel="stylesheet" href="assets/css/upload.css">
   <!-- jQuery -->
   <script src="plugins/jquery/jquery.min.js"></script>
+  
+  <script src="assets/js/upload.js"></script>
   <!--
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>-->
@@ -260,11 +263,15 @@
 <!-- Summernote -->
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- <script src="assets/js/ckeditor.js"></script>
+<script src="assets/js/ck-jquery.js"></script> -->
+
+<!-- include summernote css/js -->
+
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
-
 
 <!-- Select2 -->
 <script src="plugins/select2/js/select2.full.min.js"></script>

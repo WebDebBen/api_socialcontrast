@@ -33,6 +33,22 @@ var controls = [
               "</div>"
   },
   {
+    id: "ckeditor_obj",
+    properyt: "<form class='form'" +
+                "<div class='form-group col-md-12'>" +
+                  "<label class='control-label'>CK Editor</label> <input class='form-control' type='text' name='name' id='name'>" +
+                  "<label class='control-label'>Label Text</label> <input class='form-control' type='text' name='label' id='label'>" +
+                  "<hr/>" +
+                  "<button class='btn btn-info save_data'>Save</button><button class='btn btn-danger del_data'>Delete</button>" +
+                "</div>" +
+              "</form>",
+    element: "<label class='col-md-12 control-label valtype' data-valtype='label'>CK Editor</label>" +
+              "<div class='col-md-12'>" +
+                "<div class='ck-editor form-control'></div>" +
+              "</div>" +
+            "</div>"
+  },
+  {
     id: "select_obj",
     property: "<form class='form'>" +
                 "<div class='form-group col-md-12'>" +
@@ -171,6 +187,16 @@ $(document).ready(function(){
           var col = $("<div>").addClass("col-md-9").appendTo(form_comp );
           $("<textarea>").attr("type", "text").attr("data-condind", cond_index )
               .addClass("form-control input-md " + item["data_name"]).appendTo(col );
+          break;
+        case "ckeditor_obj":
+          var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
+              .attr("data-condind", cond_index ).appendTo(parent);
+          $("<label>").addClass("col-md-3 control-label text-right")
+              .text(item["label"] ).appendTo(form_comp );
+          var col = $("<div>").addClass("col-md-9").appendTo(form_comp );
+          var editor = $("<textarea>").attr("data-condind", cond_index )
+              .addClass("form-control ckeditor-obj " + item["data_name"]).appendTo(col );
+          $(editor).summernote();
           break;
         case "select_obj":
           var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
@@ -403,6 +429,22 @@ $(document).ready(function(){
                     .addClass("form-control input-md valtype")
                     .attr("data-valtype", "textarea").appendTo(col );
           break;
+        case "ckeditor_obj":
+          var form_comp = $("<div>").attr("class", "form form-component")
+                    .attr("data-id", "ckeditor_obj")
+                    .attr("id", item["id"])
+                    .attr("data-name", get_object_name("ckeditor_obj"))
+                    .attr("draggable", false )
+                    .appendTo(parent);
+          $("<label>").addClass("col-md-12 control-label valtype")
+                    .attr("data-valtype", "label")
+                    .text(item["label"] ).appendTo(form_comp );
+          var col = $("<div>").addClass("col-md-12").appendTo(form_comp );
+          var obj = $("<textarea>").attr("type", "text")
+                    .addClass("form-control input-md valtype")
+                    .attr("data-valtype", "textarea").appendTo(col );
+          $(obj).summernote();
+          break;
         case "select_obj":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "select_obj")
@@ -462,7 +504,6 @@ $(document).ready(function(){
           }
           break;
         case "condition_start":
-          //{"data_id":"condition_start","id":"215881","data_name":"1","data_field":"checkbox_1","data_value":"5"},
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "condition_start")
                     .attr("id", item["id"])
@@ -660,6 +701,7 @@ $(document).ready(function(){
         $target.css("background-color", "#fff");
         $(document).undelegate("body", "mousemove");
         $("body").undelegate("#temp","mouseup");
+        $(temp).find(".ck-editor").summernote();
         $temp.remove();
         genSource();
       });
@@ -700,6 +742,10 @@ $(document).ready(function(){
         $(prev_obj).find('label').text($("#label").val());
         $(prev_obj).attr("data-name", $("#name").val());
         break;
+      case "ckeditor_obj":
+        $(prev_obj).find('label').text($("#label").val());
+        $(prev_obj).attr("data-name", $("#name").val());
+        break;
       case "select_obj":
         $(prev_obj).find('label').text($("#label").val());
         $(prev_obj).attr("data-name", $("#name").val());
@@ -709,8 +755,8 @@ $(document).ready(function(){
         var items = $(".select_item");
         for (var i = 0; i < items.length; i++ ){
           var item = items[i];
-          $("<option>").attr("value", $(item).find(".obj-label").val())
-              .text($(item).find(".obj-value").val())
+          $("<option>").attr("value", $(item).find(".obj-value").val())
+              .text($(item).find(".obj-label").val())
               .appendTo($(select_obj));
         }
         break;
@@ -811,6 +857,12 @@ $(document).ready(function(){
           tmp_obj["label"] = label;
           tmp_obj["placeholder"] = placeholder;
           break;
+        case "ckeditor_obj":
+          label = $(comp).find(".control-label").text();
+          placeholder = $(comp).find(".form-control").attr("placeholder");
+          tmp_obj["label"] = label;
+          tmp_obj["placeholder"] = placeholder;
+          break;
         case "checkbox_obj":
           label = $(comp).find(".control-label").text();
           var checks = $(comp).find(".checkbox");
@@ -891,6 +943,9 @@ $(document).ready(function(){
         break;
       case "textarea_obj":
         label = "textarea_";
+        break;
+      case "ckeditor_obj":
+        label = "ckeditor_";
         break;
       case "select_obj":
         label = "select_";

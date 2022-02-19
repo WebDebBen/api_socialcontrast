@@ -28,6 +28,9 @@
                             <div class="form-group component" data-id="textarea_obj">
                                 <i class="fa fa-indent"></i>Text Area
                             </div>
+                            <!-- <div class="form-group component" data-id="ckeditor_obj">
+                                <i class="fa fa-indent"></i>CK Editor
+                            </div> -->
                             <div class="form-group component" data-id="select_obj">
                                 <i class="fa fa-play"></i>Select
                             </div>

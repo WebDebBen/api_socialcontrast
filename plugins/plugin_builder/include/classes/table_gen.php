@@ -149,8 +149,8 @@
 
         $header = '<script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>' . "\n";
         $header .= '<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">';
-        $header .= '<script src="http://hayageek.github.io/jQuery-Upload-File/4.0.11/jquery.uploadfile.min.js"></script>;';
-        $header .= '<link href="http://hayageek.github.io/jQuery-Upload-File/4.0.11/uploadfile.css" rel="stylesheet">';
+        //$header .= '<script src="http://hayageek.github.io/jQuery-Upload-File/4.0.11/jquery.uploadfile.min.js"></script>;';
+        //$header .= '<link href="http://hayageek.github.io/jQuery-Upload-File/4.0.11/uploadfile.css" rel="stylesheet">';
         $header .= '<script type="text/javascript" charset="utf-8" src="assets/js/apis/' . $table_name . '.js"></script>' . "\n";
 
         $body = "<div class='main-body'>" . "\n";
@@ -232,6 +232,7 @@
 
         $js = 'base_url = "/plugins/' . PLUGIN_PATH . '/interfaces/php/' . $table_name . '.php";';
         $js .= $endln . 'upload_url = "/plugins/plugin_builder/include/classes/upload.php";';
+        $js .= $endln . 'export_url = "/plugins/plugin_builder/include/classes/export_excel.php";';
         $js .= $endln . 'var table;';
         $js .= $endln . 'var sel_tr;';
         $js .= $endln . '$(document).ready(function(){';
@@ -250,9 +251,9 @@
         
         $js .= $endln . $tab . 'function export_excel(){';
             $js .= $endln . $tab . $tab . '$.ajax({';
-                $js .= $endln . $tab . $tab . $tab . 'url: expot_url,';
+                $js .= $endln . $tab . $tab . $tab . 'url: export_url,';
                 $js .= $endln . $tab . $tab . $tab . 'data:{';
-                    $js .= $endln . $tab . $tab . $tab . $tab . 'table: "profiles",';
+                    $js .= $endln . $tab . $tab . $tab . $tab . 'table: "' . $table_name . '",';
                 $js .= $endln . $tab . $tab . '},';
                 $js .= $endln . $tab . $tab . 'type: "post",';
                 $js .= $endln . $tab . $tab . 'dataType: "json",';
