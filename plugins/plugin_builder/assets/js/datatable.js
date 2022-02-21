@@ -35,6 +35,7 @@ $(document).ready(function(){
     init_table_list();
 });
 
+
 function dispaly_table_fields(){
     $.ajax({
         url: "/plugins/plugin_builder/include/classes/table_generate.php",
@@ -50,10 +51,12 @@ function dispaly_table_fields(){
             for (var i = 0;i < columns.length; i++){
                 var item = columns[i];
                 var column_name = item["column_name"];
-                var column_type = item["column_type"]
+                var column_type = item["column_type"];
+                var data_type = item["data_type"];
                 $("<option>").addClass("ref_field_item")
                         .attr("value", column_name).text(column_name + ":" + column_type)
-                        .attr("data-type", column_type)
+                        .attr("column-type", column_type)
+                        .attr("data-type", data_type)
                         .appendTo($("#field-list-md"));
             }
         }
@@ -253,6 +256,7 @@ function generate_php(){
 function save_config(){
     var title = $("#field-title-md").val();
     var type = $("#field-type-md").val();
+    var data_type = $("#field-type-md option:selected").attr("data-type");
     var required = $("#required_yes").is(":checked");
     var default_value = $("#field-default-value-md").val();
     var show_table = $("#table_yes").is(":checked");
@@ -262,7 +266,7 @@ function save_config(){
     var ref_field_type = $("#field-list-md option:selected").attr("data-type");
     if (ref_field == "") ref_table = "";
 
-    if (ref_field_type != type ){
+    if (ref_field_type != data_type ){
         toastr.error("The field type of reference table must match with the field type of current table");
         return;
     }
@@ -401,7 +405,9 @@ function get_jsondata(){
             requried: requried, 
             default_value: default_value,
             show_table: show_table,
-            editor_table: editor_table
+            editor_table: editor_table,
+            ref_table: ref_table,
+            ref_field: ref_field
         })
     }
 

@@ -1,5 +1,6 @@
 base_url = "/plugins/plugin_product_catalog/interfaces/php/profiles.php";
 upload_url = "/plugins/plugin_builder/include/classes/upload.php";
+export_url = "/plugins/plugin_builder/include/classes/export_excel.php";
 var table;
 var sel_tr;
 $(document).ready(function(){
@@ -9,28 +10,31 @@ $(document).ready(function(){
 	$("#profiles_body").on("click", ".delete-item", delete_record );
 	$("#export_excel").on("click", export_excel );
 	$("#save_record").on("click", save_record );
+	$("body").on("click", ".ajax-file-upload-red", function(e){e.preventDefault(); $(this).parent().remove()});
+	$("textarea").trumbowyg();
 });
-	function export_excel(){
-		$.ajax({
-			url: expot_url,
-			data:{
-				table: "profiles",
+function export_excel(){
+	$.ajax({
+		url: export_url,
+		data:{
+			table: "profiles",
 		},
 		type: "post",
 		dataType: "json",
 		success: function(data){
 			if (data["status"] == "success" ){
-					window.open("/plugins/excels/" + data["file"], "_blank");
-				}else{
-			toastr.error("failed");
+				window.open("/plugins/excels/" + data["file"], "_blank");
+			}else{
+				toastr.error("failed");
 			}
-			}
-		});
-	}
+		}
+	});
+}
 function save_record(){
 	var id = $("#data-id").val();
 	var tr_name = $("#profiles_field_name").val();
 	var tr_photo = $("#profiles_field_photo_upload").attr("data-file");
+	var tr_bigo = $("#profiles_field_bigo").trumbowyg('html');
 	$.ajax({
 		url: base_url,
 		data:{
@@ -38,6 +42,7 @@ function save_record(){
 			id: id,
 			name: tr_name,
 			photo: tr_photo,
+			bigo: tr_bigo,
 		},
 		type: "post",
 		dataType: "json",
@@ -45,10 +50,14 @@ function save_record(){
 			if (data["status"] == "success" ){
 				if (id == "-1"){
 					var table_id = data["id"];
-					table.row.add( [tr_name, "<img width='100' src='/plugins/uploads/" + tr_photo + "'>", '<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="' + table_id + '"><i class="fa fa-edit"></i></button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id="'+ table_id + '"><i class="fa fa-trash"></i></button>']).draw( false );
+					table.row.add( ['<div class="profiles_name">' + tr_name + '</div>', 
+					"<img width='100' data-file='tr_photo' class='profiles_photo' src='/plugins/uploads/" + tr_photo + "'>", 
+					'<div class="profiles_bigo">' + tr_bigo + '</div>', 
+					'<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="' + table_id + '"><i class="fa fa-edit"></i></button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id="'+ table_id + '"><i class="fa fa-trash"></i></button>']).draw( false );
 				}else{
-					$("#profiles_table tr.selected").find(".profiles_td_name").text(tr_name );
-					$("#profiles_table tr.selected").find(".profiles_td_photo").html("<img width='100' src='/plugins/uploads/" + tr_photo + "'>");
+					$(sel_tr).find(".profiles_name").html(tr_name );
+					$(sel_tr).find(".profiles_photo").html("<img width='100' data-file='tr_photo' src='/plugins/uploads/" + tr_photo + "'>");
+					$(sel_tr).find(".profiles_bigo").html(tr_bigo );
 				}
 				$("#edit-modal").modal("hide");
 			}
@@ -56,6 +65,8 @@ function save_record(){
 	});
 }
 function new_record(){
+	$("#edit-modal input").val("");
+	$("textarea").trumbowyg("html", "");
 	$(".ajax-file-upload-statusbar").remove();
 	$("#data-id").val("-1");
 	$("#edit-modal").modal("show");
@@ -85,8 +96,15 @@ function edit_record(){
 	var id = $(this).attr('data-id');
 	sel_tr = $(this).parent().parent();
 	$("#data-id").val(id );
-		$("#profiles_field_name").val($(sel_tr).find(".profiles_td_name").text());
-		$("#profiles_field_photo").val($(sel_tr).find(".profiles_td_photo").text());$("#edit-modal").modal("show");
+	$("#profiles_field_name").val($(sel_tr).find(".profiles_name").html());
+	var img_file = $(sel_tr).find(".profiles_photo").attr("data-file");
+	var container = $("#profiles_field_photo_upload + .ajax-file-upload-container");
+	var status = $("<div>").addClass("ajax-file-upload-statusbar").appendTo(container );
+	$("<div>").addClass("ajax-file-upload-filename").text(img_file ).appendTo(status);
+	$("<div>").addClass("ajax-file-upload-red").text("Delete").appendTo(status );
+	$("#profiles_field_photo_upload").attr("data-type", "file").attr("data-file", img_file);
+	$("#profiles_field_bigo").trumbowyg("html", $(sel_tr).find(".profiles_bigo").html());
+	$("#edit-modal").modal("show");
 }
 function init_table(){
 	$.ajax({
@@ -108,8 +126,14 @@ function load_data(data ){
 	for(var i = 0; i < data.length; i++ ){
 		var item = data[i];
 		var tr = $('<tr>').attr('data-id', item[0]).appendTo(parent );
-			$("<td>").text(item[1]).addClass("profiles_td_name").appendTo(tr);
-			$("<td>").html("<img width='100' src='/plugins/uploads/" + item[2] + "'>").addClass("profiles_td_photo").appendTo(tr)
+		td = $("<td>").appendTo(tr);
+		$("<div>").addClass("profiles_name").html(item[1]).appendTo(td);
+		//$("<td>").text(item[1]).addClass("profiles_td_name").appendTo(tr);
+		td = $("<td>").appendTo(tr);
+		$("<img>").attr("width", "100").attr("data-file", item[2]).attr("src", "/plugins/uploads/" + item[2]).addClass("profiles_photo").appendTo(td);
+		td = $("<td>").appendTo(tr);
+		$("<div>").addClass("profiles_bigo").html(item[3]).appendTo(td);
+		//$("<td>").text(item[3]).addClass("profiles_td_bigo").appendTo(tr);
 		var td = $("<td>").appendTo(tr );
 		$("<button>").addClass("btn btn-xs btn-sm btn-primary mr-6 edit-item")
 			.attr("data-id", item[0])
@@ -130,6 +154,8 @@ function load_data(data ){
 	});
 }
 $(document).ready(function(){
+	//$('.summernote').summernote();
+
 	var extraObj = $("#profiles_field_photo_upload").uploadFile({
 		url:upload_url, fileName:"apifile", autoSubmit:false,returnType:"json",onSuccess:function(files,data,xhr,pd){if (data["status"] == "success"){$("#profiles_field_photo_upload").attr("data-file", data["file"] );}else{$("#profiles_field_photo_upload").attr("data-file", "" );}}});
 	$("#profiles_field_photo_btn").click(function(){extraObj.startUpload();});

@@ -9,6 +9,7 @@
 			<thead><tr>
 				<th>name</th>
 				<th>photo</th>
+				<th>bigo</th>
 				<th>Action</th>
 			</tr></thead>
 			<tbody id='profiles_body'>
@@ -38,6 +39,12 @@
 					<label for="field-default-value" class="col-sm-4 col-form-label text-right">photo</label>
 					<div class="col-sm-8">
 					<div id="profiles_field_photo_upload" data-type="file">Select File</div>					<button class="btn btn-primary" type="button" id="profiles_field_photo_btn">Upload</button>				</div>
+			</div>
+				<div class="form-group row">
+					<label for="field-default-value" class="col-sm-4 col-form-label text-right">bigo</label>
+					<div class="col-sm-8">
+					<textarea class="form-control" data-type="string" id="profiles_field_bigo"></textarea>
+				</div>
 			</div>
 			</div>
 		</form>

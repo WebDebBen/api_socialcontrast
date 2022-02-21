@@ -16,6 +16,10 @@
     padding-top: 1rem;
 }
 
+.pt-2r{
+    padding-top: 2rem;
+}
+
 .mb-1r{
     margin-bottom: 1rem;
 }
@@ -348,4 +352,44 @@ table{
 
 .modal{
     z-index: 999999;
+}
+
+.accor_left{
+    position: absolute;
+    right: 10px;
+    top: -8px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.accor_right{
+    position: absolute;
+    left: 10px;
+    top: -8px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.overflow-x-hidden{
+    overflow-x: hidden !important;
+}
+
+.comp-wrap, .prop-wrap, .ele-wrap{
+    transition: all 0.1s cubic-bezier(0.445, 0.05, 0.55, 0.95);   
+}
+
+.comp-wrap{
+    position: relative;
+    width: 267px;
+}
+
+.ele-wrap{
+    position: relative;
+    width: calc(100% - 668px);
+    padding: 15px;
+}
+
+.prop-wrap{
+    position: relative;
+    width: 401px;
 }

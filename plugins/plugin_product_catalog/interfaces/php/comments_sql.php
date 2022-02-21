@@ -1,0 +1,1 @@
+<?php $query = "CREATE TABLE IF NOT EXISTS `comments`(`id` int(10) NOT NULL auto_increment,  `post_id` integer NOT NULL,  `content` varchar(255) NOT NULL DEFAULT ''1'',PRIMARY KEY(`id`)); alter table `comments` add foreign key (`post_id`) references posts (id);" ?>

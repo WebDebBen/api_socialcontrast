@@ -16,8 +16,9 @@
         </div>
     </div>
     <div class="row mt-1r">
-        <div class="col-md-2">
-            <form class="form-horizontal" id="components">
+        <div class="comp-wrap overflow-x-hidden" data-visible="true">
+            <div class="accor_left" id="accor_left"><i class="fa fa-align-justify"></i></div>
+            <form class="form-horizontal flex-comp" id="components">
                 <fieldset>
                     <div class="tab-content">
                         <label class="label-control">Elements</label>
@@ -28,9 +29,9 @@
                             <div class="form-group component" data-id="textarea_obj">
                                 <i class="fa fa-indent"></i>Text Area
                             </div>
-                            <!-- <div class="form-group component" data-id="ckeditor_obj">
-                                <i class="fa fa-indent"></i>CK Editor
-                            </div> -->
+                            <div class="form-group component" data-id="ckeditor_obj">
+                                <i class="fa fa-indent"></i>Editor
+                            </div>
                             <div class="form-group component" data-id="select_obj">
                                 <i class="fa fa-play"></i>Select
                             </div>
@@ -51,7 +52,7 @@
                 </fieldset>
             </form>
         </div>
-        <div class="col-md-7">
+        <div class="ele-wrap" data-length="7">
             <div class="clearfix">
                 <div id="build">
                     <div class="tabbable">
@@ -86,8 +87,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 pt-1r">
-            <div id="obj_detail_wrap">
+        <div class="prop-wrap pt-2r overflow-x-hidden" data-visible="true">
+            <div class="accor_right" id="accor_right"><i class="fa fa-align-justify"></i></div>
+            <div id="obj_detail_wrap" class="flex-comp">
             </div>
         </div>
     </div>

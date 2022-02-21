@@ -1,0 +1,1 @@
+<?php $query = "CREATE TABLE IF NOT EXISTS `posts`(`id` int(10) NOT NULL auto_increment,  `title` varchar(255) NOT NULL,  `content` text NOT NULL,PRIMARY KEY(`id`));" ?>

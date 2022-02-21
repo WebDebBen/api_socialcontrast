@@ -28,13 +28,14 @@
   <link rel="stylesheet" href="assets/css/jquery.highlight.css">
   <link rel="stylesheet" href="assets/css/toastr.css">
   <link rel="stylesheet" href="assets/css/upload.css">
+  <!-- <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css"> -->
   <!-- jQuery -->
   <script src="plugins/jquery/jquery.min.js"></script>
   
   <script src="assets/js/upload.js"></script>
-  <!--
+<!--   
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script> -->
 <script language="javascript">
 	function printdiv(printpage) {
 		var a = printpage.split(",");
@@ -267,7 +268,8 @@
 <script src="assets/js/ck-jquery.js"></script> -->
 
 <!-- include summernote css/js -->
-
+<script src="plugins/popover.js"></script>
+<!-- <script src="plugins/summernote/summernote-bs4.min.js"></script> -->
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
@@ -277,6 +279,9 @@
 <script src="plugins/select2/js/select2.full.min.js"></script>
 <script src="assets/js/jquery.highlight.js"></script>
 <script src="assets/js/toastr.js"></script>
+<script src="assets/js/util.js"></script>
+<link rel="stylesheet" href="plugins/wyg/ui/trumbowyg.min.css"/>
+<script src="plugins/wyg/trumbowyg.min.js" ></script>
 
 </body>
 </html>

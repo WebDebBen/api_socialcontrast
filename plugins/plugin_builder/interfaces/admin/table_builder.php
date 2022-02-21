@@ -125,15 +125,15 @@
                                 <label for="field-type" class="col-sm-4 col-form-label">Type</label>
                                 <div class="col-sm-8">
                                     <select class="form-control" id="field-type-md">
-                                        <option value="varchar(255)">Text</option>
-                                        <option value="integer">Integer</option>
-                                        <option value="double">Double</option>
-                                        <option value="varchar(255)">Password</option>
-                                        <option value="text">Text Area</option>
-                                        <option value="varchar(300)">Image</option>
-                                        <option value="tinyint">Check</option>
-                                        <option value="date">Date</option>
-                                        <option value="datetime">Datetime</option>
+                                        <option data-type="varchar" value="varchar(255)">Text</option>
+                                        <option data-type="int" value="integer">Integer</option>
+                                        <option data-type="double" value="double">Double</option>
+                                        <option data-type="varchar" value="varchar(100)">Password</option>
+                                        <option data-type="text" value="text">Text Area</option>
+                                        <option data-type="varchar" value="varchar(300)">Image</option>
+                                        <option data-type="tinyint" value="tinyint">Check</option>
+                                        <option data-type="date" value="date">Date</option>
+                                        <option data-type="datetime" value="datetime">Datetime</option>
                                     </select>
                                 </div>
                             </div>
@@ -238,15 +238,15 @@
                 <div class="field-type ml-1r mr-1r">
                     <label class="">Type</label>
                     <select class="form-control field-type-input">
-                        <option value="varchar(255)">Text</option>
-                        <option value="integer">Integer</option>
-                        <option value="double">Double</option>
-                        <option value="password">Password</option>
-                        <option value="text">Text Area</option>
-                        <option value="varchar(300)">Image</option>
-                        <option value="boolean">Check</option>
-                        <option value="date">Date</option>
-                        <option value="datetime">Datetime</option>
+                        <option data-type="varchar" value="varchar(255)">Text</option>
+                        <option data-type="int" value="integer">Integer</option>
+                        <option data-type="double" value="double">Double</option>
+                        <option data-type="varchar" value="varchar(100)">Password</option>
+                        <option data-type="text" value="text">Text Area</option>
+                        <option data-type="varchar" value="varchar(300)">Image</option>
+                        <option data-type="tinyint" value="tinyint">Check</option>
+                        <option data-type="date" value="date">Date</option>
+                        <option data-type="datetime" value="datetime">Datetime</option>
                     </select>
                 </div>
                 <div class="field-required ml-1r mr-1r">

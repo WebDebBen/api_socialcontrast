@@ -25,7 +25,7 @@ function check_table_all(){
 
 function generate_api(){
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/generate",
+        url: "/plugins/plugin_builder/include/classes/generate.php",
         data: {
             table_infos: JSON.stringify(table_infos),
             tables: JSON.stringify(sel_tables )
@@ -54,7 +54,7 @@ function initialize(){
 
 function load_table_list(){
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/showtables",
+        url: "/plugins/plugin_builder/include/classes/showtables.php",
         data: {},
         type: "get",
         dataType: "json",
@@ -83,7 +83,7 @@ function init_table_list(data ){
 
 function load_table_infos(){
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/tables",
+        url: "/plugins/plugin_builder/include/classes/tables.php",
         data: {
             tables: JSON.stringify(sel_tables)
         },

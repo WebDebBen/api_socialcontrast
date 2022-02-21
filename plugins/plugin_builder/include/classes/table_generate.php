@@ -35,6 +35,22 @@ switch($type ){
     case "table_info":
         get_table_info($table );
         break;
+    case "table_data":
+        get_table_data($obj_id, $ref_table, $ref_field );
+        break;
+}
+
+function get_table_data($obj_id, $ref_table, $ref_field ){
+    $db = $GLOBALS["db"];
+    $table_data = $db->load_data($ref_table );
+    $rs = [];
+    while($row = $table_data->fetch(PDO::FETCH_ASSOC)){
+        array_push($rs, $row );
+    }
+
+    $table_info = $db->table_info($ref_table );
+
+    echo json_encode(["status"=>"success", "rs"=> $rs, "table_info"=> $table_info ]);
 }
 
 function get_table_info($table){

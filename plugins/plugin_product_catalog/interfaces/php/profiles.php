@@ -10,7 +10,7 @@
 			delete_tr($id);
 			break;
 		case "save":
-			save_tr($id ,$name,$photo);
+			save_tr($id ,$name,$photo,$bigo);
 			break;
 	}
 function init_table(){
@@ -24,6 +24,7 @@ function init_table(){
 			array_push($item, $row["id"]);
 			array_push($item, $row["name"]);
 			array_push($item, $row["photo"]);
+			array_push($item, $row["bigo"]);
 			array_push($data, $item );
 		}
 	}
@@ -35,12 +36,12 @@ function delete_tr($id ){
 	$db->run_query($query );
 	echo json_encode(["status"=> "success"]);
 }
-function save_tr($id, $name,$photo){
+function save_tr($id, $name,$photo,$bigo){
 	$db = $GLOBALS["db"];
 	if ($id == "-1"){
-		$query = "insert into profiles set name='{$name}',photo='{$photo}'";
+		$query = "insert into profiles set name='{$name}',photo='{$photo}',bigo='{$bigo}'";
 	}else{
-		$query = "update profiles set name='{$name}',photo='{$photo}' where id={$id}";
+		$query = "update profiles set name='{$name}',photo='{$photo}',bigo='{$bigo}' where id={$id}";
 	}
 	$id = $db->update_query($query );
 	echo json_encode(["status"=> "success", "id"=> $id ]);

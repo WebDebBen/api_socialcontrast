@@ -1,4 +1,15 @@
 <?php
+
+    function camelCase($str) {
+        $i = array("-","_");
+        $str = preg_replace('/([a-z])([A-Z])/', "\\1 \\2", $str);
+        $str = preg_replace('@[^a-zA-Z0-9\-_ ]+@', '', $str);
+        $str = str_replace($i, ' ', $str);
+        $str = str_replace(' ', ' ', ucwords(strtolower($str)));
+        //$str = strtolower(substr($str,0,1)).substr($str,1);
+        return $str;
+    }
+
     function generate_content($data, $type ){
         $result = ["status"=> "success", "data"=> ""];
         switch($type ){
@@ -111,11 +122,16 @@
         $primary_key = $data["primary_key"];
         $columns = $data["columns"];
         $endln = $flag ? "\n" : "";
-        $tab = $flag ? "\t" : "";
+        $tab1 = $flag ? "\t" : "";
+        $tab2 = $flag ? "\t\t" : "";
+        $tab3 = $flag ? "\t\t\t" : "";
+        $tab4 = $flag ? "\t\t\t\t" : "";
+        $tab5 = $flag ? "\t\t\t\t\t" : "";
+        $tab6 = $flag ? "\t\t\t\t\t\t" : "";
 
         $php_str = $flag ? "": '<?php $query = "';
         $php_str_end = $flag ? "" : '" ?>';
-        $str = $php_str . "CREATE TABLE IF NOT EXISTS `{$table_name}`({$endln}{$tab}`{$primary_key}` int(10) NOT NULL auto_increment";
+        $str = $php_str . "CREATE TABLE IF NOT EXISTS `{$table_name}`({$endln}{$tab1}`{$primary_key}` int(10) NOT NULL auto_increment";
         foreach($columns as $col ){
             extract($col );
             $field_item = "`{$title}` {$type}";
@@ -127,9 +143,9 @@
             if ($default_value ){
                 $field_item .= " DEFAULT '{$default_value}'";
             }
-            $str .= ", {$endln}{$tab} {$field_item }";
+            $str .= ", {$endln}{$tab1} {$field_item }";
         }
-        $str .= ",{$endln}{$tab}PRIMARY KEY(`{$primary_key}`){$endln});";
+        $str .= ",{$endln}{$tab1}PRIMARY KEY(`{$primary_key}`){$endln});";
         foreach($refs as $ref){ 
             $str .= " {$endln}alter table `{$table_name}` add foreign key (`{$ref['field']}`) references {$ref['ref_table']} ({$ref['ref_field']});";
         }
@@ -140,8 +156,15 @@
     }
 
     function generate_content_html($data, $flag = true ){
+        $db = $GLOBALS["db"];
+
         $endln = $flag ? "\n" : "";
-        $tab = $flag ? "\t" : "";
+        $tab1 = $flag ? "\t" : "";
+        $tab2 = $flag ? "\t\t" : "";
+        $tab3 = $flag ? "\t\t\t" : "";
+        $tab4 = $flag ? "\t\t\t\t" : "";
+        $tab5 = $flag ? "\t\t\t\t\t" : "";
+        $tab6 = $flag ? "\t\t\t\t\t\t" : "";
 
         $table_name = $data["table_name"];
         $primary_key = $data["primary_key"];
@@ -154,66 +177,80 @@
         $header .= '<script type="text/javascript" charset="utf-8" src="assets/js/apis/' . $table_name . '.js"></script>' . "\n";
 
         $body = "<div class='main-body'>" . "\n";
-            $body .= $tab . '<h1 class="mt-1r">DataTables Editor <span>' . $table_name . '</span></h1>' . "\n";
-            $body .= $tab . '<div class="row mt-1r mb-1r"><div class="col-md-12"><button class="btn btn-success" id="' . $table_name . '_new">New</button><button class="btn btn-success" id="export_excel">Export</button></div></div>' . "\n";
-            $body .= $tab . '<div class="row mt-2r">' . "\n";
-                $body .= $tab . $tab . '<div class="col-md-12">' . "\n";
-                    $body .= $tab . $tab . '<table cellpadding="0" cellspacing="0" border="0" class="display" id="' . $table_name . '_table" width="100%">' . "\n"; 
-                        $body .= $tab . $tab . $tab . '<thead><tr>' . "\n";
+            $body .= $tab1 . '<h1 class="mt-1r">DataTables Editor <span>' . $table_name . '</span></h1>' . "\n";
+            $body .= $tab1 . '<div class="row mt-1r mb-1r"><div class="col-md-12"><button class="btn btn-success" id="' . $table_name . '_new">New</button><button class="btn btn-success" id="export_excel">Export</button></div></div>' . "\n";
+            $body .= $tab1 . '<div class="row mt-2r">' . "\n";
+                $body .= $tab2 . '<div class="col-md-12">' . "\n";
+                    $body .= $tab2 . '<table cellpadding="0" cellspacing="0" border="0" class="display" id="' . $table_name . '_table" width="100%">' . "\n"; 
+                        $body .= $tab3 . '<thead><tr>' . "\n";
                             foreach($columns as $col ){
-                                $body .= $tab . $tab . $tab . $tab . "<th>{$col['title']}</th>" . "\n";
+                                $col_title = camelCase($col['title']);
+                                $body .= $tab4 . "<th>{$col_title}</th>" . "\n";
                             }
-                            $body .= $tab . $tab . $tab . $tab . "<th>Action</th>" . "\n";
-                        $body .= $tab . $tab . $tab . '</tr></thead>' . "\n";
-                        $body .= $tab . $tab . $tab . "<tbody id='" . $table_name . "_body'>" . "\n";
-                        $body .= $tab . $tab . $tab . "</tbody>" . "\n";
-                    $body .= $tab . $tab . '</table>' . "\n";
-                $body .= $tab . $tab . '</div>' . "\n";
-            $body .= $tab . "</div>" . "\n";
+                            $body .= $tab4 . "<th>Action</th>" . "\n";
+                        $body .= $tab3 . '</tr></thead>' . "\n";
+                        $body .= $tab3 . "<tbody id='" . $table_name . "_body'>" . "\n";
+                        $body .= $tab3 . "</tbody>" . "\n";
+                    $body .= $tab2 . '</table>' . "\n";
+                $body .= $tab2 . '</div>' . "\n";
+            $body .= $tab1 . "</div>" . "\n";
         $body .= "</div>" . "\n";
 
         // modal div
         $body .= '<div class="modal column-detail-modal" tabindex="-1" role="dialog" id="edit-modal">' . "\n";
-            $body .= $tab . '<div class="modal-dialog" role="document">' . "\n";
-                $body .= $tab . $tab . '<div class="modal-content">' . "\n";
-                    $body .= $tab . $tab . $tab . '<div class="modal-header">' . "\n";
-                        $body .= $tab . $tab . $tab . $tab . '<h5 class="modal-title">' . $table_name . ' Table</h5>' . "\n";
-                        $body .= $tab . $tab . $tab . $tab . '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' . "\n";
-                            $body .= $tab . $tab . $tab . $tab . $tab . '<span aria-hidden="true">&times;</span>' . "\n";
-                        $body .= $tab . $tab . $tab . $tab . '</button>' . "\n";
-                    $body .= $tab . $tab . $tab . '</div>' . "\n";
+            $body .= $tab1 . '<div class="modal-dialog modal-lg" role="document">' . "\n";
+                $body .= $tab2 . '<div class="modal-content">' . "\n";
+                    $body .= $tab3 . '<div class="modal-header">' . "\n";
+                        $body .= $tab4 . '<h5 class="modal-title">' . $table_name . ' Table</h5>' . "\n";
+                        $body .= $tab4 . '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' . "\n";
+                            $body .= $tab5 . '<span aria-hidden="true">&times;</span>' . "\n";
+                        $body .= $tab4 . '</button>' . "\n";
+                    $body .= $tab3 . '</div>' . "\n";
 
-                    $body .= $tab . $tab . $tab . '<form class="form">' . "\n";
-                        $body .= $tab . $tab . $tab . '<div class="modal-body">' . "\n";
+                    $body .= $tab3 . '<form class="form">' . "\n";
+                        $body .= $tab3 . '<div class="modal-body">' . "\n";
                             foreach($columns as $col ){
                                 extract($col );
-                                $body .= $tab . $tab . $tab . $tab . '<div class="form-group row">' . "\n";
-                                    $body .= $tab . $tab . $tab . $tab . $tab . '<label for="field-default-value" class="col-sm-4 col-form-label text-right">' . $title . '</label>' . "\n";
-                                    $body .= $tab . $tab . $tab . $tab . $tab . '<div class="col-sm-8">' . "\n";
-                                        if ($type == 'boolean'){
-                                            $body .= $tab . $tab . $tab . $tab . $tab . '<input type="checkbox" class="form-control" data-type="checkbox" id="' . $table_name . '_field_' . $title . '">' . "\n";
+                                $body .= $tab4 . '<div class="form-group row">' . "\n";
+                                    $body .= $tab5 . '<label for="field-default-value" class="col-sm-2 col-form-label text-right">' . camelCase($title) . '</label>' . "\n";
+                                    $body .= $tab5 . '<div class="col-sm-10">' . "\n";
+                                        if ($ref_table != "" && $ref_field != "" ){
+                                            $body .= $tab5 . "<select class='form-control' data-reffield='" . $ref_field . "' data-reftable='" . $ref_table . "' data-table='" . $table_name . "' data-type='relation' id='" . $table_name . '_field_' . $title . "'>\n";
+                                                /*$table_data = $db->load_data($ref_table );
+                                                while($row = $table_data->fetch(PDO::FETCH_ASSOC)){
+                                                    $str = " - ";
+                                                    foreach($row as $cell){
+                                                        $str .= $cell . " - ";
+                                                    }
+                                                    $body .= $tab6 . "<option value='" . $row[$ref_field] . "'>" . $str . "</option>";
+                                                }*/
+                                            $body .= $tab5 . "</select>";
+                                        }else if ($type == 'boolean'){
+                                            $body .= $tab5 . '<input type="checkbox" class="form-control" data-type="checkbox" id="' . $table_name . '_field_' . $title . '">' . "\n";
                                         }else if($type == 'date' || $type == 'datetime'){
-                                            $body .= $tab . $tab . $tab . $tab . $tab . '<input type="text" class="form-control" data-type="date" id="' . $table_name . '_field_' . $title . '">' . "\n";
+                                            $body .= $tab5 . '<input type="text" class="form-control" data-type="date" id="' . $table_name . '_field_' . $title . '">' . "\n";
                                         }else if($type == 'varchar(300)'){
                                             //$body .= '<input type="file" class="form-control" data-type="file" id="' . $table_name . '_field_' . $title . '">' . "\n";
-                                            $body .= $tab . $tab . $tab . $tab . $tab . '<div id="' . $table_name . '_field_' . $title . '_upload" data-type="file">Select File</div>';
-                                            $body .= $tab . $tab . $tab . $tab . $tab . '<button class="btn btn-primary" type="button" id="' . $table_name . '_field_' . $title . '_btn">Upload</button>';
-                                        }else{
-                                            $body .= $tab . $tab . $tab . $tab . $tab . '<input type="text" class="form-control" data-type="string" id="' . $table_name . '_field_' . $title . '">' . "\n";
+                                            $body .= $tab5 . '<div id="' . $table_name . '_field_' . $title . '_upload" data-type="file">Select File</div>';
+                                            $body .= $tab5 . '<button class="btn btn-primary" type="button" id="' . $table_name . '_field_' . $title . '_btn">Upload</button>';
+                                        }else if($type == 'text'){
+                                            $body .= $tab5 . '<textarea class="form-control" data-type="string" id="' . $table_name . '_field_' . $title . '"></textarea>' . "\n";
+                                        }else {
+                                            $body .= $tab5 . '<input type="text" class="form-control" data-type="string" id="' . $table_name . '_field_' . $title . '">' . "\n";
                                         }
-                                    $body .= $tab . $tab . $tab . $tab . '</div>' . "\n";
-                                $body .= $tab . $tab . $tab . '</div>' . "\n";
+                                    $body .= $tab4 . '</div>' . "\n";
+                                $body .= $tab3 . '</div>' . "\n";
                             }
-                        $body .= $tab . $tab . $tab . '</div>' . "\n";
-                    $body .= $tab . $tab . '</form>' . "\n";
+                        $body .= $tab3 . '</div>' . "\n";
+                    $body .= $tab2 . '</form>' . "\n";
 
-                    $body .= $tab . '<div class="modal-footer">' . "\n";
-                        $body .= $tab . $tab . $tab . '<input type="hidden" id="data-id" value="-1"/>' . "\n";
-                        $body .= $tab . $tab . $tab . '<button type="button" class="btn btn-primary" id="save_record">Save</button>' . "\n";
-                        $body .= $tab . $tab . $tab . '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>' . "\n";
-                    $body .= $tab . $tab . $tab . '</div>' . "\n";
-                $body .= $tab . $tab . '</div>' . "\n";
-            $body .= $tab . '</div>' . "\n";
+                    $body .= $tab1 . '<div class="modal-footer">' . "\n";
+                        $body .= $tab3 . '<input type="hidden" id="data-id" value="-1"/>' . "\n";
+                        $body .= $tab3 . '<button type="button" class="btn btn-primary" id="save_record">Save</button>' . "\n";
+                        $body .= $tab3 . '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>' . "\n";
+                    $body .= $tab3 . '</div>' . "\n";
+                $body .= $tab2 . '</div>' . "\n";
+            $body .= $tab1 . '</div>' . "\n";
         $body .= '</div>' . "\n";
 
         $html = $header.$body;
@@ -222,7 +259,12 @@
 
     function generate_content_javascript($data, $flag = true ){
         $endln = $flag ? "\n" : "";
-        $tab = $flag ? "\t" : "";
+        $tab1 = $flag ? "\t" : "";
+        $tab2 = $flag ? "\t\t" : "";
+        $tab3 = $flag ? "\t\t\t" : "";
+        $tab4 = $flag ? "\t\t\t\t" : "";
+        $tab5 = $flag ? "\t\t\t\t\t" : "";
+        $tab6 = $flag ? "\t\t\t\t\t\t" : "";
         
         $table_name = $data["table_name"];
         $primary_key = $data["primary_key"];
@@ -236,192 +278,217 @@
         $js .= $endln . 'var table;';
         $js .= $endln . 'var sel_tr;';
         $js .= $endln . '$(document).ready(function(){';
-            $js .= $endln . $tab . 'init_table();';
-            $js .= $endln . $tab . '$("#' . $table_name . '_new").on("click", new_record);';
-            $js .= $endln . $tab . '$("#' . $table_name . '_body").on("click", ".edit-item", edit_record );';
-            $js .= $endln . $tab . '$("#' . $table_name . '_body").on("click", ".delete-item", delete_record );';
-            $js .= $endln . $tab . '$("#export_excel").on("click", export_excel );';
-            $js .= $endln . $tab . '$("#save_record").on("click", save_record );';
-
-            /*$js .= $endln . $tab . 'var extraObj = $("#profiles_field_' . $title . '_upload").uploadFile({';
-                $js .= $endln . $tab . $tab . 'url:upload_url, fileName:"apifile", autoSubmit:false });';    
-            $js .= $endln . $tab . '$("#profiles_field_photo_btn").click(function(){extraObj.startUpload();});';*/
+            $js .= $endln . $tab1 . 'init_table();';
+            $js .= $endln . $tab1 . '$("#' . $table_name . '_new").on("click", new_record);';
+            $js .= $endln . $tab1 . '$("#' . $table_name . '_body").on("click", ".edit-item", edit_record );';
+            $js .= $endln . $tab1 . '$("#' . $table_name . '_body").on("click", ".delete-item", delete_record );';
+            $js .= $endln . $tab1 . '$("#export_excel").on("click", export_excel );';
+            $js .= $endln . $tab1 . '$("#save_record").on("click", save_record );';
+            $js .= $endln . $tab1 . '$("body").on("click", ".ajax-file-upload-red", function(e){e.preventDefault(); $(this).parent().remove()});';
+            $js .= $endln . $tab1 . '$("textarea").trumbowyg();';
+            
+            $js .= $endln . $tab1 . 'var objs = $("select[data-type=relation]");';
+            $js .= $endln . $tab1 . 'for(var i = 0; i < objs.length; i++ ){';
+                $js .= $endln . $tab2 . 'var obj = objs[i];';
+                $js .= $endln . $tab2 . 'var obj_id = $(obj ).attr("id");';
+                $js .= $endln . $tab2 . 'var ref_table = $(obj).attr("data-reftable");';
+                $js .= $endln . $tab2 . 'var ref_field = $(obj).attr("data-reffield");';
+                $js .= $endln . $tab2 . 'set_relation_table_data(obj_id, ref_table, ref_field );';
+            $js .= $endln . $tab1 . '}';
 
         $js .= $endln . '});';
         
-        $js .= $endln . $tab . 'function export_excel(){';
-            $js .= $endln . $tab . $tab . '$.ajax({';
-                $js .= $endln . $tab . $tab . $tab . 'url: export_url,';
-                $js .= $endln . $tab . $tab . $tab . 'data:{';
-                    $js .= $endln . $tab . $tab . $tab . $tab . 'table: "' . $table_name . '",';
-                $js .= $endln . $tab . $tab . '},';
-                $js .= $endln . $tab . $tab . 'type: "post",';
-                $js .= $endln . $tab . $tab . 'dataType: "json",';
-                $js .= $endln . $tab . $tab . 'success: function(data){';
-                    $js .= $endln . $tab . $tab . $tab . 'if (data["status"] == "success" ){';
-                        $js .= $endln . $tab . $tab . $tab . $tab . $tab . 'window.open("/plugins/excels/" + data["file"], "_blank");';
-                    $js .= $endln . $tab . $tab . $tab . $tab . '}else{';
-                        $js .= $endln . $tab . $tab . $tab . 'toastr.error("failed");';
-                        $js .= $endln . $tab . $tab . $tab . '}';
-                $js .= $endln . $tab . $tab . $tab . '}';
-            $js .= $endln . $tab . $tab . '});';
-        $js .= $endln . $tab . '}';
+        $js .= $endln . 'function export_excel(){';
+            $js .= $endln . $tab1 . '$.ajax({';
+                $js .= $endln . $tab2 . 'url: export_url,';
+                $js .= $endln . $tab2 . 'data:{';
+                    $js .= $endln . $tab3 . 'table: "' . $table_name . '",';
+                $js .= $endln . $tab2 . '},';
+                $js .= $endln . $tab2 . 'type: "post",';
+                $js .= $endln . $tab2 . 'dataType: "json",';
+                $js .= $endln . $tab2 . 'success: function(data){';
+                    $js .= $endln . $tab3 . 'if (data["status"] == "success" ){';
+                        $js .= $endln . $tab4 . 'window.open("/plugins/excels/" + data["file"], "_blank");';
+                    $js .= $endln . $tab3 . '}else{';
+                        $js .= $endln . $tab4 . 'toastr.error("failed");';
+                        $js .= $endln . $tab3 . '}';
+                $js .= $endln . $tab2 . '}';
+            $js .= $endln . $tab1 . '});';
+        $js .= $endln . '}';
 
         $js .= $endln . 'function save_record(){';
-            $js .= $endln . $tab . 'var id = $("#data-id").val();';
+            $js .= $endln . $tab1 . 'var id = $("#data-id").val();';
             foreach($columns as $col ){
                 extract($col );
                 if ($type == 'varchar(300)'){
                     array_push($uploads, $title );
-                    $js .= $endln . $tab . 'var tr_' . $title . ' = $("#' . $table_name . '_field_' . $title . '_upload").attr("data-file");';
+                    $js .= $endln . $tab1 . 'var tr_' . $title . ' = $("#' . $table_name . '_field_' . $title . '_upload").attr("data-file");';
+                }else if($type == 'text'){
+                    $js .= $endln . $tab1 . 'var tr_' . $title . ' = $("#' . $table_name . '_field_' . $title . '").trumbowyg(\'html\');';
                 }else{
-                    $js .= $endln . $tab . 'var tr_' . $title . ' = $("#' . $table_name . '_field_' . $title . '").val();';
+                    $js .= $endln . $tab1 . 'var tr_' . $title . ' = $("#' . $table_name . '_field_' . $title . '").val();';
                 }
             }
-            $js .= $endln . $tab . '$.ajax({';
-                $js .= $endln . $tab . $tab . 'url: base_url,';
-                $js .= $endln . $tab . $tab . 'data:{';
-                    $js .= $endln . $tab . $tab . $tab . 'type: "save",';
-                    $js .= $endln . $tab . $tab . $tab . 'id: id,';
+            $js .= $endln . $tab1 . '$.ajax({';
+                $js .= $endln . $tab2 . 'url: base_url,';
+                $js .= $endln . $tab2 . 'data:{';
+                    $js .= $endln . $tab3 . 'type: "save",';
+                    $js .= $endln . $tab3 . 'id: id,';
                     foreach($columns as $col ){
                         extract($col );
-                        $js .= $endln . $tab . $tab . $tab . $title . ': tr_' . $title . ",";
+                        $js .= $endln . $tab3 . $title . ': tr_' . $title . ",";
                     }
-                $js .= $endln . $tab . $tab . '},';
-                $js .= $endln . $tab . $tab . 'type: "post",';
-                $js .= $endln . $tab . $tab . 'dataType: "json",';
-                $js .= $endln . $tab . $tab . 'success: function(data){';
-                    $js .= $endln . $tab . $tab . $tab . 'if (data["status"] == "success" ){';
-                        $js .= $endln . $tab . $tab . $tab . $tab . 'if (id == "-1"){';
-                            $js .= $endln . $tab . $tab . $tab . $tab . $tab . 'var table_id = data["id"];';
-                            $js .= $endln . $tab . $tab . $tab . $tab . $tab . 'table.row.add( [';
+                $js .= $endln . $tab2 . '},';
+                $js .= $endln . $tab2 . 'type: "post",';
+                $js .= $endln . $tab2 . 'dataType: "json",';
+                $js .= $endln . $tab2 . 'success: function(data){';
+                    $js .= $endln . $tab3 . 'if (data["status"] == "success" ){';
+                        $js .= $endln . $tab4 . 'if (id == "-1"){';
+                            $js .= $endln . $tab5 . 'var table_id = data["id"];';
+                            $js .= $endln . $tab5 . 'table.row.add( [';
                             foreach($columns as $col ){
                                 extract($col );
                                 if ($type == "varchar(300)"){
-                                    $js .= '"<img width=\'100\' src=\'/plugins/uploads/" + tr_' . $title . ' + "\'>", ';
+                                    $js .= '"<img width=\'100\' data-file=\'tr_' . $title . '\' class=\'' . $table_name . '_' . $title . '\' src=\'/plugins/uploads/" + tr_' . $title . ' + "\'>", ';
                                 }else{
-                                    $js .= 'tr_' . $title . ', ';
+                                    $js .= '"<div class=\'' . $table_name . '_' . $title . '\'>" + tr_' . $title . ' + "</div>", ';
                                 }                                
                             }//elete-item" data-id="' + table_id + '"
                             $js .= "'" . '<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="\'' .
                             " + table_id + '" . '"><i class="fa fa-edit"></i></button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id="' . "'+ table_id + '" . '"><i class="fa fa-trash"></i></button>' . "'" . ']).draw( false );';
-                        $js .= $endln . $tab . $tab . $tab . $tab . '}else{';
+                        $js .= $endln . $tab4 . '}else{';
                             foreach($columns as $col ){
                                 extract($col );
                                 if ($type == 'varchar(300)'){
-                                    $js .= $endln . $tab . $tab . $tab . $tab . $tab . '$("#' . $table_name . '_table tr.selected").find(".' . $table_name. '_td_' . $title . '").html("<img width=\'100\' src=\'/plugins/uploads/" + tr_' . $title . ' + "\'>");';
+                                    $js .= $endln . $tab5 . '$(sel_tr).find(".' . $table_name. '_' . $title . '").html("<img width=\'100\' data-file=\'tr_' . $title . '\' src=\'/plugins/uploads/" + tr_' . $title . ' + "\'>");';
                                 }else{
-                                    $js .= $endln . $tab . $tab . $tab . $tab . $tab . '$("#' . $table_name . '_table tr.selected").find(".' . $table_name. '_td_' . $title . '").text(tr_' . $title . ' );';
+                                    $js .= $endln . $tab5 . '$(sel_tr).find(".' . $table_name. '_' . $title . '").html(tr_' . $title . ' );';
                                 }
                             }
-                        $js .= $endln . $tab . $tab . $tab . $tab . '}';
-                        $js .= $endln . $tab . $tab . $tab . $tab . '$("#edit-modal").modal("hide");';
-                    $js .= $endln . $tab . $tab . $tab . '}';
-                $js .= $endln . $tab . $tab . '}';
+                        $js .= $endln . $tab4 . '}';
+                        $js .= $endln . $tab4 . '$("#edit-modal").modal("hide");';
+                    $js .= $endln . $tab3 . '}';
+                $js .= $endln . $tab2 . '}';
 
-            $js .= $endln . $tab . '});';
+            $js .= $endln . $tab1 . '});';
         $js .= $endln . '}';
 
         $js .= $endln . 'function new_record(){';
-            $js .= $endln . $tab . '$(".ajax-file-upload-statusbar").remove();';
-            $js .= $endln . $tab . '$("#data-id").val("-1");';
-            $js .= $endln . $tab . '$("#edit-modal").modal("show");';
+            $js .= $endln . $tab1.  '$("#edit-modal input").val("");';
+            $js .= $endln . $tab1 . '$(".ajax-file-upload-statusbar").remove();';
+            $js .= $endln . $tab1 . '$("#data-id").val("-1");';
+            $js .= $endln . $tab1 . '$("#edit-modal").modal("show");';
         $js .= $endln . '}';
 
         $js .= $endln . 'function delete_record(){';
-            $js .= $endln . $tab . 'var id = $(this).attr("data-id");';
-            $js .= $endln . $tab . 'sel_tr = $(this).parent().parent();';
-            $js .= $endln . $tab . 'if (confirm("Are you going to delete this record?")){';
-                $js .= $endln . $tab . $tab . '$.ajax({';
-                    $js .= $endln . $tab . $tab . $tab . 'url: base_url,';
-                    $js .= $endln . $tab . $tab . $tab . 'data:{';
-                        $js .= $endln . $tab . $tab . $tab . $tab . "type: 'delete',";
-                        $js .= $endln . $tab . $tab . $tab . $tab . "id: id";
-                    $js .= $endln . $tab . $tab . $tab . '},';
-                    $js .= $endln . $tab . $tab . $tab . 'type:"post",';
-                    $js .= $endln . $tab . $tab . $tab . 'dataType: "json",';
-                    $js .= $endln . $tab . $tab . $tab . 'success: function(data){';
-                        $js .= $endln . $tab . $tab . $tab . $tab . 'if (data["status"] == "success"){';
-                            $js .= $endln . $tab . $tab . $tab . $tab . $tab . "table.row('.selected').remove().draw( false );";
-                        $js .= $endln . $tab . $tab . $tab . $tab . '}';
-                    $js .= $endln . $tab.  $tab . $tab . '}';
-                $js .= $endln . $tab . $tab . '})';
-            $js .= $endln . $tab . '}';
+            $js .= $endln . $tab1 . 'var id = $(this).attr("data-id");';
+            $js .= $endln . $tab1 . 'sel_tr = $(this).parent().parent();';
+            $js .= $endln . $tab1 . 'if (confirm("Are you going to delete this record?")){';
+                $js .= $endln . $tab2 . '$.ajax({';
+                    $js .= $endln . $tab3 . 'url: base_url,';
+                    $js .= $endln . $tab3 . 'data:{';
+                        $js .= $endln . $tab4 . "type: 'delete',";
+                        $js .= $endln . $tab4 . "id: id";
+                    $js .= $endln . $tab3 . '},';
+                    $js .= $endln . $tab3 . 'type:"post",';
+                    $js .= $endln . $tab3 . 'dataType: "json",';
+                    $js .= $endln . $tab3 . 'success: function(data){';
+                        $js .= $endln . $tab4 . 'if (data["status"] == "success"){';
+                            $js .= $endln . $tab5 . "table.row('.selected').remove().draw( false );";
+                        $js .= $endln . $tab4 . '}';
+                    $js .= $endln . $tab3 . '}';
+                $js .= $endln . $tab2 . '})';
+            $js .= $endln . $tab1 . '}';
         $js .= $endln . '}';
 
         $js .= $endln . 'function edit_record(){';
-            $js .= $endln . $tab . '$(".ajax-file-upload-statusbar").remove();';
-            $js .= $endln . $tab . "var id = $(this).attr('data-id');";
-            $js .= $endln . $tab . "sel_tr = $(this).parent().parent();";
-            $js .= $endln . $tab . '$("#data-id").val(id );';
+            $js .= $endln . $tab1 . '$(".ajax-file-upload-statusbar").remove();';
+            $js .= $endln . $tab1 . "var id = $(this).attr('data-id');";
+            $js .= $endln . $tab1 . "sel_tr = $(this).parent().parent();";
+            $js .= $endln . $tab1 . '$("#data-id").val(id );';
             foreach($columns as $col ){
                 extract($col );
-                $js .= $endln . $tab . $tab . '$("#' . $table_name . '_field_' . $title . '").val($(sel_tr).find(".' . $table_name . '_td_' . $title . '").text());';
+                if ($type == "varchar(300)"){
+                    if ($title && $title != "" ){
+                        $js .= $endln . $tab1 . 'var img_file = $(sel_tr).find(".' . $table_name . '_' . $title . '").attr("data-file");';
+                        $js .= $endln . $tab1 . 'var container = $("#' . $table_name . '_field_' . $title . '_upload + .ajax-file-upload-container");';
+                        $js .= $endln . $tab1 . 'var status = $("<div>").addClass("ajax-file-upload-statusbar").appendTo(container );';
+                        $js .= $endln . $tab1 . '$("<div>").addClass("ajax-file-upload-filename").text(img_file ).appendTo(status);';
+                        $js .= $endln . $tab1 . '$("<div>").addClass("ajax-file-upload-red").text("Delete").appendTo(status );';
+                        $js .= $endln . $tab1 . '$("#' . $table_name . '_field_' . $title . '_upload").attr("data-type", "file").attr("data-file", img_file);';
+                    }
+                }else if($type == "text"){
+                    $js .= $endln . $tab1 . '$("#' . $table_name . '_field_' . $title . '").trumbowyg("html",$(sel_tr).find(".' . $table_name . '_' . $title . '").html());';
+                }else{
+                    $js .= $endln . $tab1 . '$("#' . $table_name . '_field_' . $title . '").val($(sel_tr).find(".' . $table_name . '_' . $title . '").html());';
+                }
             }
-            $js .= '$("#edit-modal").modal("show");';
+            $js .= $endln . $tab1 . '$("#edit-modal").modal("show");';
         $js .= $endln . '}';
 
         $js .= $endln . 'function init_table(){';
-            $js .= $endln . $tab . '$.ajax({';
-                $js .= $endln . $tab . $tab . 'url: base_url,';
-                $js .= $endln . $tab . $tab . 'data:{';
-                    $js .= $endln . $tab . $tab . $tab . 'type: "init_table"';
-                $js .= $endln . $tab . $tab . '},';
-                $js .= $endln . $tab . $tab . 'dataType: "json",';
-                $js .= $endln . $tab . $tab . 'type: "post",';
-                $js .= $endln . $tab . $tab . 'success: function(data ){';
-                    $js .= $endln . $tab . $tab . $tab . 'if (data["status"] == "success" ){';
-                        $js .= $endln . $tab . $tab . $tab . $tab . 'load_data(data["data"]);';
-                    $js .= $endln . $tab . $tab . $tab . '}';
-                $js .= $endln . $tab . $tab . '}';
-            $js .= $endln . $tab . '});';
+            $js .= $endln . $tab1 . '$.ajax({';
+                $js .= $endln . $tab2 . 'url: base_url,';
+                $js .= $endln . $tab2 . 'data:{';
+                    $js .= $endln . $tab3 . 'type: "init_table"';
+                $js .= $endln . $tab2 . '},';
+                $js .= $endln . $tab2 . 'dataType: "json",';
+                $js .= $endln . $tab2 . 'type: "post",';
+                $js .= $endln . $tab2 . 'success: function(data ){';
+                    $js .= $endln . $tab3 . 'if (data["status"] == "success" ){';
+                        $js .= $endln . $tab4 . 'load_data(data["data"]);';
+                    $js .= $endln . $tab3 . '}';
+                $js .= $endln . $tab2 . '}';
+            $js .= $endln . $tab1 . '});';
         $js .= $endln . '}';
 
         $js .= $endln . 'function load_data(data ){';
-            $js .= $endln . $tab . 'var parent = $("#' . $table_name . '_body");';
-            $js .= $endln . $tab . 'for(var i = 0; i < data.length; i++ ){';
-                $js .= $endln . $tab . $tab . 'var item = data[i];';
-                $js .= $endln . $tab . $tab . "var tr = $('<tr>').attr('data-id', item[0]).appendTo(parent );";
+            $js .= $endln . $tab1 . 'var parent = $("#' . $table_name . '_body");';
+            $js .= $endln . $tab1 . 'for(var i = 0; i < data.length; i++ ){';
+                $js .= $endln . $tab2 . 'var item = data[i];';
+                $js .= $endln . $tab2 . "var tr = $('<tr>').attr('data-id', item[0]).appendTo(parent );";
                 foreach($columns as $key=> $col ){
                     extract($col );
                     if ($type == "varchar(300)"){
-                        //$js .= $endln . $tab . $tab . $tab . '$("<td>").text(item[' . ($key + 1) . ']).addClass("' . $table_name . '_td_' . $title . '").appendTo(tr);';
-                        $js .= $endln . $tab . $tab . $tab . '$("<td>").html("<img width=\'100\' src=\'/plugins/uploads/" + item[' . ($key + 1) . '] + "\'>").addClass("profiles_td_photo").appendTo(tr)';
+                        //$js .= $endln . $tab3 . '$("<td>").html("<img width=\'100\' src=\'/plugins/uploads/" + item[' . ($key + 1) . '] + "\'>").addClass("profiles_td_photo").appendTo(tr)';
+                        $js .= $endln . $tab2 . 'td = $("<td>").appendTo(tr);';
+                        $js .= $endln . $tab2 . '$("<img>").attr("width", "100").attr("data-file", item[' . ($key + 1) . ']).attr("src", "/plugins/uploads/" + item[' . ($key + 1) . ']).addClass("' . $table_name . '_' . $title . '").appendTo(td);';
                     }else{
-                        $js .= $endln . $tab . $tab . $tab . '$("<td>").text(item[' . ($key + 1) . ']).addClass("' . $table_name . '_td_' . $title . '").appendTo(tr);';
+                        $js .= $endln . $tab2 . 'td = $("<td>").appendTo(tr);';
+		                $js .= $endln . $tab2 . '$("<div>").addClass("' . $table_name . '_' . $title . '").html(item[' . ($key + 1). ']).appendTo(td);';
+                        //$js .= $endln . $tab3 . '$("<td>").html(item[' . ($key + 1) . ']).addClass("' . $table_name . '_td_' . $title . '").appendTo(tr);';
                     }
-                    
                 }
-                $js .= $endln . $tab . $tab . 'var td = $("<td>").appendTo(tr );';
-                $js .= $endln . $tab . $tab . '$("<button>").addClass("btn btn-xs btn-sm btn-primary mr-6 edit-item")';
-                            $js .= $endln . $tab . $tab.  $tab . '.attr("data-id", item[0])';
-                            $js .= $endln . $tab . $tab.  $tab . '.html("<i class=' . "'fa fa-edit'" . '></i>").appendTo(td );';
-                $js .= $endln . $tab . $tab . '$("<button>").addClass("btn btn-xs btn-sm btn-secondary delete-item")';
-                            $js .= $endln . $tab . $tab.  $tab . '.attr("data-id", item[0])';
-                            $js .= $endln . $tab . $tab.  $tab . '.html("<i class=' . "'fa fa-trash'" . '></i>").appendTo(td );';
-            $js .= $endln . $tab . '}';
-            $js .= $endln . $tab . 'table = $("#' . $table_name . '_table").DataTable();';
+                $js .= $endln . $tab2 . 'var td = $("<td>").appendTo(tr );';
+                $js .= $endln . $tab2 . '$("<button>").addClass("btn btn-xs btn-sm btn-primary mr-6 edit-item")';
+                            $js .= $endln . $tab3 . '.attr("data-id", item[0])';
+                            $js .= $endln . $tab3 . '.html("<i class=' . "'fa fa-edit'" . '></i>").appendTo(td );';
+                $js .= $endln . $tab2 . '$("<button>").addClass("btn btn-xs btn-sm btn-secondary delete-item")';
+                            $js .= $endln . $tab3 . '.attr("data-id", item[0])';
+                            $js .= $endln . $tab3 . '.html("<i class=' . "'fa fa-trash'" . '></i>").appendTo(td );';
+            $js .= $endln . $tab1 . '}';
+            $js .= $endln . $tab1 . 'table = $("#' . $table_name . '_table").DataTable();';
         
-            $js .= $endln . $tab . "$('#" . $table_name . "_table tbody').on( 'click', 'tr', function () {";
-                $js .= $endln . $tab . $tab . "if ( $(this).hasClass('selected') ) {";
-                    $js .= $endln . $tab . $tab . $tab . "$(this).removeClass('selected');";
-                $js .= $endln . $tab . $tab . "}";
-                $js .= $endln . $tab . $tab . "else {";
-                    $js .= $endln . $tab . $tab . "table.$('tr.selected').removeClass('selected');";
-                    $js .= $endln . $tab . $tab . "$(this).addClass('selected');";
-                $js .= $endln . $tab . $tab . "}";
-            $js .= $endln . $tab . "});";
+            $js .= $endln . $tab1 . "$('#" . $table_name . "_table tbody').on( 'click', 'tr', function () {";
+                $js .= $endln . $tab2 . "if ( $(this).hasClass('selected') ) {";
+                    $js .= $endln . $tab3 . "$(this).removeClass('selected');";
+                $js .= $endln . $tab2 . "}";
+                $js .= $endln . $tab2 . "else {";
+                    $js .= $endln . $tab2 . "table.$('tr.selected').removeClass('selected');";
+                    $js .= $endln . $tab2 . "$(this).addClass('selected');";
+                $js .= $endln . $tab2 . "}";
+            $js .= $endln . $tab1 . "});";
         $js .= $endln . "}"; 
 
         $js .= $endln . '$(document).ready(function(){';
             foreach($uploads as $item ){
-                $js .= $endln . $tab . 'var extraObj = $("#' . $table_name . '_field_' . $item . '_upload").uploadFile({';
-                    $js .= $endln .$tab .$tab . 'url:upload_url, fileName:"apifile", autoSubmit:false,returnType:"json",';
+                $js .= $endln . $tab1 . 'var extraObj = $("#' . $table_name . '_field_' . $item . '_upload").uploadFile({';
+                    $js .= $endln .$tab2 . 'url:upload_url, fileName:"apifile", autoSubmit:false,returnType:"json",';
                     $js .= 'onSuccess:function(files,data,xhr,pd){';
                         $js .= 'if (data["status"] == "success"){$("#' . $table_name . '_field_' . $item . '_upload").attr("data-file", data["file"] );}';
                         $js .= 'else{$("#' . $table_name . '_field_' . $item . '_upload").attr("data-file", "" );}';
                     $js .= '}});';
-                $js .= $endln . $tab . '$("#' . $table_name . '_field_' . $item . '_btn").click(function(){extraObj.startUpload();});';
+                $js .= $endln . $tab1 . '$("#' . $table_name . '_field_' . $item . '_btn").click(function(){extraObj.startUpload();});';
             }
 
         $js .= $endln . '});';
@@ -431,7 +498,12 @@
 
     function generate_content_php($data, $flag = true ){
         $endln = $flag ? "\n" : "";
-        $tab = $flag ? "\t" : "";
+        $tab1 = $flag ? "\t" : "";
+        $tab2 = $flag ? "\t\t" : "";
+        $tab3 = $flag ? "\t\t\t" : "";
+        $tab4 = $flag ? "\t\t\t\t" : "";
+        $tab5 = $flag ? "\t\t\t\t\t" : "";
+        $tab6 = $flag ? "\t\t\t\t\t\t" : "";
 
         $table_name = $data["table_name"];
         $primary_key = $data["primary_key"];
@@ -451,68 +523,68 @@
         }
 
         $php  = '<?php';
-            $php .= $endln . $tab .  'include_once("../../../../config/config.php");';
-            $php .= $endln . $tab .  'include_once("./' . $table_name . '_sql.php");';
+            $php .= $endln . $tab1 .  'include_once("../../../../config/config.php");';
+            $php .= $endln . $tab1 .  'include_once("./' . $table_name . '_sql.php");';
             $php .= "include_once '../../../../config/database.php';";
             $php .= '$db = new Database();';
             $php .= '$db->getConnection(API_DB_NAME );';
             //$php .= $endln . $tab .  'include_once("../db.php");';
             //$php .= $endln . $tab .  '$db = new dbObj();';
-            $php .= $endln . $tab .  'extract($_POST);';
-            $php .= $endln . $tab .  'switch($type ){';
-                $php .= $endln . $tab .  $tab . 'case "init_table":';
-                    $php .= $endln . $tab .  $tab . $tab . 'init_table();';
-                    $php .= $endln . $tab .  $tab . $tab . 'break;';
-                $php .= $endln . $tab. $tab .  'case "delete":';
-                    $php .= $endln . $tab .  $tab . $tab . 'delete_tr($id);';
-                    $php .= $endln . $tab .  $tab . $tab . 'break;';
-                $php .= $endln . $tab. $tab .  'case "save":';
-                    $php .= $endln . $tab .  $tab .  $tab .  'save_tr($id ';
+            $php .= $endln . $tab1 .  'extract($_POST);';
+            $php .= $endln . $tab1 .  'switch($type ){';
+                $php .= $endln . $tab2 . 'case "init_table":';
+                    $php .= $endln . $tab3 . 'init_table();';
+                    $php .= $endln . $tab3 . 'break;';
+                $php .= $endln . $tab2 .  'case "delete":';
+                    $php .= $endln . $tab3 . 'delete_tr($id);';
+                    $php .= $endln . $tab3 . 'break;';
+                $php .= $endln . $tab2 .  'case "save":';
+                    $php .= $endln . $tab3 .  'save_tr($id ';
                         foreach($columns as $col ){
                             extract($col );
                             $php .= ",$" . $title;
                         }
                     $php .= ');';
-                    $php .= $endln . $tab. $tab .  $tab . 'break;';
-            $php .= $endln . $tab . '}';
+                    $php .= $endln . $tab3 . 'break;';
+            $php .= $endln . $tab1 . '}';
             
             $php .= $endln . 'function init_table(){';
-                $php .= $endln . $tab . '$query = $GLOBALS["query"];';
-                $php .= $endln . $tab . '$db = $GLOBALS["db"];';
-                //$php .= $endln . $tab . '$db->run_query($query );';
-                $php .= $endln . $tab . '$result = $db->load_data("' . $table_name . '");';
+                $php .= $endln . $tab1 . '$query = $GLOBALS["query"];';
+                $php .= $endln . $tab1 . '$db = $GLOBALS["db"];';
+                //$php .= $endln . $tab1 . '$db->run_query($query );';
+                $php .= $endln . $tab1 . '$result = $db->load_data("' . $table_name . '");';
         
-                $php .= $endln . $tab . '$data = [];';
-                $php .= $endln . $tab . 'if($result){';
-                    $php .= $endln . $tab . $tab . 'while ($row = $result->fetch(PDO::FETCH_BOTH)){';
-                        $php .= $endln . $tab . $tab . $tab . '$item = [];';
-                        $php .= $endln . $tab . $tab . $tab . 'array_push($item, $row["id"]);';
+                $php .= $endln . $tab1 . '$data = [];';
+                $php .= $endln . $tab1 . 'if($result){';
+                    $php .= $endln . $tab2 . 'while ($row = $result->fetch(PDO::FETCH_BOTH)){';
+                        $php .= $endln . $tab3 . '$item = [];';
+                        $php .= $endln . $tab3 . 'array_push($item, $row["id"]);';
                         foreach($columns as $col ){
                             extract($col );
-                            $php .= $endln . $tab . $tab . $tab . 'array_push($item, $row["' . $title . '"]);';
+                            $php .= $endln . $tab3 . 'array_push($item, $row["' . $title . '"]);';
                         }
-                        $php .= $endln . $tab . $tab . $tab . 'array_push($data, $item );';
-                    $php .= $endln . $tab . $tab . '}';
-                $php .= $endln . $tab . '}';
-                $php .= $endln . $tab . 'echo json_encode(["status"=>"success", "data"=> $data ]);';
+                        $php .= $endln . $tab3 . 'array_push($data, $item );';
+                    $php .= $endln . $tab2 . '}';
+                $php .= $endln . $tab1 . '}';
+                $php .= $endln . $tab1 . 'echo json_encode(["status"=>"success", "data"=> $data ]);';
             $php .= $endln . '}';
 
             $php .= $endln . 'function delete_tr($id ){';
-                $php .= $endln . $tab . '$query = "delete from ' . $table_name . ' where ' . $primary_key . '={$id}";';
-                $php .= $endln . $tab . '$db = $GLOBALS["db"];';
-                $php .= $endln . $tab . '$db->run_query($query );';
-                $php .= $endln . $tab . 'echo json_encode(["status"=> "success"]);';
+                $php .= $endln . $tab1 . '$query = "delete from ' . $table_name . ' where ' . $primary_key . '={$id}";';
+                $php .= $endln . $tab1 . '$db = $GLOBALS["db"];';
+                $php .= $endln . $tab1 . '$db->run_query($query );';
+                $php .= $endln . $tab1 . 'echo json_encode(["status"=> "success"]);';
             $php .= $endln . '}';
 
             $php .= $endln . 'function save_tr($id, ' . $tmp_key . '){';
-                $php .= $endln . $tab . '$db = $GLOBALS["db"];';
-                $php .= $endln . $tab . 'if ($id == "-1"){';
-                    $php .= $endln . $tab . $tab . '$query = "insert into ' . $table_name . ' set ' . $tmp . '";';
-                $php .= $endln . $tab . '}else{';
-                    $php .= $endln . $tab . $tab . '$query = "update ' . $table_name . ' set ' . $tmp . ' where ' . $primary_key . '={$id}";';
-                $php .= $endln . $tab . '}';
-                $php .= $endln . $tab . '$id = $db->update_query($query );';
-                $php .= $endln . $tab . 'echo json_encode(["status"=> "success", "' . $primary_key . '"=> $id ]);';
+                $php .= $endln . $tab1 . '$db = $GLOBALS["db"];';
+                $php .= $endln . $tab1 . 'if ($id == "-1"){';
+                    $php .= $endln . $tab2 . '$query = "insert into ' . $table_name . ' set ' . $tmp . '";';
+                $php .= $endln . $tab1 . '}else{';
+                    $php .= $endln . $tab2 . '$query = "update ' . $table_name . ' set ' . $tmp . ' where ' . $primary_key . '={$id}";';
+                $php .= $endln . $tab1 . '}';
+                $php .= $endln . $tab1 . '$id = $db->update_query($query );';
+                $php .= $endln . $tab1 . 'echo json_encode(["status"=> "success", "' . $primary_key . '"=> $id ]);';
             $php .= $endln . '}';
 
         $php .= $endln . "?>";

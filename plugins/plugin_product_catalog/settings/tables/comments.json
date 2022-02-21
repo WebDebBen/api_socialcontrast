@@ -1,0 +1,1 @@
+{"table_name":"comments","primary_key":"id","columns":[{"title":"post_id","type":"integer","requried":"true","default_value":"","show_table":"true","editor_table":"true"},{"title":"content","type":"varchar(255)","requried":"true","default_value":"'1'","show_table":"true","editor_table":"true"}],"refs":[{"field":"post_id","ref_table":"posts","ref_field":"id"}]}
