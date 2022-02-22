@@ -28,18 +28,20 @@
 				</button>
 			</div>
 			<form class="form">
-			<div class="modal-body">
-				<div class="form-group row">
-					<label for="field-default-value" class="col-sm-4 col-form-label text-right">name</label>
-					<div class="col-sm-8">
-					<input type="text" class="form-control" data-type="string" id="profiles_field_name">
+				<div class="modal-body">
+					<div class="form-group row">
+						<label for="field-default-value" class="col-sm-4 col-form-label text-right">name</label>
+						<div class="col-sm-8">
+						<input type="text" class="form-control" data-type="string" id="profiles_field_name">
+					</div>
 				</div>
-			</div>
 				<div class="form-group row">
 					<label for="field-default-value" class="col-sm-4 col-form-label text-right">photo</label>
 					<div class="col-sm-8">
-					<div id="profiles_field_photo_upload" data-type="file">Select File</div>					<button class="btn btn-primary" type="button" id="profiles_field_photo_btn">Upload</button>				</div>
-			</div>
+						<div id="profiles_field_photo_upload" data-type="file">Select File</div>					
+						<button class="btn btn-primary" type="button" id="profiles_field_photo_btn">Upload</button>				
+					</div>
+				</div>
 				<div class="form-group row">
 					<label for="field-default-value" class="col-sm-4 col-form-label text-right">bigo</label>
 					<div class="col-sm-8">
@@ -48,7 +50,7 @@
 			</div>
 			</div>
 		</form>
-	<div class="modal-footer">
+		<div class="modal-footer">
 			<input type="hidden" id="data-id" value="-1"/>
 			<button type="button" class="btn btn-primary" id="save_record">Save</button>
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -284,9 +284,14 @@
             $js .= $endln . $tab1 . '$("#' . $table_name . '_body").on("click", ".delete-item", delete_record );';
             $js .= $endln . $tab1 . '$("#export_excel").on("click", export_excel );';
             $js .= $endln . $tab1 . '$("#save_record").on("click", save_record );';
-            $js .= $endln . $tab1 . '$("body").on("click", ".ajax-file-upload-red", function(e){e.preventDefault(); $(this).parent().remove()});';
+            //$js .= $endln . $tab1 . '$("body").on("click", ".ajax-file-upload-red", function(e){e.preventDefault(); $(this).parent().remove()});';
+            $js .= $endln . $tab1 . '$("body").on("click", ".ajax-file-upload-red", function(e){';
+                $js .= $endln . $tab2 . 'e.preventDefault();';
+                $js .= $endln . $tab2 . '$(this).parent().parent().find("+ .btn").show();';
+                $js .= $endln . $tab2 . '$(this).parent().parent().parent().find("div[data-type=file]").attr("data-file", "").show();';
+                $js .= $endln . $tab2 . '$(this).parent().remove()';
+            $js .= $endln . $tab1 . '});';
             $js .= $endln . $tab1 . '$("textarea").trumbowyg();';
-            
             $js .= $endln . $tab1 . 'var objs = $("select[data-type=relation]");';
             $js .= $endln . $tab1 . 'for(var i = 0; i < objs.length; i++ ){';
                 $js .= $endln . $tab2 . 'var obj = objs[i];';
@@ -349,7 +354,7 @@
                             foreach($columns as $col ){
                                 extract($col );
                                 if ($type == "varchar(300)"){
-                                    $js .= '"<img width=\'100\' data-file=\'tr_' . $title . '\' class=\'' . $table_name . '_' . $title . '\' src=\'/plugins/uploads/" + tr_' . $title . ' + "\'>", ';
+                                    $js .= '"<img width=\'100\' data-file=\'" + tr_' . $title . '+"\' class=\'' . $table_name . '_' . $title . '\' src=\'/plugins/uploads/" + tr_' . $title . ' + "\'>", ';
                                 }else{
                                     $js .= '"<div class=\'' . $table_name . '_' . $title . '\'>" + tr_' . $title . ' + "</div>", ';
                                 }                                
@@ -360,7 +365,7 @@
                             foreach($columns as $col ){
                                 extract($col );
                                 if ($type == 'varchar(300)'){
-                                    $js .= $endln . $tab5 . '$(sel_tr).find(".' . $table_name. '_' . $title . '").html("<img width=\'100\' data-file=\'tr_' . $title . '\' src=\'/plugins/uploads/" + tr_' . $title . ' + "\'>");';
+                                    $js .= $endln . $tab5 . '$(sel_tr).find(".' . $table_name. '_' . $title . '").attr("width", "100").attr("data-file", tr_' . $title . ').attr("src", "/plugins/uploads/" + tr_' . $title . ');';
                                 }else{
                                     $js .= $endln . $tab5 . '$(sel_tr).find(".' . $table_name. '_' . $title . '").html(tr_' . $title . ' );';
                                 }
@@ -376,6 +381,8 @@
         $js .= $endln . 'function new_record(){';
             $js .= $endln . $tab1.  '$("#edit-modal input").val("");';
             $js .= $endln . $tab1 . '$(".ajax-file-upload-statusbar").remove();';
+            $js .= $endln . $tab1 . '$("[data-type=file]").show();';
+            $js .= $endln . $tab1 . '$("[data-type=file]").parent().find("button").show();';
             $js .= $endln . $tab1 . '$("#data-id").val("-1");';
             $js .= $endln . $tab1 . '$("#edit-modal").modal("show");';
         $js .= $endln . '}';
@@ -411,11 +418,21 @@
                 if ($type == "varchar(300)"){
                     if ($title && $title != "" ){
                         $js .= $endln . $tab1 . 'var img_file = $(sel_tr).find(".' . $table_name . '_' . $title . '").attr("data-file");';
-                        $js .= $endln . $tab1 . 'var container = $("#' . $table_name . '_field_' . $title . '_upload + .ajax-file-upload-container");';
-                        $js .= $endln . $tab1 . 'var status = $("<div>").addClass("ajax-file-upload-statusbar").appendTo(container );';
-                        $js .= $endln . $tab1 . '$("<div>").addClass("ajax-file-upload-filename").text(img_file ).appendTo(status);';
-                        $js .= $endln . $tab1 . '$("<div>").addClass("ajax-file-upload-red").text("Delete").appendTo(status );';
-                        $js .= $endln . $tab1 . '$("#' . $table_name . '_field_' . $title . '_upload").attr("data-type", "file").attr("data-file", img_file);';
+                        $js .= $endln . $tab1 . 'if (img_file && img_file != "" ){';
+                            $js .= $endln . $tab2 . 'var container = $("#' . $table_name . '_field_' . $title . '_upload + .ajax-file-upload-container");';
+                            $js .= $endln . $tab2 . 'var status = $("<div>").addClass("ajax-file-upload-statusbar").appendTo(container );';
+                            $js .= $endln . $tab2 . '$("<img>").addClass("ajax-file-upload-file-img").attr("src", "/plugins/uploads/" + img_file ).appendTo(status);';
+                            $js .= $endln . $tab2 . '$("<div>").addClass("ajax-file-upload-red").text("Delete").appendTo(status );';
+                            $js .= $endln . $tab2 . '$("#' . $table_name . '_field_' . $title . '_upload").attr("data-type", "file").attr("data-file", img_file);';
+                            $js .= $endln . $tab2 . '$("#' . $table_name . '_field_' . $title . '_upload").hide();';
+                            $js .= $endln . $tab2 . '$("#' . $table_name . '_field_' . $title . '_btn").hide();';
+                        $js .= $endln . $tab1 . '}';
+
+                        // $js .= $endln . $tab1 . 'var container = $("#' . $table_name . '_field_' . $title . '_upload + .ajax-file-upload-container");';
+                        // $js .= $endln . $tab1 . 'var status = $("<div>").addClass("ajax-file-upload-statusbar").appendTo(container );';
+                        // $js .= $endln . $tab1 . '$("<div>").addClass("ajax-file-upload-filename").text(img_file ).appendTo(status);';
+                        // $js .= $endln . $tab1 . '$("<div>").addClass("ajax-file-upload-red").text("Delete").appendTo(status );';
+                        // $js .= $endln . $tab1 . '$("#' . $table_name . '_field_' . $title . '_upload").attr("data-type", "file").attr("data-file", img_file);';
                     }
                 }else if($type == "text"){
                     $js .= $endln . $tab1 . '$("#' . $table_name . '_field_' . $title . '").trumbowyg("html",$(sel_tr).find(".' . $table_name . '_' . $title . '").html());';

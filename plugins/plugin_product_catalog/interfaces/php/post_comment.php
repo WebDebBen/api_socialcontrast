@@ -10,7 +10,7 @@
 			delete_tr($id);
 			break;
 		case "save":
-			save_tr($id ,$post_id,$content);
+			save_tr($id ,$post_id,$content,$thumbs);
 			break;
 	}
 function init_table(){
@@ -24,6 +24,7 @@ function init_table(){
 			array_push($item, $row["id"]);
 			array_push($item, $row["post_id"]);
 			array_push($item, $row["content"]);
+			array_push($item, $row["thumbs"]);
 			array_push($data, $item );
 		}
 	}
@@ -35,12 +36,12 @@ function delete_tr($id ){
 	$db->run_query($query );
 	echo json_encode(["status"=> "success"]);
 }
-function save_tr($id, $post_id,$content){
+function save_tr($id, $post_id,$content,$thumbs){
 	$db = $GLOBALS["db"];
 	if ($id == "-1"){
-		$query = "insert into post_comment set post_id='{$post_id}',content='{$content}'";
+		$query = "insert into post_comment set post_id='{$post_id}',content='{$content}',thumbs='{$thumbs}'";
 	}else{
-		$query = "update post_comment set post_id='{$post_id}',content='{$content}' where id={$id}";
+		$query = "update post_comment set post_id='{$post_id}',content='{$content}',thumbs='{$thumbs}' where id={$id}";
 	}
 	$id = $db->update_query($query );
 	echo json_encode(["status"=> "success", "id"=> $id ]);

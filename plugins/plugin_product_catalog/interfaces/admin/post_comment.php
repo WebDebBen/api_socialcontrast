@@ -9,6 +9,7 @@
 			<thead><tr>
 				<th>Post Id</th>
 				<th>Content</th>
+				<th>Thumbs</th>
 				<th>Action</th>
 			</tr></thead>
 			<tbody id='post_comment_body'>
@@ -31,14 +32,19 @@
 				<div class="form-group row">
 					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Post Id</label>
 					<div class="col-sm-10">
-					<select class='form-control' data-reffield='id' data-reftable='posts' data-table='post_comment' data-type='relation' id='post_comment_field_post_id'>
-					</select>				</div>
+					<input type="text" class="form-control" data-type="string" id="post_comment_field_post_id">
+				</div>
 			</div>
 				<div class="form-group row">
 					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Content</label>
 					<div class="col-sm-10">
 					<input type="text" class="form-control" data-type="string" id="post_comment_field_content">
 				</div>
+			</div>
+				<div class="form-group row">
+					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Thumbs</label>
+					<div class="col-sm-10">
+					<div id="post_comment_field_thumbs_upload" data-type="file">Select File</div>					<button class="btn btn-primary" type="button" id="post_comment_field_thumbs_btn">Upload</button>				</div>
 			</div>
 			</div>
 		</form>

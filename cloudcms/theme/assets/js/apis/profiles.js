@@ -10,7 +10,12 @@ $(document).ready(function(){
 	$("#profiles_body").on("click", ".delete-item", delete_record );
 	$("#export_excel").on("click", export_excel );
 	$("#save_record").on("click", save_record );
-	$("body").on("click", ".ajax-file-upload-red", function(e){e.preventDefault(); $(this).parent().remove()});
+	$("body").on("click", ".ajax-file-upload-red", function(e){
+		e.preventDefault(); 
+		$(this).parent().parent().find("+ .btn").show();
+		$(this).parent().parent().parent().find("div[data-type=file]").attr("data-file", "").show();
+		$(this).parent().remove()
+	});
 	$("textarea").trumbowyg();
 });
 function export_excel(){
@@ -68,6 +73,9 @@ function new_record(){
 	$("#edit-modal input").val("");
 	$("textarea").trumbowyg("html", "");
 	$(".ajax-file-upload-statusbar").remove();
+	$("[data-type=file]").show();
+	$("[data-type=file]").parent().find("button").show();
+	$("#profiles_field_photo_btn").hide();
 	$("#data-id").val("-1");
 	$("#edit-modal").modal("show");
 }
@@ -98,11 +106,16 @@ function edit_record(){
 	$("#data-id").val(id );
 	$("#profiles_field_name").val($(sel_tr).find(".profiles_name").html());
 	var img_file = $(sel_tr).find(".profiles_photo").attr("data-file");
-	var container = $("#profiles_field_photo_upload + .ajax-file-upload-container");
-	var status = $("<div>").addClass("ajax-file-upload-statusbar").appendTo(container );
-	$("<div>").addClass("ajax-file-upload-filename").text(img_file ).appendTo(status);
-	$("<div>").addClass("ajax-file-upload-red").text("Delete").appendTo(status );
-	$("#profiles_field_photo_upload").attr("data-type", "file").attr("data-file", img_file);
+	if (img_file && img_file != "" ){
+		var container = $("#profiles_field_photo_upload + .ajax-file-upload-container");
+		var status = $("<div>").addClass("ajax-file-upload-statusbar").appendTo(container );
+		$("<img>").addClass("ajax-file-upload-file-img").attr("src", "/plugins/uploads/" + img_file ).appendTo(status);
+		$("<div>").addClass("ajax-file-upload-red").text("Delete").appendTo(status );
+		$("#profiles_field_photo_upload").attr("data-type", "file").attr("data-file", img_file);
+		$("#profiles_field_photo_upload").hide();
+		$("#profiles_field_photo_btn").hide();
+	}
+	
 	$("#profiles_field_bigo").trumbowyg("html", $(sel_tr).find(".profiles_bigo").html());
 	$("#edit-modal").modal("show");
 }
@@ -157,6 +170,7 @@ $(document).ready(function(){
 	//$('.summernote').summernote();
 
 	var extraObj = $("#profiles_field_photo_upload").uploadFile({
-		url:upload_url, fileName:"apifile", autoSubmit:false,returnType:"json",onSuccess:function(files,data,xhr,pd){if (data["status"] == "success"){$("#profiles_field_photo_upload").attr("data-file", data["file"] );}else{$("#profiles_field_photo_upload").attr("data-file", "" );}}});
+		url:upload_url, fileName:"apifile", autoSubmit:false,returnType:"json",onSuccess:function(files,data,xhr,pd){if (data["status"] == "success"){
+			$("#profiles_field_photo_upload").attr("data-file", data["file"] );}else{$("#profiles_field_photo_upload").attr("data-file", "" );}}});
 	$("#profiles_field_photo_btn").click(function(){extraObj.startUpload();});
 });
