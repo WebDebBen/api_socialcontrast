@@ -8,8 +8,8 @@
 		<table cellpadding="0" cellspacing="0" border="0" class="display" id="post_comment_table" width="100%">
 			<thead><tr>
 				<th>Post Id</th>
-				<th>Content</th>
-				<th>Thumbs</th>
+				<th>Photo</th>
+				<th>Description</th>
 				<th>Action</th>
 			</tr></thead>
 			<tbody id='post_comment_body'>
@@ -32,19 +32,19 @@
 				<div class="form-group row">
 					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Post Id</label>
 					<div class="col-sm-10">
-					<input type="text" class="form-control" data-type="string" id="post_comment_field_post_id">
-				</div>
+					<select class='form-control' data-reffield='id' data-reftable='posts' data-table='post_comment' data-type='relation' id='post_comment_field_post_id'>
+					</select>				</div>
 			</div>
 				<div class="form-group row">
-					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Content</label>
+					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Photo</label>
 					<div class="col-sm-10">
-					<input type="text" class="form-control" data-type="string" id="post_comment_field_content">
-				</div>
+					<div id="post_comment_field_photo_upload" data-type="file">Select File</div>					<button class="btn btn-primary" type="button" id="post_comment_field_photo_btn">Upload</button>				</div>
 			</div>
 				<div class="form-group row">
-					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Thumbs</label>
+					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Description</label>
 					<div class="col-sm-10">
-					<div id="post_comment_field_thumbs_upload" data-type="file">Select File</div>					<button class="btn btn-primary" type="button" id="post_comment_field_thumbs_btn">Upload</button>				</div>
+					<textarea class="form-control" data-type="string" id="post_comment_field_description"></textarea>
+				</div>
 			</div>
 			</div>
 		</form>

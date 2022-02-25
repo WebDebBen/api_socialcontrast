@@ -15,6 +15,7 @@
             <button class="btn btn-success" id="save_form">Save Form</button>
         </div>
     </div>
+
     <div class="row mt-1r">
         <div class="comp-wrap overflow-x-hidden" data-visible="true">
             <div class="accor_left" id="accor_left"><i class="fa fa-align-justify"></i></div>
@@ -30,7 +31,22 @@
                                 <i class="fa fa-indent"></i>Text Area
                             </div>
                             <div class="form-group component" data-id="ckeditor_obj">
-                                <i class="fa fa-indent"></i>Editor
+                                <i class="fa fa-pen"></i>Editor
+                            </div>
+                            <div class="form-group component" data-id="date_obj">
+                                <i class="fa fa-calendar"></i>Date
+                            </div>
+                            <div class="form-group component" data-id="file_obj">
+                                <i class="fa fa-file"></i>File
+                            </div>
+                            <div class="form-group component" data-id="image_obj">
+                                <i class="fa fa-image"></i>Image
+                            </div>
+                            <div class="form-group component" data-id="hidden_obj">
+                                <i class="fa fa-hidden"></i>Hidden
+                            </div>
+                            <div class="form-group component" data-id="paragraph_obj">
+                                <i class="fa fa-paragraph"></i>Paragraph
                             </div>
                             <div class="form-group component" data-id="select_obj">
                                 <i class="fa fa-play"></i>Select
@@ -39,7 +55,7 @@
                                 <i class="fa fa-check fa-checkbox"></i>Checkbox
                             </div>
                             <div class="form-group component" data-id="radio_obj">
-                                <i class="fa fa-filter"></i>Radio
+                                <i class="fa fa-dot-circle"></i>Radio
                             </div>
                             <div class="form-group component" data-id="condition_start">
                                 <i class="fa fa-filter"></i>Condition Start

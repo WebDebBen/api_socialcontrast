@@ -126,7 +126,7 @@
                                 <div class="col-sm-8">
                                     <select class="form-control" id="field-type-md">
                                         <option data-type="varchar" value="varchar(255)">Text</option>
-                                        <option data-type="int" value="integer">Integer</option>
+                                        <option data-type="int" value="int(11)">Integer</option>
                                         <option data-type="double" value="double">Double</option>
                                         <option data-type="varchar" value="varchar(100)">Password</option>
                                         <option data-type="text" value="text">Text Area</option>
@@ -239,7 +239,7 @@
                     <label class="">Type</label>
                     <select class="form-control field-type-input">
                         <option data-type="varchar" value="varchar(255)">Text</option>
-                        <option data-type="int" value="integer">Integer</option>
+                        <option data-type="int" value="int(11)">Integer</option>
                         <option data-type="double" value="double">Double</option>
                         <option data-type="varchar" value="varchar(100)">Password</option>
                         <option data-type="text" value="text">Text Area</option>

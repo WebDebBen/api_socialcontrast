@@ -96,7 +96,7 @@ function select_table(){
                     $(template).find(".field-default-value-input").val(item["column_default"]);
                     $(template).find(".field-props-wrap").attr("data-table", ref_table );
                     $(template).find(".field-props-wrap").attr("data-field", ref_field );
-                    $(template).find(".field-props-wrap").attr("data-type", column_type); 
+                    $(template).find(".field-props-wrap").attr("data-type", data_type); 
                     $(template).find(".reference_table_span").text(ref_table ? ref_table : "None" );
                     $(template).find(".reference_field_span").text(ref_field ? ref_field : "None" );
                     $(template).appendTo($(parent));

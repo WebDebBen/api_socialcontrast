@@ -46,16 +46,16 @@ function export_excel(){
 function save_record(){
 	var id = $("#data-id").val();
 	var tr_post_id = $("#post_comment_field_post_id").val();
-	var tr_content = $("#post_comment_field_content").val();
-	var tr_thumbs = $("#post_comment_field_thumbs_upload").attr("data-file");
+	var tr_photo = $("#post_comment_field_photo_upload").attr("data-file");
+	var tr_description = $("#post_comment_field_description").trumbowyg('html');
 	$.ajax({
 		url: base_url,
 		data:{
 			type: "save",
 			id: id,
 			post_id: tr_post_id,
-			content: tr_content,
-			thumbs: tr_thumbs,
+			photo: tr_photo,
+			description: tr_description,
 		},
 		type: "post",
 		dataType: "json",
@@ -63,11 +63,11 @@ function save_record(){
 			if (data["status"] == "success" ){
 				if (id == "-1"){
 					var table_id = data["id"];
-					table.row.add( ["<div class='post_comment_post_id'>" + tr_post_id + "</div>", "<div class='post_comment_content'>" + tr_content + "</div>", "<img width='100' data-file='" + tr_thumbs+"' class='post_comment_thumbs' src='/plugins/uploads/" + tr_thumbs + "'>", '<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="' + table_id + '"><i class="fa fa-edit"></i></button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id="'+ table_id + '"><i class="fa fa-trash"></i></button>']).draw( false );
+					table.row.add( ["<div class='post_comment_post_id'>" + tr_post_id + "</div>", "<img width='100' data-file='" + tr_photo+"' class='post_comment_photo' src='/plugins/uploads/" + tr_photo + "'>", "<div class='post_comment_description'>" + tr_description + "</div>", '<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="' + table_id + '"><i class="fa fa-edit"></i></button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id="'+ table_id + '"><i class="fa fa-trash"></i></button>']).draw( false );
 				}else{
 					$(sel_tr).find(".post_comment_post_id").html(tr_post_id );
-					$(sel_tr).find(".post_comment_content").html(tr_content );
-					$(sel_tr).find(".post_comment_thumbs").attr("width", "100").attr("data-file", tr_thumbs).attr("src", "/plugins/uploads/" + tr_thumbs);
+					$(sel_tr).find(".post_comment_photo").attr("width", "100").attr("data-file", tr_photo).attr("src", "/plugins/uploads/" + tr_photo);
+					$(sel_tr).find(".post_comment_description").html(tr_description );
 				}
 				$("#edit-modal").modal("hide");
 			}
@@ -108,17 +108,17 @@ function edit_record(){
 	sel_tr = $(this).parent().parent();
 	$("#data-id").val(id );
 	$("#post_comment_field_post_id").val($(sel_tr).find(".post_comment_post_id").html());
-	$("#post_comment_field_content").val($(sel_tr).find(".post_comment_content").html());
-	var img_file = $(sel_tr).find(".post_comment_thumbs").attr("data-file");
+	var img_file = $(sel_tr).find(".post_comment_photo").attr("data-file");
 	if (img_file && img_file != "" ){
-		var container = $("#post_comment_field_thumbs_upload + .ajax-file-upload-container");
+		var container = $("#post_comment_field_photo_upload + .ajax-file-upload-container");
 		var status = $("<div>").addClass("ajax-file-upload-statusbar").appendTo(container );
 		$("<img>").addClass("ajax-file-upload-file-img").attr("src", "/plugins/uploads/" + img_file ).appendTo(status);
 		$("<div>").addClass("ajax-file-upload-red").text("Delete").appendTo(status );
-		$("#post_comment_field_thumbs_upload").attr("data-type", "file").attr("data-file", img_file);
-		$("#post_comment_field_thumbs_upload").hide();
-		$("#post_comment_field_thumbs_btn").hide();
+		$("#post_comment_field_photo_upload").attr("data-type", "file").attr("data-file", img_file);
+		$("#post_comment_field_photo_upload").hide();
+		$("#post_comment_field_photo_btn").hide();
 	}
+	$("#post_comment_field_description").trumbowyg("html",$(sel_tr).find(".post_comment_description").html());
 	$("#edit-modal").modal("show");
 }
 function init_table(){
@@ -144,9 +144,9 @@ function load_data(data ){
 		td = $("<td>").appendTo(tr);
 		$("<div>").addClass("post_comment_post_id").html(item[1]).appendTo(td);
 		td = $("<td>").appendTo(tr);
-		$("<div>").addClass("post_comment_content").html(item[2]).appendTo(td);
+		$("<img>").attr("width", "100").attr("data-file", item[2]).attr("src", "/plugins/uploads/" + item[2]).addClass("post_comment_photo").appendTo(td);
 		td = $("<td>").appendTo(tr);
-		$("<img>").attr("width", "100").attr("data-file", item[3]).attr("src", "/plugins/uploads/" + item[3]).addClass("post_comment_thumbs").appendTo(td);
+		$("<div>").addClass("post_comment_description").html(item[3]).appendTo(td);
 		var td = $("<td>").appendTo(tr );
 		$("<button>").addClass("btn btn-xs btn-sm btn-primary mr-6 edit-item")
 			.attr("data-id", item[0])
@@ -167,7 +167,7 @@ function load_data(data ){
 	});
 }
 $(document).ready(function(){
-	var extraObj = $("#post_comment_field_thumbs_upload").uploadFile({
-		url:upload_url, fileName:"apifile", autoSubmit:false,returnType:"json",onSuccess:function(files,data,xhr,pd){if (data["status"] == "success"){$("#post_comment_field_thumbs_upload").attr("data-file", data["file"] );}else{$("#post_comment_field_thumbs_upload").attr("data-file", "" );}}});
-	$("#post_comment_field_thumbs_btn").click(function(){extraObj.startUpload();});
+	var extraObj = $("#post_comment_field_photo_upload").uploadFile({
+		url:upload_url, fileName:"apifile", autoSubmit:false,returnType:"json",onSuccess:function(files,data,xhr,pd){if (data["status"] == "success"){$("#post_comment_field_photo_upload").attr("data-file", data["file"] );}else{$("#post_comment_field_photo_upload").attr("data-file", "" );}}});
+	$("#post_comment_field_photo_btn").click(function(){extraObj.startUpload();});
 });

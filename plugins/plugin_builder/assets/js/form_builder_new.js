@@ -1,10 +1,6 @@
 var controls = [
   {
     id: "text_obj",
-    element: "<label class='col-md-12 control-label valtype' for='input01' data-valtype='label'>Text input</label>" +
-          "<div class='col-md-12'>" +
-            "<input type='text' placeholder='placeholder' class='form-control input-md valtype' data-valtype='placeholder' >" +
-          "</div>",
     property: "<form class='form'>" +
       "<div class='form-group col-md-12'>" +
         "<label class='control-label'>Text Name</label> <input class='form-control' type='text' name='name' id='name'>" +
@@ -13,7 +9,11 @@ var controls = [
         "<hr/>" +
         "<button class='btn btn-info save_data'>Save</button><button class='btn btn-danger del_data'>Delete</button>" +
       "</div>" +
-    "</form>"
+    "</form>",
+    element: "<label class='col-md-12 control-label valtype' for='input01' data-valtype='label'>Text input</label>" +
+          "<div class='col-md-12'>" +
+            "<input type='text' placeholder='placeholder' class='form-control input-md valtype' data-valtype='placeholder' >" +
+          "</div>",
   },
   {
     id: "textarea_obj",
@@ -34,7 +34,7 @@ var controls = [
   },
   {
     id: "ckeditor_obj",
-    properyt: "<form class='form'" +
+    property: "<form class='form'" +
                 "<div class='form-group col-md-12'>" +
                   "<label class='control-label'>Editor</label> <input class='form-control' type='text' name='name' id='name'>" +
                   "<label class='control-label'>Label Text</label> <input class='form-control' type='text' name='label' id='label'>" +
@@ -47,6 +47,42 @@ var controls = [
                 "<div class='ck-editor'><img src='assets/images/wyg.png' style='width:100%'></div>" +
               "</div>" +
             "</div>"
+  },
+  {
+    id: "date_obj",
+    property: "<form class='form'" +
+                "<div class='form-group col-md-12'>" +
+                  "<label class='control-label'>Date</label> <input class='form-control' type='text' name='name' id='name'>" +
+                  "<label class='control-label'>Label Text</label> <input class='form-control' type='text' name='label' id='label'>" +
+                  "<hr/>" +
+                  "<button class='btn btn-info save_data'>Save</button><button class='btn btn-danger del_data'>Delete</button>" +
+                "</div>" +
+              "</form>",
+    element: "<label class='col-md-12 control-label valtype' data-valtype='label'>Date</label>" +
+              "<div class='col-md-12'>" +
+                "<div class='input-group date' data-target-input='nearest'>" +
+                    "<input type='text' class='form-control datetimepicker-input' />" +
+                    "<div class='input-group-append' data-toggle='datetimepicker'>" +
+                      "<div class='input-group-text'><i class='fa fa-calendar'></i></div>" +
+                    "</div>" +
+                  "</div>" +
+              "</div>" +
+            "</div>"
+  },
+  {
+    id: "file_obj",
+    property:"<form class='form'" +
+                "<div class='form-group col-md-12'>" +
+                  "<label class='control-label'>File</label> <input class='form-control' type='text' name='name' id='name'>" +
+                  "<label class='control-label'>Label Text</label> <input class='form-control' type='text' name='label' id='label'>" +
+                  "<hr/>" +
+                  "<button class='btn btn-info save_data'>Save</button><button class='btn btn-danger del_data'>Delete</button>" +
+                "</div>" +
+              "</form>",
+    element: "<label class='col-md-12 control-label valtype' for='input01' data-valtype='label'>File</label>" +
+              "<div class='col-md-12'>" +
+                "<input type='file' disable placeholder='placeholder' class='form-control input-md valtype' data-valtype='placeholder' >" +
+              "</div>",
   },
   {
     id: "select_obj",
@@ -183,9 +219,12 @@ function accor_action(){
   }
 
   $(".ele-wrap").css("width", "calc(100% - " + length + "px)");
+
+
 }
 
 $(document).ready(function(){
+  
   $("#accor_left").on("click", accor_action );
   $("#accor_right").on("click", accor_action );
 
@@ -235,6 +274,24 @@ $(document).ready(function(){
               .addClass("form-control ckeditor-obj " + item["data_name"]).appendTo(col );
           $(editor).trumbowyg();
           break;
+        case "date_obj":
+          var form_comp = $("<div>").attr("class", "row mb-1r form preview-component")
+                    .attr("data-flag", cond_flag )
+                    .attr("data-condind", cond_index ).appendTo(parent );
+          $("<label>").addClass("col-md-2 control-label text-right")
+                    .text(item["label"] ).appendTo(form_comp );
+          var col = $("<div>").addClass("col-md-10").appendTo(form_comp );
+          var obj = $("<div>").addClass("input-group date valtype")
+                    .attr("data-valtype", "date")
+                    .attr("data-target-input", "nearest").appendTo(col );
+          $("<input>").attr("type", "text")
+                    .attr("data-condind", cond_index)
+                    .addClass("form-control datetimepicker-input date-obj " + item["data_name"]).appendTo(obj );
+          var div = $("<div>").addClass("input-group-append").attr("data-toggle", "datetimepicker")
+                    .appendTo(obj );
+          $("<div>").addClass("input-group-text").html("<i class='fa fa-calendar'></i>").appendTo(div );
+          $(obj).datepicker();
+            break;
         case "select_obj":
           var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
             .attr("data-condind", cond_index ).appendTo(parent);
@@ -307,7 +364,6 @@ $(document).ready(function(){
       return;
     }
 
-    console.log(cond_info );
     for (var i = 0;i < cond_info.length; i++ ){
       var field = cond_info[i]["field"];
       $("." + field).on("change", function(e){
@@ -418,6 +474,21 @@ $(document).ready(function(){
                     .addClass("form-control input-md valtype")
                     .attr("data-valtype", "textarea").appendTo(col );
           break;
+        case "date": case "datetime":
+          var form_comp = $("<div>").attr("class", "form form-component")
+                    .attr("data-id", "date_obj")
+                    .attr("id", parseInt(Math.random() * 10000 + 10 ))
+                    .attr("data-name", get_object_name("date_obj"))
+                    .attr("draggable", false )
+                    .appendTo(parent);
+          $("<label>").addClass("col-md-12 control-label valtype")
+                    .attr("data-valtype", "label")
+                    .text(field_name ).appendTo(form_comp );
+          var col = $("<div>").addClass("col-md-12").appendTo(form_comp );
+          $("<input>").attr("type", "text").attr("placeholder", "placeholder")
+                    .addClass("form-control input-md valtype")
+                    .attr("data-valtype", "placeholder").appendTo(col );
+          break;
         default:
           var form_comp = $("<div>").attr("class", "form form-component")
                             .attr("data-id", "text_obj")
@@ -489,6 +560,26 @@ $(document).ready(function(){
                     .addClass("form-control input-md valtype")
                     .attr("data-valtype", "textarea").appendTo(col );
           $(obj).trumbowyg();
+          break;
+        case "date_obj":
+          var form_comp = $("<div>").attr("class", "form form-component")
+                    .attr("data-id", "date_obj")
+                    .attr("id", item["id"])
+                    .attr("data-name", get_object_name("date_obj"))
+                    .attr("draggable", false )
+                    .appendTo(parent);
+          $("<label>").addClass("col-md-12 control-label valtype")
+                    .attr("data-valtype", "label")
+                    .text(item["label"] ).appendTo(form_comp );
+          var col = $("<div>").addClass("col-md-12").appendTo(form_comp );
+          var obj = $("<div>").addClass("input-group date valtype")
+                    .attr("data-valtype", "date")
+                    .attr("data-target-input", "nearest").appendTo(col );
+          $("<input>").attr("type", "text").addClass("form-control datetimepicker-input").appendTo(obj );
+          var div = $("<div>").addClass("input-group-append").attr("data-toggle", "datetimepicker")
+                    .appendTo(obj );
+          $("<div>").addClass("input-group-text").html("<i class='fa fa-calendar'></i>").appendTo(div );
+          $(obj).datepicker();
           break;
         case "select_obj":
           var form_comp = $("<div>").attr("class", "form form-component")
@@ -790,6 +881,10 @@ $(document).ready(function(){
         $(prev_obj).find('label').text($("#label").val());
         $(prev_obj).attr("data-name", $("#name").val());
         break;
+      case "date_obj":
+        $(prev_obj).find('label').text($("#label").val());
+        $(prev_obj).find("data-name", $("#name").val());
+        break;
       case "select_obj":
         $(prev_obj).find('label').text($("#label").val());
         $(prev_obj).attr("data-name", $("#name").val());
@@ -907,6 +1002,10 @@ $(document).ready(function(){
           tmp_obj["label"] = label;
           tmp_obj["placeholder"] = placeholder;
           break;
+        case "date_obj":
+          label = $(comp).find(".control-label").text();
+          tmp_obj["label"] = label;
+          break;
         case "checkbox_obj":
           label = $(comp).find(".control-label").text();
           var checks = $(comp).find(".checkbox");
@@ -990,6 +1089,9 @@ $(document).ready(function(){
         break;
       case "ckeditor_obj":
         label = "editor_";
+        break;
+      case "date_obj":
+        label = "date_";
         break;
       case "select_obj":
         label = "select_";
