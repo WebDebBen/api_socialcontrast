@@ -85,6 +85,56 @@ var controls = [
               "</div>",
   },
   {
+    id: "paragraph_obj",
+    property:"<form class='form'" +
+                "<div class='form-group col-md-12'>" +
+                  "<label class='control-label'>Paragraph Text</label> <input class='form-control' type='text' name='text' id='text'>" +
+                  "<select class='form-control mt-1r' id='paragraph-select'>" +
+                    "<option value='h1'>H1</option>" +
+                    "<option value='h2'>H2</option>" +
+                    "<option value='h3'>H3</option>" +
+                    "<option value='h4'>H4</option>" +
+                    "<option value='h5'>H5</option>" +
+                    "<option value='h6'>H6</option>" +
+                  "</select>" +
+                  "<hr/>" +
+                  "<button class='btn btn-info save_data'>Save</button><button class='btn btn-danger del_data'>Delete</button>" +
+                "</div>" +
+              "</form>",
+    element: "<label class='col-md-12 control-label valtype paragraph-text' data-valtype='paragraph'><h1>Paragraph</h1></label>"
+  },
+  {
+    id: "image_obj",
+    property:"<form class='form'" +
+                "<div class='form-group col-md-12'>" +
+                  "<label class='control-label'>Image</label> <input class='form-control' type='text' name='name' id='name'>" +
+                  "<label class='control-label'>Label Text</label> <input class='form-control' type='text' name='label' id='label'>" +
+                  "<hr/>" +
+                  "<button class='btn btn-info save_data'>Save</button><button class='btn btn-danger del_data'>Delete</button>" +
+                "</div>" +
+              "</form>",
+    element: "<label class='col-md-12 control-label valtype' for='input01' data-valtype='label'>Image</label>" +
+              "<div class='col-md-12'>" +
+                "<input type='file' disable placeholder='placeholder' class='form-control input-md valtype' data-valtype='placeholder' >" +
+              "</div>",
+  },
+  {
+    id: "hidden_obj",
+    property: "<form class='form'>" +
+      "<div class='form-group col-md-12'>" +
+        "<label class='control-label'>Hidden Name</label> <input class='form-control' type='text' name='name' id='name'>" +
+        "<label class='control-label'>Label Text</label> <input class='form-control' type='text' name='label' id='label'>" +
+        "<label class='control-label'>Placeholder</label> <input type='text' name='placeholder' id='placeholder' class='form-control'>" +
+        "<hr/>" +
+        "<button class='btn btn-info save_data'>Save</button><button class='btn btn-danger del_data'>Delete</button>" +
+      "</div>" +
+    "</form>",
+    element: "<label class='col-md-12 control-label valtype' for='input01' data-valtype='label'>Hidden input</label>" +
+          "<div class='col-md-12'>" +
+            "<input type='text' placeholder='placeholder' class='form-control input-md valtype' data-valtype='placeholder' >" +
+          "</div>",
+  },
+  {
     id: "select_obj",
     property: "<form class='form'>" +
                 "<div class='form-group col-md-12'>" +
@@ -178,53 +228,9 @@ var controls = [
 ];
 
 var prev_obj = "";
-
-function get_control(id ){
-  for(var i = 0;i < controls.length; i++ ){
-    if (controls[i]["id"] == id ){
-      return controls[i];
-    }
-  }
-}
-
-
-function accor_action(){
-  if ($(this).parent().attr("data-visible") == "true" ){
-      $(this).parent().attr("data-visible", "false");
-      $(this).parent().css("max-width", "40px");
-      $(this).parent().find(".flex-comp").hide();
-  }else{
-      $(this).parent().attr("data-visible", "true");
-      $(this).parent().find(".flex-comp").show();
-  }
-  
-  var comp_wrap = $(".comp-wrap");
-  var prop_wrap = $(".prop-wrap");
-  var comp_flag = $(comp_wrap).attr("data-visible");
-  var prop_flag = $(prop_wrap).attr("data-visible");
-
-  var length = 0;
-  if (comp_flag == "true" ){
-    length += parseInt(267); 
-    $(comp_wrap).css("max-width", "267px");
-  }else{
-    length += parseInt(40);
-  }
-
-  if (prop_flag == "true"){
-    $(prop_wrap).css("max-width", "401px");
-    length += parseInt(401);
-  }else{
-    length += parseInt(40);
-  }
-
-  $(".ele-wrap").css("width", "calc(100% - " + length + "px)");
-
-
-}
+var upload_url = "/plugins/plugin_builder/include/classes/upload.php";
 
 $(document).ready(function(){
-  
   $("#accor_left").on("click", accor_action );
   $("#accor_right").on("click", accor_action );
 
@@ -255,6 +261,7 @@ $(document).ready(function(){
             .attr("data-condind", cond_index )
             .addClass("form-control input-md " + item["data_name"]).appendTo(col );
           break;
+
         case "textarea_obj":
           var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
               .attr("data-condind", cond_index ).appendTo(parent);
@@ -264,6 +271,7 @@ $(document).ready(function(){
           $("<textarea>").attr("type", "text").attr("data-condind", cond_index )
               .addClass("form-control input-md " + item["data_name"]).appendTo(col );
           break;
+
         case "ckeditor_obj":
           var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
               .attr("data-condind", cond_index ).appendTo(parent);
@@ -274,6 +282,47 @@ $(document).ready(function(){
               .addClass("form-control ckeditor-obj " + item["data_name"]).appendTo(col );
           $(editor).trumbowyg();
           break;
+
+        case "file_obj":
+          var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
+              .attr("data-condind", cond_index ).appendTo(parent);
+          $("<label>").addClass("col-md-2 control-label text-right")
+              .text(item["label"] ).appendTo(form_comp );
+          var col = $("<div>").addClass("col-md-10").appendTo(form_comp );
+          var editor = $("<div>").attr("data-condind", cond_index )
+              .addClass("file-upload-div file-obj " + item["data_name"]).appendTo(col );
+          $(editor).uploadFile({url:upload_url, fileName:"apifile", showCancel: true, showDelete: true, autoSubmit:true, returnType:"json"});
+          break;
+
+        case "image_obj":
+          var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
+              .attr("data-condind", cond_index ).appendTo(parent);
+          $("<label>").addClass("col-md-2 control-label text-right")
+              .text(item["label"] ).appendTo(form_comp );
+          var col = $("<div>").addClass("col-md-10").appendTo(form_comp );
+          var editor = $("<div>").attr("data-condind", cond_index )
+              .addClass("file-upload-div file-obj " + item["data_name"]).appendTo(col );
+          $(editor).uploadFile({
+            url:upload_url, fileName:"apifile", autoSubmit:true, returnType:"json",showPreview: true,
+            showCancel: true, showDelete: true,
+          onSuccess:function(files,data,xhr,pd){
+            if (data["status"] == "success"){
+              $("#tmp_file_upload").attr("data-file", data["file"] );
+            }else{
+              $("#tmp_file_upload").attr("data-file", "" );
+            }
+          }});
+          break;
+
+        case "hidden_obj":
+          break;
+        case "paragraph_obj":
+          var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
+              .attr("data-condind", cond_index ).appendTo(parent);
+          $("<" + item["tag_name"] +">").addClass("col-md-12")
+              .text(item["text"] ).appendTo(form_comp );
+          break;
+
         case "date_obj":
           var form_comp = $("<div>").attr("class", "row mb-1r form preview-component")
                     .attr("data-flag", cond_flag )
@@ -291,7 +340,8 @@ $(document).ready(function(){
                     .appendTo(obj );
           $("<div>").addClass("input-group-text").html("<i class='fa fa-calendar'></i>").appendTo(div );
           $(obj).datepicker();
-            break;
+          break;
+
         case "select_obj":
           var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
             .attr("data-condind", cond_index ).appendTo(parent);
@@ -305,6 +355,7 @@ $(document).ready(function(){
             $("<option>").attr("value", a["value"]).text(a["text"]).appendTo(select );
           }
           break;
+
         case "radio_obj":
           var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
             .attr("data-cond", cond_index ).appendTo(parent);
@@ -322,6 +373,7 @@ $(document).ready(function(){
             }
           }
           break;
+
         case "checkbox_obj":
           var form_comp = $("<div>").attr("class", "row mb-1r form preivew-component").attr("data-flag", cond_flag )
             .attr("data-cond", cond_index ).appendTo(parent);
@@ -339,6 +391,7 @@ $(document).ready(function(){
             }
           }
           break;
+
         case "condition_start":
           if (cond_flag == true ){
             alert("Condition error");
@@ -349,6 +402,7 @@ $(document).ready(function(){
           $("." + item["data_field"]).attr("data-cond", item["data_value"]);
           cond_flag = true;
           break;
+
         case "condition_end":
           if (cond_flag == false){
             alert("Condition error");
@@ -419,7 +473,6 @@ $(document).ready(function(){
           load_form_from_json(res );
         }
         $("#tb_frm_name").val($("#tb_frm_list").val());
-        //$("#tb_frm_name").attr("readonly", true );
         $("#tb_frm_modal").modal("hide");
       }
     });
@@ -459,6 +512,7 @@ $(document).ready(function(){
             $("<option>").attr("value", types[j]).text(types[j]).appendTo(select );
           }
           break;
+
         case "textarea":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "textarea_obj")
@@ -474,6 +528,7 @@ $(document).ready(function(){
                     .addClass("form-control input-md valtype")
                     .attr("data-valtype", "textarea").appendTo(col );
           break;
+
         case "date": case "datetime":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "date_obj")
@@ -489,6 +544,7 @@ $(document).ready(function(){
                     .addClass("form-control input-md valtype")
                     .attr("data-valtype", "placeholder").appendTo(col );
           break;
+
         default:
           var form_comp = $("<div>").attr("class", "form form-component")
                             .attr("data-id", "text_obj")
@@ -515,7 +571,6 @@ $(document).ready(function(){
       var item = data[i];
       switch(item["data_id"]){
         case "text_obj":
-          //data_id: 'text_obj', id: '5198', data_name: 'text_2', label: 'book_name', placeholder: 'placeholder'
           var form_comp = $("<div>").attr("class", "form form-component")
                             .attr("data-id", "text_obj")
                             .attr("id", item["id"])
@@ -530,6 +585,7 @@ $(document).ready(function(){
                             .addClass("form-control input-md valtype")
                             .attr("data-valtype", "placeholder").appendTo(col );
           break;
+
         case "textarea_obj":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "textarea_obj")
@@ -545,6 +601,7 @@ $(document).ready(function(){
                     .addClass("form-control input-md valtype")
                     .attr("data-valtype", "textarea").appendTo(col );
           break;
+
         case "ckeditor_obj":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "ckeditor_obj")
@@ -561,6 +618,69 @@ $(document).ready(function(){
                     .attr("data-valtype", "textarea").appendTo(col );
           $(obj).trumbowyg();
           break;
+
+        case "paragraph_obj":
+          var form_comp = $("<div>").attr("class", "row mb-1r form-component")
+                    .attr("data-id", "paragraph_obj")
+                    .attr("id", item["id"])
+                    .attr("data-name", get_object_name("paragraph_obj"))
+                    .attr("draggable", false )
+                    .appendTo(parent);
+          var label = $("<label>").addClass("col-md-12 valtype paragraph-text")
+                    .attr("data-valtype", "paragraph").appendTo(form_comp );
+          $("<" + item["tag_name"] + ">").html(item["text"]).appendTo(label);
+          break;
+
+        case "file_obj":
+              var form_comp = $("<div>").attr("class", "form form-component")
+                        .attr("data-id", "file_obj")
+                        .attr("id", item["id"])
+                        .attr("data-name", get_object_name("file_obj"))
+                        .attr("draggable", false )
+                        .appendTo(parent);
+              $("<label>").addClass("col-md-12 control-label valtype")
+                        .attr("data-valtype", "label")
+                        .text(item["label"] ).appendTo(form_comp );
+              var col = $("<div>").addClass("col-md-12").appendTo(form_comp );
+              var obj = $("<input>").attr("type", "file")
+                        .attr("disable", true )
+                        .addClass("form-control input-md valtype")
+                        .attr("data-valtype", "file").appendTo(col );
+          break;
+
+        case "file_obj":
+            var form_comp = $("<div>").attr("class", "form form-component")
+                      .attr("data-id", "image_obj")
+                      .attr("id", item["id"])
+                      .attr("data-name", get_object_name("image_obj"))
+                      .attr("draggable", false )
+                      .appendTo(parent);
+            $("<label>").addClass("col-md-12 control-label valtype")
+                      .attr("data-valtype", "label")
+                      .text(item["label"] ).appendTo(form_comp );
+            var col = $("<div>").addClass("col-md-12").appendTo(form_comp );
+            var obj = $("<input>").attr("type", "file")
+                      .attr("disable", true )
+                      .addClass("form-control input-md valtype")
+                      .attr("data-valtype", "image").appendTo(col );
+          break;
+
+        case "hidden_obj":
+          var form_comp = $("<div>").attr("class", "form form-component")
+                            .attr("data-id", "hidden_obj")
+                            .attr("id", item["id"])
+                            .attr("data-name", get_object_name("hidden_obj"))
+                            .attr("draggable", false )
+                            .appendTo(parent);
+          $("<label>").addClass("col-md-12 control-label valtype")
+                            .attr("data-valtype", "label")
+                            .text(item["label"] ).appendTo(form_comp );
+          var col = $("<div>").addClass("col-md-12").appendTo(form_comp );
+          $("<input>").attr("type", "text").attr("placeholder", item["placeholder"])
+                            .addClass("form-control input-md valtype")
+                            .attr("data-valtype", "placeholder").appendTo(col );
+          break;
+
         case "date_obj":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "date_obj")
@@ -581,6 +701,7 @@ $(document).ready(function(){
           $("<div>").addClass("input-group-text").html("<i class='fa fa-calendar'></i>").appendTo(div );
           $(obj).datepicker();
           break;
+
         case "select_obj":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "select_obj")
@@ -599,6 +720,7 @@ $(document).ready(function(){
             $("<option>").attr("value", a["value"]).text(a["text"]).appendTo(select );
           }
           break;
+
         case "radio_obj":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "radio_obj")
@@ -619,6 +741,7 @@ $(document).ready(function(){
               .appendTo(col );
           }
           break;
+
         case "checkbox_obj":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "checkbox_obj")
@@ -639,6 +762,7 @@ $(document).ready(function(){
               .appendTo(col );
           }
           break;
+
         case "condition_start":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "condition_start")
@@ -649,6 +773,7 @@ $(document).ready(function(){
                     .appendTo(parent);
           $("<div>").addClass("condition-wrap action-start").text("Condition Start").appendTo(form_comp);
           break;
+
         case "condition_end":
           var form_comp = $("<div>").attr("class", "form form-component")
                     .attr("data-id", "condition_end")
@@ -881,6 +1006,21 @@ $(document).ready(function(){
         $(prev_obj).find('label').text($("#label").val());
         $(prev_obj).attr("data-name", $("#name").val());
         break;
+      case "file_obj":
+        $(prev_obj).find('label').text($("#label").val());
+        $(prev_obj).attr("data-name", $("#name").val());
+        break;
+      case "paragraph_obj":
+        $(prev_obj).find('label').html("<" + $("#paragraph-select").val() + ">" + $("#text").val() + "</" + $("#paragraph-select").val() + ">");
+        $(prev_obj).attr("data-tagname", $("#paragraph-select").val());
+      case "image_obj":
+        $(prev_obj).find('label').text($("#label").val());
+        $(prev_obj).attr("data-name", $("#name").val());
+        break;
+      case "hidden_obj":
+        $(prev_obj).find('label').text($("#label").val());
+        $(prev_obj).attr("data-name", $("#name").val());
+        break;
       case "date_obj":
         $(prev_obj).find('label').text($("#label").val());
         $(prev_obj).find("data-name", $("#name").val());
@@ -1002,6 +1142,22 @@ $(document).ready(function(){
           tmp_obj["label"] = label;
           tmp_obj["placeholder"] = placeholder;
           break;
+        case "file_obj":
+          label = $(comp).find(".control-label").text();
+          tmp_obj["label"] = label;
+          break;
+        case "image_obj":
+          label = $(comp).find(".control-label").text();
+          tmp_obj["label"] = label;
+          break;
+        case "hidden_obj":
+          label = $(comp).find(".control-label").text();
+          tmp_obj["label"] = label;
+          break;
+        case "paragraph_obj":
+          tmp_obj["tag_name"] = $(comp).attr("data-tagname");
+          tmp_obj["text"] = $(comp).find("label").text();
+          break;
         case "date_obj":
           label = $(comp).find(".control-label").text();
           tmp_obj["label"] = label;
@@ -1090,6 +1246,18 @@ $(document).ready(function(){
       case "ckeditor_obj":
         label = "editor_";
         break;
+      case "file_obj":
+        label = "file_";
+        break;
+      case "paragraph_obj":
+        label = "paragraph_";
+        break;
+      case "image_obj":
+        label = "image_";
+        break;
+      case "hidden_obj":
+        label = "hidden_";
+        break;
       case "date_obj":
         label = "date_";
         break;
@@ -1132,6 +1300,9 @@ $(document).ready(function(){
       switch(valtype ){
         case "label":
           $("#label").val($(item).text());
+          break;
+        case "paragraph":
+          $("#text").val($(item).text());
           break;
         case "placeholder":
           $("#placeholder").val($(item).attr("placeholder"));
@@ -1238,3 +1409,45 @@ $(document).ready(function(){
     genSource();
   });
 });
+
+function get_control(id ){
+  for(var i = 0;i < controls.length; i++ ){
+    if (controls[i]["id"] == id ){
+      return controls[i];
+    }
+  }
+}
+
+
+function accor_action(){
+  if ($(this).parent().attr("data-visible") == "true" ){
+      $(this).parent().attr("data-visible", "false");
+      $(this).parent().css("max-width", "40px");
+      $(this).parent().find(".flex-comp").hide();
+  }else{
+      $(this).parent().attr("data-visible", "true");
+      $(this).parent().find(".flex-comp").show();
+  }
+  
+  var comp_wrap = $(".comp-wrap");
+  var prop_wrap = $(".prop-wrap");
+  var comp_flag = $(comp_wrap).attr("data-visible");
+  var prop_flag = $(prop_wrap).attr("data-visible");
+
+  var length = 0;
+  if (comp_flag == "true" ){
+    length += parseInt(267); 
+    $(comp_wrap).css("max-width", "267px");
+  }else{
+    length += parseInt(40);
+  }
+
+  if (prop_flag == "true"){
+    $(prop_wrap).css("max-width", "401px");
+    length += parseInt(401);
+  }else{
+    length += parseInt(40);
+  }
+
+  $(".ele-wrap").css("width", "calc(100% - " + length + "px)");
+}
