@@ -6,7 +6,6 @@
         $str = preg_replace('@[^a-zA-Z0-9\-_ ]+@', '', $str);
         $str = str_replace($i, ' ', $str);
         $str = str_replace(' ', ' ', ucwords(strtolower($str)));
-        //$str = strtolower(substr($str,0,1)).substr($str,1);
         return $str;
     }
 

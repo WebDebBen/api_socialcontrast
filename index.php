@@ -44,6 +44,7 @@
 
 	$item_plugins = new System1($db);
 	$plugins_records = json_decode($item_plugins->getPlugins()); 
+
 	foreach($plugins_records as $plugin){
 		$json_url = './plugins/' . $plugin->plugin_name . '/settings/classes.php';
 		if(file_exists($json_url)){
@@ -64,13 +65,12 @@
         	}
         }
 	}
-    	
+
     if(isset($_SESSION['login']) && $_SESSION['login']['status'] == true){
 		$page = $_GET['page'];
 		$type = $_GET['type'];
 		$module = $_GET['module'];
 		$interface_name = $_GET['interface_name'];
-		
 		if(isset($_GET['action']) && $_GET['action'] == 'select_user'){
 			$customer_visit_upd = new Customer($db);
 			$customer_visit_upd->visit_id = $_SESSION['visit_id'];
@@ -78,13 +78,17 @@
 			$customer_visit_upd_response = json_decode($customer_visit_upd->UpdateCustomerVisit());
 			$_SESSION['customer_id'] = $_GET['id'];
 		}
-		
+
 		// if($module == ''){
 // 			$module = 'gevorest_pos';
 // 		}
 // 		if($interface_name == ''){
 // 			$interface_name = 'customer_meet';
 // 		}
+		if ($module == 'plugin_creator'){
+			$module = 'plugin_creator/' . $interface_name;
+			$interface_name = "edit";
+		}
 
 		include 'cloudcms/theme/index.php';
     } 

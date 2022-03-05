@@ -17,9 +17,13 @@ function toCamelCase(inputArray){
     var result = "";
     for(var i = 0; i < inputArray.length; i++ ){
         var currentStr = inputArray[i];
-        var tempStr = currentStr.toLowcase();
-        tempStr = tempStr.subStr(0,1).toUpperCase() + tempStr.subStr(1);
-        result += tempStr + " ";
+        var tempStr = currentStr.toLowerCase();
+        tempStr = tempStr.substr(0,1).toUpperCase() + tempStr.substr(1);
+        if (i == (inputArray.length - 1)){
+            result += tempStr;
+        }else{
+            result += tempStr + "_";
+        }
     }
     return result;
 }

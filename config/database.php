@@ -35,10 +35,46 @@
             return $tables;
         }
 
+        function record_count($query ){
+            $result = $this->conn->query($query );
+            if ($result ){
+                $count = 0;
+                while($row = $result->fetch(PDO::FETCH_BOTH)){
+                    $count++;
+                }
+                return $count;
+            }
+            return 0;
+        }
+
         function run_query($query ){
             $sth = $this->conn->prepare($query );
             $sth->execute();
             return true;
+        }
+
+        public function load_plugins(){
+            $query = "show tables where Tables_in_generator = 'plugins'";
+            $result = $this->conn->query($query );
+            if (!$result){
+                $query = "CREATE TABLE `plugins`  (
+                    `id` int(11) NOT NULL AUTO_INCREMENT,
+                    `name` varchar(255) NULL DEFAULT NULL,
+                    PRIMARY KEY (`id`) USING BTREE
+                  ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci";
+                $this->conn->query($query);
+            }
+            $query = "select * from plugins";
+            $result = $this->conn->query($query );
+            if ($result){
+                $plugins = [];
+                while($row = $result->fetch(PDO::FETCH_BOTH)){
+                    array_push($plugins, $row["name"]);
+                }
+                return $plugins;
+            }else{
+                return [];
+            }
         }
 
         public function load_data($table ){
