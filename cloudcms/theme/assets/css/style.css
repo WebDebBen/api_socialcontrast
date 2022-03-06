@@ -48,6 +48,10 @@
     margin-top: 10px;
 }
 
+.px-1r{
+    padding: 1rem;
+}
+
 .hide{
     display: none !important;
 }
@@ -410,4 +414,8 @@ table{
 .ajax-file-upload-file-img{
     width: 100%;
     max-width: 200px;
+}
+
+.tab-content{
+    border: solid 1px #ccc;
 }

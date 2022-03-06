@@ -21,7 +21,8 @@
     	$single_admin->id = $_SESSION['login']['id'];
     	$privileges = json_decode($single_admin->getSingleAdmin());
     }
-    if(isset($_POST['action']) && $_POST['action'] == 'check_login'){
+
+	if(isset($_POST['action']) && $_POST['action'] == 'check_login'){
     	$item = new Admin($db);
     	$item->username = $_POST['username'];
    		$item->password = $_POST['password'];
@@ -80,11 +81,12 @@
 		}
 
 		// if($module == ''){
-// 			$module = 'gevorest_pos';
-// 		}
-// 		if($interface_name == ''){
-// 			$interface_name = 'customer_meet';
-// 		}
+ 		// 	$module = 'gevorest_pos';
+ 		// }
+ 		// if($interface_name == ''){
+ 		// 	$interface_name = 'customer_meet';
+ 		// }
+
 		if ($module == 'plugin_creator'){
 			$module = 'plugin_creator/' . $interface_name;
 			$interface_name = "edit";

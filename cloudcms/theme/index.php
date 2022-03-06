@@ -209,6 +209,7 @@
 			}
 			break;
 	}
+
 	if($proceed == true){
 		
 		switch($_GET['type']){

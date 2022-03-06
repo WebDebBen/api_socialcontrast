@@ -57,7 +57,7 @@ function add_tr(parent, name ){
   $("<span>").text(name).appendTo(td);
   td = $("<td>").addClass("plugin_view").appendTo(tr);
   //$("<a>").attr("href", "/admin/plugins/plugin_creator/edit/" + plugin_name).text("View").appendTo(td);
-  $("<a>").attr("href", "/admin/plugins/plugin_builder/" + plugin_name + "/edit").text("View").appendTo(td);
+  $("<a>").attr("href", "/admin/plugins/plugin_builder/plugin_editor/" + plugin_name).text("View").appendTo(td);
   td = $("<td>").addClass("plugin_action").appendTo(tr);
   $("<button>").addClass("btn btn-danger").text("Delete")
       .attr("data-name", name )
