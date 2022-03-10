@@ -44,8 +44,8 @@
     }
 
 	$item_plugins = new System1($db);
-	$plugins_records = json_decode($item_plugins->getPlugins()); 
-
+	$plugins_records = json_decode($item_plugins->getPlugins());
+	
 	foreach($plugins_records as $plugin){
 		$json_url = './plugins/' . $plugin->plugin_name . '/settings/classes.php';
 		if(file_exists($json_url)){

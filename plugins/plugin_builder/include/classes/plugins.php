@@ -57,6 +57,7 @@ function save_plugin($name ){
         mkdir($folder_path . "/assets");
             mkdir($folder_path . "/assets/css");
             mkdir($folder_path . "/assets/js");
+        mkdir($folder_path . "/commits");
         mkdir($folder_path . "/include");
             mkdir($folder_path . "/include/classes");
             mkdir($folder_path . "/include/database_scripts");
@@ -67,7 +68,11 @@ function save_plugin($name ){
         mkdir($folder_path . "/settings");
             mkdir($folder_path . "/settings/forms");
             mkdir($folder_path . "/settings/tables");
-        
+            $myfile = fopen($folder_path . "/settings/settings.json", "w") or die("Unable to open file!");
+            fwrite($myfile, "{}");
+            fclose($myfile);
+        mkdir($folder_path . "/temporary");
+
         echo json_encode(["status"=> "success"]);
     }
 }

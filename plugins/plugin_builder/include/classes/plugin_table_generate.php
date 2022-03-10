@@ -27,7 +27,7 @@ switch($type ){
         generate_run($json_data );
         break;
     case "save":
-        generate_save($json_data );
+        generate_save($json_data, $plugin_name );
         break;
     case "table_list":
         get_table_list();
@@ -104,7 +104,7 @@ function generate_run($data ){
     echo json_encode($run );
 }
 
-function generate_save($data ){ 
-    $run = generate_content($data, "save");
+function generate_save($data, $plugin_name ){ 
+    $run = generate_content($data, "save", $plugin_name);
     echo json_encode($run );
 }

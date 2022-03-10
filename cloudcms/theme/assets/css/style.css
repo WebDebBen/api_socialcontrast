@@ -418,4 +418,71 @@ table{
 
 .tab-content{
     border: solid 1px #ccc;
+    margin-top: -1px;
+}
+
+/*********************** overlay **************************/
+.editor_overlay{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    left: 0;
+    top: 0;
+    z-index: 10000;
+    transition: all 0.25s ease-in;
+}
+
+.rapi_edit_wrap{
+    position: relative;
+    display: block;
+    min-height: 600px;
+    height: 600px;
+}
+
+.editor_code_mirror{
+    position: fixed;
+    left: 5%;
+    top: 10%;
+    width: 90%;
+    height: 80%;
+    background: white;
+    z-index: 10000;
+}
+
+.editor_header{
+    padding: 1rem;
+    font-weight: bold;
+    border-bottom: solid 1px #eee;
+}
+
+.editor_close_overlay{
+    float: right;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.editor_body{
+    height: calc(80vh - 130px);
+    position: relative;
+    display: block;
+}
+
+.editor_code_area{
+    height: 100%;
+}
+
+.editor_footer{
+    position: relative;
+    padding: 1rem;
+    border-top: solid 1px #eee;
+}
+
+.CodeMirror{
+    height: 100% !important;
+}
+
+.hidden{
+    opacity: 0;
+    z-index: -1;
 }

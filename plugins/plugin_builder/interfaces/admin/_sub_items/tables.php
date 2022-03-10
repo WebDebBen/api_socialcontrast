@@ -5,7 +5,6 @@
     </div>
     <div class="col-md-3">
         <select class="form-control" id="datatb_table_list_sel">
-            <option value="test">test</option>
         </select>
     </div>
     <div class="col-md-2">
@@ -54,7 +53,7 @@
 </div>
 <div class="row mt-24">
     <div class="col-md-6">
-        <button class="btn btn-success" type="button" id="datatb_run_btn">Run Now</button>
+        <button class="btn btn-success hide" type="button" id="datatb_run_btn">Run Now</button>
         <button class="btn btn-primary" type="button" id="datatb_save_btn">Save Table</button>
     </div>
     <div class="col-md-6">

@@ -9,7 +9,7 @@
         return $str;
     }
 
-    function generate_content($data, $type ){
+    function generate_content($data, $type, $plugin_name = "" ){
         $result = ["status"=> "success", "data"=> ""];
         switch($type ){
             case "sql":
@@ -28,22 +28,23 @@
                 $result["data"] = generate_content_json($data );
                 break;
             case "run":
-                $result = run_content($data );
+                $result = run_content($data, "" );
                 break;
             case "save":
-                $result = save_content($data );
+                $result = save_content($data, $plugin_name );
                 break;
         } 
         return $result;
     }
 
-    function save_content($data ){
-        return run_content($data );
+    function save_content($data, $plugin_name ){
+        return run_content($data, $plugin_name );
     }
 
-    function run_content($data ){
+    function run_content($data, $plugin_name = ""){
         $table_name = $data["table_name"];
 
+        $tmp_sql = generate_content_tmp_sql($data, false );
         $sql = generate_content_sql($data, false );
         $html = generate_content_html($data );
         $js = generate_content_javascript($data );
@@ -57,21 +58,27 @@
         $db->run_query($run_sql );
 
         $html_file = $table_name . ".php";
-        $html_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . PLUGIN_PATH . "/interfaces/admin/" . $html_file; 
-        // "../../../../plugins/" . PLUGIN_PATH . "/interfaces/admin/" . $html_file;
+        $html_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/interfaces/admin/" . $html_file; 
+
+
+        $temp_sql_file = $table_name . "_" . date("y_m_d_h_i_s")  . ".sql";
+        $temp_sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name .  "/temporary/{$temp_sql_file}";
+
         $sql_file = $table_name . "_sql.php";
-        //$sql_path = "../../../../plugins/" . PLUGIN_PATH .  "/interfaces/php/" . $sql_file;
-        $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . PLUGIN_PATH .  "/interfaces/php/" . $sql_file;
+        $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name .  "/interfaces/php/" . $sql_file;
         $php_file = $table_name . ".php";
-        //$php_path = "../../../../plugins/" . PLUGIN_PATH .  "/interfaces/php/" . $php_file;
-        $php_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . PLUGIN_PATH . "/interfaces/php/" . $php_file;
+        $php_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/interfaces/php/" . $php_file;
         $js_file = $table_name . ".js";
-        //$js_path = "../../../../plugins/" . PLUGIN_PATH .  "/assets/js/" . $js_file;
-        //$js_path = "../../../../cloudcms/theme/assets/js/apis/" . $js_file;
-        $js_path = $_SERVER["DOCUMENT_ROOT"] . "/cloudcms/theme/assets/js/apis/" . $js_file;
+        $js_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/assets/js/" . $js_file;
         $json_file = $table_name . ".json";
-        //$json_path = "../../../../plugins/" . PLUGIN_PATH . "/settings/tables/" . $json_file;
-        $json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . PLUGIN_PATH . "/settings/tables/" . $json_file;
+        $json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/settings/tables/" . $json_file;
+
+        if (file_exists($temp_sql_path )){
+            unlink($temp_sql_path );
+        }
+        $myfile = fopen($temp_sql_path, "w") or die("Unable to open file!");
+        fwrite($myfile, $tmp_sql );
+        fclose($myfile);
 
         if (file_exists($sql_path )){
             unlink($sql_path );
@@ -115,6 +122,46 @@
         return json_encode($data);
     }
 
+    function generate_content_tmp_sql($data, $flag = true ){
+        $refs = isset($data["refs"]) ? $data["refs"] : [];
+        $table_name = $data["table_name"];
+        $primary_key = $data["primary_key"];
+        $columns = $data["columns"];
+        $endln = $flag ? "\n" : "";
+        $tab1 = $flag ? "\t" : "";
+        $tab2 = $flag ? "\t\t" : "";
+        $tab3 = $flag ? "\t\t\t" : "";
+        $tab4 = $flag ? "\t\t\t\t" : "";
+        $tab5 = $flag ? "\t\t\t\t\t" : "";
+        $tab6 = $flag ? "\t\t\t\t\t\t" : "";
+
+        $str = "CREATE TABLE IF NOT EXISTS `{$table_name}`({$endln}{$tab1}`{$primary_key}` int(10) NOT NULL auto_increment";
+        foreach($columns as $col ){
+            extract($col );
+            $field_item = "`{$title}` {$type}";
+            if ($requried ){
+                $field_item .= " NOT NULL";
+            }else{
+                $field_item .= " NULL";
+            }
+            if ($default_value ){
+                $field_item .= " DEFAULT '{$default_value}'";
+            }
+            $str .= ", {$endln}{$tab1} {$field_item }";
+        }
+        $str .= ", {$endln}{$tab1} `created_id` int NULL";
+        $str .= ", {$endln}{$tab1} `created_at` datetime NULL";
+        $str .= ", {$endln}{$tab1} `updated_id` int NULL";
+        $str .= ", {$endln}{$tab1} `updated_at` timestamp";
+
+        $str .= ",{$endln}{$tab1}PRIMARY KEY(`{$primary_key}`){$endln});";
+        foreach($refs as $ref){ 
+            $str .= " {$endln}alter table `{$table_name}` add foreign key (`{$ref['field']}`) references {$ref['ref_table']} ({$ref['ref_field']});";
+        }
+
+        return $str;
+    }
+
     function generate_content_sql($data, $flag = true ){
         $refs = isset($data["refs"]) ? $data["refs"] : [];
         $table_name = $data["table_name"];
@@ -144,6 +191,11 @@
             }
             $str .= ", {$endln}{$tab1} {$field_item }";
         }
+        $str .= ", {$endln}{$tab1} `created_id` int NULL";
+        $str .= ", {$endln}{$tab1} `created_at` datetime NULL";
+        $str .= ", {$endln}{$tab1} `updated_id` int NULL";
+        $str .= ", {$endln}{$tab1} `updated_at` timestamp";
+
         $str .= ",{$endln}{$tab1}PRIMARY KEY(`{$primary_key}`){$endln});";
         foreach($refs as $ref){ 
             $str .= " {$endln}alter table `{$table_name}` add foreign key (`{$ref['field']}`) references {$ref['ref_table']} ({$ref['ref_field']});";
@@ -171,9 +223,8 @@
 
         $header = '<script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>' . "\n";
         $header .= '<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">';
-        //$header .= '<script src="http://hayageek.github.io/jQuery-Upload-File/4.0.11/jquery.uploadfile.min.js"></script>;';
-        //$header .= '<link href="http://hayageek.github.io/jQuery-Upload-File/4.0.11/uploadfile.css" rel="stylesheet">';
-        $header .= '<script type="text/javascript" charset="utf-8" src="assets/js/apis/' . $table_name . '.js"></script>' . "\n";
+        //$header .= '<script type="text/javascript" charset="utf-8" src="assets/js/apis/' . $table_name . '.js"></script>' . "\n";
+        $header .= '<script type="text/javascript" charset="utf-8" src="assets/js/' . $table_name . '.js"></script>' . "\n";
 
         $body = "<div class='main-body'>" . "\n";
             $body .= $tab1 . '<h1 class="mt-1r">DataTables Editor <span>' . $table_name . '</span></h1>' . "\n";
@@ -426,12 +477,6 @@
                             $js .= $endln . $tab2 . '$("#' . $table_name . '_field_' . $title . '_upload").hide();';
                             $js .= $endln . $tab2 . '$("#' . $table_name . '_field_' . $title . '_btn").hide();';
                         $js .= $endln . $tab1 . '}';
-
-                        // $js .= $endln . $tab1 . 'var container = $("#' . $table_name . '_field_' . $title . '_upload + .ajax-file-upload-container");';
-                        // $js .= $endln . $tab1 . 'var status = $("<div>").addClass("ajax-file-upload-statusbar").appendTo(container );';
-                        // $js .= $endln . $tab1 . '$("<div>").addClass("ajax-file-upload-filename").text(img_file ).appendTo(status);';
-                        // $js .= $endln . $tab1 . '$("<div>").addClass("ajax-file-upload-red").text("Delete").appendTo(status );';
-                        // $js .= $endln . $tab1 . '$("#' . $table_name . '_field_' . $title . '_upload").attr("data-type", "file").attr("data-file", img_file);';
                     }
                 }else if($type == "text"){
                     $js .= $endln . $tab1 . '$("#' . $table_name . '_field_' . $title . '").trumbowyg("html",$(sel_tr).find(".' . $table_name . '_' . $title . '").html());';
@@ -466,13 +511,11 @@
                 foreach($columns as $key=> $col ){
                     extract($col );
                     if ($type == "varchar(300)"){
-                        //$js .= $endln . $tab3 . '$("<td>").html("<img width=\'100\' src=\'/plugins/uploads/" + item[' . ($key + 1) . '] + "\'>").addClass("profiles_td_photo").appendTo(tr)';
                         $js .= $endln . $tab2 . 'td = $("<td>").appendTo(tr);';
                         $js .= $endln . $tab2 . '$("<img>").attr("width", "100").attr("data-file", item[' . ($key + 1) . ']).attr("src", "/plugins/uploads/" + item[' . ($key + 1) . ']).addClass("' . $table_name . '_' . $title . '").appendTo(td);';
                     }else{
                         $js .= $endln . $tab2 . 'td = $("<td>").appendTo(tr);';
 		                $js .= $endln . $tab2 . '$("<div>").addClass("' . $table_name . '_' . $title . '").html(item[' . ($key + 1). ']).appendTo(td);';
-                        //$js .= $endln . $tab3 . '$("<td>").html(item[' . ($key + 1) . ']).addClass("' . $table_name . '_td_' . $title . '").appendTo(tr);';
                     }
                 }
                 $js .= $endln . $tab2 . 'var td = $("<td>").appendTo(tr );';
@@ -544,8 +587,6 @@
             $php .= "include_once '../../../../config/database.php';";
             $php .= '$db = new Database();';
             $php .= '$db->getConnection(API_DB_NAME );';
-            //$php .= $endln . $tab .  'include_once("../db.php");';
-            //$php .= $endln . $tab .  '$db = new dbObj();';
             $php .= $endln . $tab1 .  'extract($_POST);';
             $php .= $endln . $tab1 .  'switch($type ){';
                 $php .= $endln . $tab2 . 'case "init_table":';
@@ -567,7 +608,6 @@
             $php .= $endln . 'function init_table(){';
                 $php .= $endln . $tab1 . '$query = $GLOBALS["query"];';
                 $php .= $endln . $tab1 . '$db = $GLOBALS["db"];';
-                //$php .= $endln . $tab1 . '$db->run_query($query );';
                 $php .= $endln . $tab1 . '$result = $db->load_data("' . $table_name . '");';
         
                 $php .= $endln . $tab1 . '$data = [];';

@@ -2,7 +2,7 @@ var sel_item = null;
 var sel_table = "new";
 
 $(document).ready(function(){
-    new Sortable(document.getElementById("dtatb_table-property"), {
+    new Sortable(document.getElementById("datatb_table-property"), {
         handle: '.fa-arrows-alt',
         animation: 150,
         ghostClass: 'blue-background-class'
@@ -38,7 +38,7 @@ $(document).ready(function(){
 
 function display_datatb_table_fields(){
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/table_generate.php",
+        url: "/plugins/plugin_builder/include/classes/plugin_table_generate.php",
         data: {
             type: "table_info",
             table: $(this).val()
@@ -65,7 +65,7 @@ function display_datatb_table_fields(){
 
 function select_datatb_table(){
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/table_generate.php",
+        url: "/plugins/plugin_builder/include/classes/plugin_table_generate.php",
         data: {
             type: "table_info",
             table: $("#datatb_table_list_sel").val()
@@ -82,6 +82,7 @@ function select_datatb_table(){
                 var item = columns[i];
                 var max_length = item["character_maximum_length"];
                 var column_name = item["column_name"];
+                if (column_name == "created_id" || column_name == "created_at" || column_name == "updated_id" || column_name == "updated_at") continue;
                 var data_type = item["data_type"];
                 var column_key = item["column_key"];
                 var column_type = item["column_type"] 
@@ -120,7 +121,7 @@ function init_datatb_table_list(){
             for(var i = 0; i < all.length; i++ ){
                 var item = all[i];
                 $("<option value='" + item + "'>").addClass("ref_table_item").text(item).appendTo($("#datatb_table-list-md"));
-                $("<option value='" + item + "'>").text(item).appendTo($("#datatb_table-list-md"));
+                $("<option value='" + item + "'>").text(item).appendTo($("#datatb_table_list_sel"));
             }
 
             /*var made = res["made"];
@@ -193,16 +194,17 @@ function formatHTML(html) {
 }
 
 function generate_content(type ){
-    var json_data = get_jsondata();
+    var json_data = get_datatb_jsondata();
     if (json_data["status"] == false ){
         toastr.error(json_data["error"]);
     }
 
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/table_generate.php",
+        url: "/plugins/plugin_builder/include/classes/plugin_table_generate.php",
         data: {
             json_data: json_data["data"],
-            type: type
+            type: type,
+            plugin_name: $("#plugin_name").val()
         },
         type: "post",
         dataType: "json",
@@ -360,7 +362,7 @@ function validate_name(str ){
     return !str.match(/[^a-zA-Z0-9_]/);
 }
 
-function get_jsondata(){
+function get_datatb_jsondata(){
     var table_name = $("#datatb_table-name-input").val();
     var primary_key  =$("#datatb_primary-key-input").val();
     

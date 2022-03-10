@@ -53,6 +53,35 @@
             return true;
         }
 
+        public function load_commit_list($plugin_name){
+            $query = "show tables where Tables_in_generator = 'commits'";
+            $result = $this->conn->query($query );
+
+            if (!$result){
+                $query = "CREATE TABLE `commits`  (
+                    `id` int(11) NOT NULL AUTO_INCREMENT,
+                    `plugin_name` varchar(255) NULL DEFAULT NULL,
+                    `name` varchar(255) NULL DEFAULT NULL,
+                    `description` varchar(255) NULL DEFAULT NULL,
+                    `is_commited` int NULL DEFAULT 1,
+                    `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (`id`) USING BTREE
+                  ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci";
+                $this->conn->query($query);
+            }
+            $query = "select * from commits where plugin_name='{$plugin_name}'";
+            $result = $this->conn->query($query );
+            if ($result){
+                $plugins = [];
+                while($row = $result->fetch(PDO::FETCH_BOTH)){
+                    array_push($plugins, ["name"=>$row["name"], "description"=> $row["description"], "is_commited"=> $row["is_commited"]]);
+                }
+                return $plugins;
+            }else{
+                return [];
+            }
+        }
+
         public function load_plugins(){
             $query = "show tables where Tables_in_generator = 'plugins'";
             $result = $this->conn->query($query );
