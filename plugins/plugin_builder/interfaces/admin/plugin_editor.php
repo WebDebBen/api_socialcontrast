@@ -29,6 +29,14 @@
                                         aria-controls="table-builder-interface" aria-selected="true">Table Builder</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="form-builder-tab" data-toggle="pill" href="#form-builder-interface" rol="tab" 
+                                        aria-controls="form-builder-interface" aria-selected="true">Form Builder</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="data-table-tab" data-toggle="pill" href="#data-table-interface" rol="tab" 
+                                        aria-controls="data-table-interface" aria-selected="true">Datatable Builder</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="database-script-tab" data-toggle="pill" href="#database-script-interface" rol="tab" 
                                         aria-controls="database-script-interface" aria-selected="true">Database Script</a>
                         </li>
@@ -63,6 +71,16 @@
                         <div class="tab-pane fade show" id="table-builder-interface" role="tabpanel" aria-labelledby="table-builder-tab">
                             <div class="card-body p-0">
                                 <?php include_once("_sub_items/tables.php"); ?>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade show" id="form-builder-interface" role="tabpanel" aria-labelledby="form-builder-tab">
+                            <div class="card-body p-0">
+                                <?php include_once("_sub_items/forms.php"); ?>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade show" id="data-table-interface" role="tabpanel" aria-labelledby="data-table-tab">
+                            <div class="card-body p-0">
+                                <?php include_once("_sub_items/data_table.php"); ?>
                             </div>
                         </div>
                         <div class="tab-pane fade show" id="database-script-interface" role="tabpanel" aria-labelledby="database-script-tab">
@@ -107,13 +125,15 @@
     </div>
 </div>
 
-<script src="/plugins/plugin_builder/assets/plugins/js/rest_api_builder.js"></script>
 <script src="/plugins/plugin_builder/assets/js/Sortable.js"></script>
-<script src="/plugins/plugin_builder/assets/plugins/js/datatable.js"></script>
+<script src="/plugins/plugin_builder/assets/plugins/js/rest_api_builder.js"></script>
+<script src="/plugins/plugin_builder/assets/plugins/js/datatable_builder.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/database_script.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/settings.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/rest_api_editor.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/commits.js"></script>
+<script src="/plugins/plugin_builder/assets/plugins/js/form_builder_new.js"></script>
+<script src="/plugins/plugin_builder/assets/plugins/js/datatable_new.js"></script>
 <script>
     var editor;
     $(document).ready(function(){

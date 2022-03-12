@@ -1,0 +1,1 @@
+{"table_name":"aabbcc","primary_key":"id","columns":[{"title":"ab","type":"datetime","requried":"false","default_value":"","show_table":"false","editor_table":"true","ref_table":"","ref_field":""},{"title":"cd","type":"varchar(255)","requried":"true","default_value":"","show_table":"true","editor_table":"true","ref_table":"","ref_field":""}]}
