@@ -9,6 +9,9 @@
 			<thead><tr>
 				<th>Ab</th>
 				<th>Cd</th>
+				<th>Ef</th>
+				<th>Gh</th>
+				<th>Ij</th>
 				<th>Action</th>
 			</tr></thead>
 			<tbody id='aabbcc_body'>
@@ -38,6 +41,24 @@
 					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Cd</label>
 					<div class="col-sm-10">
 					<input type="text" class="form-control" data-type="string" id="aabbcc_field_cd">
+				</div>
+			</div>
+				<div class="form-group row">
+					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Ef</label>
+					<div class="col-sm-10">
+					<input type="text" class="form-control" data-type="string" id="aabbcc_field_ef">
+				</div>
+			</div>
+				<div class="form-group row">
+					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Gh</label>
+					<div class="col-sm-10">
+					<input type="text" class="form-control" data-type="string" id="aabbcc_field_gh">
+				</div>
+			</div>
+				<div class="form-group row">
+					<label for="field-default-value" class="col-sm-2 col-form-label text-right">Ij</label>
+					<div class="col-sm-10">
+					<input type="text" class="form-control" data-type="string" id="aabbcc_field_ij">
 				</div>
 			</div>
 			</div>

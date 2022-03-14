@@ -68,13 +68,17 @@ function select_datatb_table(){
         url: "/plugins/plugin_builder/include/classes/plugin_table_generate.php",
         data: {
             type: "table_info",
+            plugin_name: $("#plugin_name").val(),
             table: $("#datatb_table_list_sel").val()
         },
         type: "post",
         dataType: "json",
         success: function(res ){
-            $("#datatb_table-name-input").val(res["table_name"]);
-            var columns = res["columns"];
+            var table_info = res["table_info"];
+            var json_data = res["json_data"];
+
+            $("#datatb_table-name-input").val(table_info["table_name"]);
+            var columns = table_info["columns"];
 
             var parent = $("#datatb_table-property");
             $(parent).html("");
@@ -91,7 +95,8 @@ function select_datatb_table(){
                 if (column_key == "PRI"){
                     $("#datatb_primary-key-input").val(column_name);
                 }else{
-                    var template = $("#datatb_table-prop-item-template .table-prop-item").clone(); 
+                    var template = $("#datatb_table-prop-item-template .table-prop-item").clone();
+                    $(template).addClass("datatb_table_item_" + column_name);
                     $(template).find(".field-title-input").val(column_name);
                     $(template).find(".field-type-input").val(column_type);
                     $(template).find(".field-default-value-input").val(item["column_default"]);
@@ -101,6 +106,21 @@ function select_datatb_table(){
                     $(template).find(".reference_table_span").text(ref_table ? ref_table : "None" );
                     $(template).find(".reference_field_span").text(ref_field ? ref_field : "None" );
                     $(template).appendTo($(parent));
+                }
+            }
+
+            var json_column = json_data["columns"];
+            for (var i = 0; i < json_column.length; i++){
+                var item = json_column[i];
+                var column_name = item["title"];
+                if (item["requried"] == "false"){
+                    $(".datatb_table_item_" + column_name).find(".field-required-input").removeProp("checked");
+                }
+                if (item["show_table"] == "false"){
+                    $(".datatb_table_item_" + column_name).find(".field-show-table-input").removeProp("checked");
+                }
+                if (item["editor_table"] == "false" ){
+                    $(".datatb_table_item_" + column_name).find(".field-show-editor-input").removeProp("checked");
                 }
             }
         }
@@ -411,7 +431,7 @@ function get_datatb_jsondata(){
             editor_table: editor_table,
             ref_table: ref_table,
             ref_field: ref_field
-        })
+        });
     }
 
     return {

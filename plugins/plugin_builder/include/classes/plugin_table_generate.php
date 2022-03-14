@@ -33,7 +33,7 @@ switch($type ){
         get_table_list();
         break;
     case "table_info":
-        get_table_info($table );
+        get_table_info($table, $plugin_name );
         break;
     case "table_data":
         get_table_data($obj_id, $ref_table, $ref_field );
@@ -53,10 +53,16 @@ function get_table_data($obj_id, $ref_table, $ref_field ){
     echo json_encode(["status"=>"success", "rs"=> $rs, "table_info"=> $table_info ]);
 }
 
-function get_table_info($table){
+function get_table_info($table, $plugin_name){
     $db = $GLOBALS["db"];
     $table_info = $db->table_info($table );
-    echo  json_encode($table_info );
+    
+    $json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/settings/tables/{$table}.json";
+    $json_data = [];
+    if (file_exists($json_path)){
+        $json_data = json_decode(file_get_contents($json_path));
+    }
+    echo  json_encode(["status"=> "success", "table_info"=> $table_info, "json_data"=> $json_data]);
 }
 
 function get_table_list(){

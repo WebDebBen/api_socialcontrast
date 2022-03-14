@@ -47,6 +47,9 @@ function save_record(){
 	var id = $("#data-id").val();
 	var tr_ab = $("#aabbcc_field_ab").val();
 	var tr_cd = $("#aabbcc_field_cd").val();
+	var tr_ef = $("#aabbcc_field_ef").val();
+	var tr_gh = $("#aabbcc_field_gh").val();
+	var tr_ij = $("#aabbcc_field_ij").val();
 	$.ajax({
 		url: base_url,
 		data:{
@@ -54,6 +57,9 @@ function save_record(){
 			id: id,
 			ab: tr_ab,
 			cd: tr_cd,
+			ef: tr_ef,
+			gh: tr_gh,
+			ij: tr_ij,
 		},
 		type: "post",
 		dataType: "json",
@@ -61,10 +67,13 @@ function save_record(){
 			if (data["status"] == "success" ){
 				if (id == "-1"){
 					var table_id = data["id"];
-					table.row.add( ["<div class='aabbcc_ab'>" + tr_ab + "</div>", "<div class='aabbcc_cd'>" + tr_cd + "</div>", '<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="' + table_id + '"><i class="fa fa-edit"></i></button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id="'+ table_id + '"><i class="fa fa-trash"></i></button>']).draw( false );
+					table.row.add( ["<div class='aabbcc_ab'>" + tr_ab + "</div>", "<div class='aabbcc_cd'>" + tr_cd + "</div>", "<div class='aabbcc_ef'>" + tr_ef + "</div>", "<div class='aabbcc_gh'>" + tr_gh + "</div>", "<div class='aabbcc_ij'>" + tr_ij + "</div>", '<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="' + table_id + '"><i class="fa fa-edit"></i></button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id="'+ table_id + '"><i class="fa fa-trash"></i></button>']).draw( false );
 				}else{
 					$(sel_tr).find(".aabbcc_ab").html(tr_ab );
 					$(sel_tr).find(".aabbcc_cd").html(tr_cd );
+					$(sel_tr).find(".aabbcc_ef").html(tr_ef );
+					$(sel_tr).find(".aabbcc_gh").html(tr_gh );
+					$(sel_tr).find(".aabbcc_ij").html(tr_ij );
 				}
 				$("#edit-modal").modal("hide");
 			}
@@ -106,6 +115,9 @@ function edit_record(){
 	$("#data-id").val(id );
 	$("#aabbcc_field_ab").val($(sel_tr).find(".aabbcc_ab").html());
 	$("#aabbcc_field_cd").val($(sel_tr).find(".aabbcc_cd").html());
+	$("#aabbcc_field_ef").val($(sel_tr).find(".aabbcc_ef").html());
+	$("#aabbcc_field_gh").val($(sel_tr).find(".aabbcc_gh").html());
+	$("#aabbcc_field_ij").val($(sel_tr).find(".aabbcc_ij").html());
 	$("#edit-modal").modal("show");
 }
 function init_table(){
@@ -132,6 +144,12 @@ function load_data(data ){
 		$("<div>").addClass("aabbcc_ab").html(item[1]).appendTo(td);
 		td = $("<td>").appendTo(tr);
 		$("<div>").addClass("aabbcc_cd").html(item[2]).appendTo(td);
+		td = $("<td>").appendTo(tr);
+		$("<div>").addClass("aabbcc_ef").html(item[3]).appendTo(td);
+		td = $("<td>").appendTo(tr);
+		$("<div>").addClass("aabbcc_gh").html(item[4]).appendTo(td);
+		td = $("<td>").appendTo(tr);
+		$("<div>").addClass("aabbcc_ij").html(item[5]).appendTo(td);
 		var td = $("<td>").appendTo(tr );
 		$("<button>").addClass("btn btn-xs btn-sm btn-primary mr-6 edit-item")
 			.attr("data-id", item[0])

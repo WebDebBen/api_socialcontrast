@@ -2,7 +2,12 @@
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css"><script type="text/javascript" charset="utf-8" src="assets/js/apis/post_comment.js"></script>
 <div class='main-body'>
 	<h1 class="mt-1r">DataTables Editor <span>post_comment</span></h1>
-	<div class="row mt-1r mb-1r"><div class="col-md-12"><button class="btn btn-success" id="post_comment_new">New</button><button class="btn btn-success" id="export_excel">Export</button></div></div>
+	<div class="row mt-1r mb-1r">
+		<div class="col-md-12">
+			<button class="btn btn-success" id="post_comment_new">New</button>
+			<button class="btn btn-success" id="export_excel">Export</button>
+		</div>
+	</div>
 	<div class="row mt-2r">
 		<div class="col-md-12">
 		<table cellpadding="0" cellspacing="0" border="0" class="display" id="post_comment_table" width="100%">

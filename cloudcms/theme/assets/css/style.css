@@ -392,7 +392,7 @@ table{
 }
 
 .comp-wrap, .prop-wrap, .ele-wrap{
-    transition: all 0.1s cubic-bezier(0.445, 0.05, 0.55, 0.95);   
+    transition: all 0.1s cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
 
 .comp-wrap{
@@ -419,6 +419,10 @@ table{
 .tab-content{
     border: solid 1px #ccc;
     margin-top: -1px;
+}
+
+.datepicker.dropdown-menu{
+  padding: 0.7rem 1rem !important;
 }
 
 /*********************** overlay **************************/

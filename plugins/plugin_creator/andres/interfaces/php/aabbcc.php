@@ -10,7 +10,7 @@
 			delete_tr($id);
 			break;
 		case "save":
-			save_tr($id ,$ab,$cd);
+			save_tr($id ,$ab,$cd,$ef,$gh,$ij);
 			break;
 	}
 function init_table(){
@@ -24,6 +24,9 @@ function init_table(){
 			array_push($item, $row["id"]);
 			array_push($item, $row["ab"]);
 			array_push($item, $row["cd"]);
+			array_push($item, $row["ef"]);
+			array_push($item, $row["gh"]);
+			array_push($item, $row["ij"]);
 			array_push($data, $item );
 		}
 	}
@@ -35,12 +38,12 @@ function delete_tr($id ){
 	$db->run_query($query );
 	echo json_encode(["status"=> "success"]);
 }
-function save_tr($id, $ab,$cd){
+function save_tr($id, $ab,$cd,$ef,$gh,$ij){
 	$db = $GLOBALS["db"];
 	if ($id == "-1"){
-		$query = "insert into aabbcc set ab='{$ab}',cd='{$cd}'";
+		$query = "insert into aabbcc set ab='{$ab}',cd='{$cd}',ef='{$ef}',gh='{$gh}',ij='{$ij}'";
 	}else{
-		$query = "update aabbcc set ab='{$ab}',cd='{$cd}' where id={$id}";
+		$query = "update aabbcc set ab='{$ab}',cd='{$cd}',ef='{$ef}',gh='{$gh}',ij='{$ij}' where id={$id}";
 	}
 	$id = $db->update_query($query );
 	echo json_encode(["status"=> "success", "id"=> $id ]);

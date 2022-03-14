@@ -125,7 +125,9 @@
     </div>
 </div>
 
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
 <script src="/plugins/plugin_builder/assets/js/Sortable.js"></script>
+<script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/rest_api_builder.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/datatable_builder.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/database_script.js"></script>
