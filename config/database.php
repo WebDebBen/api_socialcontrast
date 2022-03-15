@@ -48,9 +48,45 @@
         }
 
         function run_query($query ){
-            $sth = $this->conn->prepare($query );
-            $sth->execute();
-            return true;
+            $stmt = $this->conn->query($query );
+            return $this->conn->lastInsertId();//mysqli_insert_id($this->conn );
+        }
+
+        function run_query_with_error($query){
+            $result = $this->conn->query($query );
+            if($result) {
+                $table_data = [];
+                while($row = $result->fetch(PDO::FETCH_ASSOC)){
+                    $item = [];
+                    foreach($row as $key=>$value){
+                        array_push($item, ["key"=> $key, "value"=> $value]);
+                    }
+                    array_push($table_data, $item);
+                }
+                return ["status"=> "success", "result"=> $table_data];
+            } else {
+                return ["status"=> "error", "result"=> $this->conn->errorInfo()];
+            }
+        }
+
+        function load_records($query){
+            $result = $this->conn->query($query );
+            return $result;
+        }
+
+        function load_records_data($query){
+            $result = $this->conn->query($query );
+            $data = [];
+            if($result){
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)){
+                    $item = [];
+                    foreach($row as $key=>$value){
+                        array_push($item, ["key"=> $key, "value"=> $value]);
+                    }
+                    array_push($data, $item );
+                }
+            }
+            return $data;
         }
 
         public function load_commit_list($plugin_name){
@@ -115,6 +151,10 @@
         public function update_query($query ){
             $stmt = $this->conn->query($query );
             return $this->conn->lastInsertId();//mysqli_insert_id($this->conn );
+        }
+
+        public function last_insert_id(){
+            $this->conn->lastInsertId();
         }
 
         function table_list(){

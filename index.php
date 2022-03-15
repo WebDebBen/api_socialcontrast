@@ -1,5 +1,6 @@
 <?php
-	error_reporting(1); // disable errors
+
+	error_reporting(0); // disable errors
 	session_start();
 	include_once 'config/config.php';
 	include_once 'config/database.php'; 
@@ -8,7 +9,6 @@
 	$database = new Database();
     $db = $database->getConnection();
     
-
     include_once 'cloudcms/include/classes/all_classes.php';
 
 	if ($_GET["page"] == "api"){

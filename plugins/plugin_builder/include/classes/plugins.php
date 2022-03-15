@@ -65,6 +65,7 @@ function save_plugin($name ){
             mkdir($folder_path . "/interfaces/admin");
             mkdir($folder_path . "/interfaces/ajax");
             mkdir($folder_path . "/interfaces/php");
+            mkdir($folder_path . "/interfaces/query");
         mkdir($folder_path . "/settings");
             mkdir($folder_path . "/settings/forms");
             mkdir($folder_path . "/settings/tables");

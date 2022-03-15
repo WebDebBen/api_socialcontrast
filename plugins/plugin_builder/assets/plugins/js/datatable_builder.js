@@ -143,12 +143,6 @@ function init_datatb_table_list(){
                 $("<option value='" + item + "'>").addClass("ref_table_item").text(item).appendTo($("#datatb_table-list-md"));
                 $("<option value='" + item + "'>").text(item).appendTo($("#datatb_table_list_sel"));
             }
-
-            /*var made = res["made"];
-            $("#datatb_table_list_sel").html("");
-            for(var i = 0; i < made.length; i++ ){
-                $("<option>").attr("value", made[i]).text(made[i]).appendTo($("#datatb_table_list_sel"));
-            }*/
         }
     });
 }

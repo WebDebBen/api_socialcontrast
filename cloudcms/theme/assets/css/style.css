@@ -490,3 +490,14 @@ table{
     opacity: 0;
     z-index: -1;
 }
+
+
+.tablequery_code_area,
+.tablequery_code_area:focus
+{
+  height: 162px !important;
+  background: #1F2430 !important;
+  color: gray !important;
+  font-size: 18px !important;
+  padding-left: 16px !important;
+}

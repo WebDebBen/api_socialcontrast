@@ -1,4 +1,7 @@
 var dt_table;
+var g_dt_table_fields;
+var g_sel_dt_tr;
+
 $(document).ready(function(){
     load_dt_table_list();
     $("#dt_select_tb_btn").on("click", dt_select_datatable);
@@ -15,32 +18,41 @@ function dt_save_record(){
         var value = $(input).val();
         records[title] = value;
     }
-    records["id"] = $("#dt-data-id").val();
+    records["id"] = $("#data-dt-id").val();
     
     $.ajax({
         url: "/plugins/plugin_builder/include/classes/plugin_datatable.php",
         data: {
             type: "save_table",
-            id: $("#dt-data-id").val(),
-            data: records
+            id: $("#data-dt-id").val(),
+            table_name: $("#dt_tbname").val(),
+            table_data: records
         },
         type: "post",
         dataType: "json",
         success: function(res ){
-            console.log(res);
-            // if (data["status"] == "success" ){
-			// 	if (id == "-1"){
-			// 		var table_id = data["id"];
-			// 		table.row.add( ["<div class='aabbcc_ab'>" + tr_ab + "</div>", "<div class='aabbcc_cd'>" + tr_cd + "</div>", "<div class='aabbcc_ef'>" + tr_ef + "</div>", "<div class='aabbcc_gh'>" + tr_gh + "</div>", "<div class='aabbcc_ij'>" + tr_ij + "</div>", '<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="' + table_id + '"><i class="fa fa-edit"></i></button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id="'+ table_id + '"><i class="fa fa-trash"></i></button>']).draw( false );
-			// 	}else{
-			// 		$(sel_tr).find(".aabbcc_ab").html(tr_ab );
-			// 		$(sel_tr).find(".aabbcc_cd").html(tr_cd );
-			// 		$(sel_tr).find(".aabbcc_ef").html(tr_ef );
-			// 		$(sel_tr).find(".aabbcc_gh").html(tr_gh );
-			// 		$(sel_tr).find(".aabbcc_ij").html(tr_ij );
-			// 	}
-			// 	$("#edit-modal").modal("hide");
-			// }
+            if (res["status"] == "success" ){
+                if ($("#data-dt-id").val() == ""){
+                    var table_id = res["id"];
+                    var items = [];
+                    for (var i = 0; i < g_dt_table_fields.length; i++){
+                        var item = g_dt_table_fields[i];
+                        if (item["is_show"] == "true"){
+                            items.push("<div class='dt-table-" + item["title"] + "'>" + records[item["title"]] + "</div>");
+                        }
+                    }
+                    items.push('<button class="btn btn-xs btn-sm btn-primary mr-6 edit-item" data-id="' + table_id + '"><i class="fa fa-edit"></i>edit</button><button class="btn btn-xs btn-sm btn-secondary delete-item" data-id="'+ table_id + '"><i class="fa fa-trash"></i>delete</button>');
+                    dt_table.row.add(items).draw(false);
+                }else{
+                    for (var i = 0; i < g_dt_table_fields.length; i++){
+                        var item = g_dt_table_fields[i];
+                        if (item["is_show"] == "true"){
+                            $(g_sel_dt_tr).find(".dt-table-" + item['title']).html(records[item['title']]);
+                        }
+                    }
+                }
+            }
+            $("#dt-edit-modal").modal("hide");
         }
     });
 }
@@ -120,6 +132,7 @@ function init_dt_datatable(table_info, json_data, table_data ){
     var json_columns = json_data["columns"];
     var table_columns = table_info["columns"];
     var fields_info = get_dt_table_fields(table_columns, json_columns);
+    g_dt_table_fields = fields_info;
 
     var table_wrap = $("#dt_table_wrap");
     $(table_wrap).html("");
@@ -148,7 +161,7 @@ function init_dt_datatable(table_info, json_data, table_data ){
         for (var j = 0; j < fields_info.length; j++ ){
             if (fields_info[j]["is_show"] == "true"){
                 var field_title = fields_info[j]["title"];
-                $("<td>").text(table_item[field_title]).appendTo(tr);
+                $("<td>").html("<div class='dt-table-" + field_title + "'>" + table_item[field_title] + "</div>").appendTo(tr);
             }
         }
         var td = $("<td>").appendTo(tr );
@@ -156,11 +169,30 @@ function init_dt_datatable(table_info, json_data, table_data ){
             .attr("type", "button")
 			.attr("data-id", table_item["id"])
             .on("click", function(e){
-                $("#dt-edit-modal").modal("show");
+                g_sel_dt_tr = $(this).parent().parent();
+                edit_dt_modal_show($(this).attr("data-id"));
             })
 			.html("<i class='fa fa-edit'></i> edit").appendTo(td );
 		$("<button>").addClass("btn btn-xs btn-sm btn-secondary delete-item")
             .attr("type", "button")
+            .on("click", function(e){
+                if (!confirm("delete this data?")) return;
+                g_sel_dt_tr = $(this).parent().parent();
+                $("#dt_tbname").val();
+                $.ajax({
+                    url: "/plugins/plugin_builder/include/classes/plugin_datatable.php",
+                    data: {
+                        type: "delete_data",
+                        table_name: $("#dt_tbname").val(),
+                        id: $(this).attr("data-id")
+                    },
+                    type: "post",
+                    dataType: "json",
+                    success: function(res){
+                        dt_table.row('.selected').remove().draw( false );
+                    }
+                });
+            })
 			.attr("data-id", table_item["id"])
 			.html("<i class='fa fa-trash'></i> delete").appendTo(td );
     }
@@ -175,6 +207,31 @@ function init_dt_datatable(table_info, json_data, table_data ){
 		    $(this).addClass('selected');
 		}
 	});
+}
+
+function edit_dt_modal_show(id){
+    $("#data-dt-id").val(id);
+    $.ajax({
+        url: "/plugins/plugin_builder/include/classes/plugin_datatable.php",
+        data: {
+            type: "load_data",
+            id: $("#data-dt-id").val(),
+            table_name: $("#dt_tbname").val()
+        },
+        type: "post",
+        dataType: "json",
+        success: function(res ){
+            var data = res["data"];
+            for (var i = 0; i < g_dt_table_fields.length; i++){
+                var item = g_dt_table_fields[i];
+                if (item["is_edit"] == "true"){
+                    $(".dt-edit-modal-" + item['title']).val(data[item['title']]);
+                }
+            }
+            
+        }
+    });
+    $("#dt-edit-modal").modal("show");
 }
 
 function add_dt_field_modal(fields){
@@ -196,24 +253,28 @@ function add_dt_field_modal(fields){
             $("<label>").addClass("col-sm-2 col-form-label text-right").text(title ).appendTo(form_group);
             var col_10 = $("<div>").addClass("col-sm-10").appendTo(form_group);
             if (ref_table_name && ref_table_name != "" ){
-                $("<select>").addClass("form-control ref-select dt-edit-input")
+                var tmp_select = $("<select>").addClass("form-control ref-select dt-edit-input dt-edit-modal-" + title)
                         .attr("data-reffield", ref_column_name)
                         .attr("data-fieldname", title)
                         .attr("data-reftable", ref_table_name).attr("data-type", "relation").appendTo(col_10);
+                load_relation_table_data(tmp_select, $("#dt_tbname").val(), title, ref_table_name, ref_column_name);
             }else{
                 switch(type){
                     case "enum":
-                        $("<select>").addClass("form-control ref-select dt-edit-input").attr("data-reffield", ref_column_name)
+                        $("<select>").addClass("form-control ref-select dt-edit-input dt-edit-modal-" + title)
+                            .attr("data-reffield", ref_column_name)
                             .attr("data-fieldname", title)
                             .attr("data-reftable", ref_table_name).attr("data-type", "relation").appendTo(col_10);
                         break;
                     case "date": case "datetime": case "timestamp":
                         $("<input>").attr("type", "text").attr("data-fieldname", title)
-                            .addClass("form-control dt_modal_datepicker dt-edit-input").appendTo(col_10);
+                            .addClass("form-control dt_modal_datepicker dt-edit-input dt-edit-modal-" + title)
+                            .appendTo(col_10);
                         break;
                     default:
                         $("<input>").attr("type", "text").attr("data-fieldname", title)
-                            .addClass("form-control dt_modal_input dt-edit-input").appendTo(col_10);
+                            .addClass("form-control dt_modal_input dt-edit-input dt-edit-modal-" + title)
+                            .appendTo(col_10);
                         break;
                 }
             }
@@ -222,6 +283,44 @@ function add_dt_field_modal(fields){
     $('.dt_modal_datepicker').datepicker({
         format: 'yyyy-mm-dd',
     });
+}
+
+function load_relation_table_data(select_obj, table_name, table_field, ref_table_name, ref_column_name){
+    $.ajax({
+        url: "/plugins/plugin_builder/include/classes/plugin_datatable.php",
+        data: {
+            type: "load_relation_data",
+            table_name: table_name,
+            table_field: table_field,
+            ref_table_name: ref_table_name,
+            ref_table_field: ref_column_name
+        },
+        type: "post",
+        dataType: "json",
+        success: function(res ){
+            if (res["status"] == "success"){
+                result = res["result"];
+                display_relation_table_data(select_obj,result);
+            }
+        }
+    });
+}
+
+function display_relation_table_data(select_obj, result){
+    for(var i = 0; i < result.length; i++){
+        var items = result[i];
+        var str = "";
+        var tmp_id = items[0]["value"];
+        for (var j = 0; j < items.length; j++){
+            var item = items[j];
+            var key = item["key"];
+            var value = item["value"];
+            if (key != "created_at" && key != "updated_at" && key != "created_id" && key != "updated_id"){
+                str = j == 0 ? value : str + "," + value;
+            }
+        }
+        $("<option>").attr("value", tmp_id).html(str).appendTo(select_obj);
+    }
 }
 
 function add_dt_filter_area(fields){

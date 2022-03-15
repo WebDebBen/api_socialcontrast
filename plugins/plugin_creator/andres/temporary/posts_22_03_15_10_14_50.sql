@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS `posts`(`id` int(10) NOT NULL auto_increment,  `title` varchar(255) NOT NULL,  `title` varchar(255) NOT NULL DEFAULT 'NULL',  `content` text NOT NULL,  `description` text NOT NULL DEFAULT 'NULL',  `created_id` int NULL,  `created_at` datetime NULL,  `updated_id` int NULL,  `updated_at` timestamp,PRIMARY KEY(`id`));

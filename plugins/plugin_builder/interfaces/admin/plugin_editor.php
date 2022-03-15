@@ -37,6 +37,10 @@
                                         aria-controls="data-table-interface" aria-selected="true">Datatable Builder</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="data-tablequery-tab" data-toggle="pill" href="#data-tablequery-interface" rol="tab" 
+                                        aria-controls="data-tablequery-interface" aria-selected="true">Datatable Query</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="database-script-tab" data-toggle="pill" href="#database-script-interface" rol="tab" 
                                         aria-controls="database-script-interface" aria-selected="true">Database Script</a>
                         </li>
@@ -81,6 +85,11 @@
                         <div class="tab-pane fade show" id="data-table-interface" role="tabpanel" aria-labelledby="data-table-tab">
                             <div class="card-body p-0">
                                 <?php include_once("_sub_items/data_table.php"); ?>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade show" id="data-tablequery-interface" role="tabpanel" aria-labelledby="data-tablequery-tab">
+                            <div class="card-body p-0">
+                                <?php include_once("_sub_items/data_tablequery.php"); ?>
                             </div>
                         </div>
                         <div class="tab-pane fade show" id="database-script-interface" role="tabpanel" aria-labelledby="database-script-tab">
@@ -136,6 +145,7 @@
 <script src="/plugins/plugin_builder/assets/plugins/js/commits.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/form_builder_new.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/datatable_new.js"></script>
+<script src="/plugins/plugin_builder/assets/plugins/js/tablequery.js"></script>
 <script>
     var editor;
     $(document).ready(function(){
