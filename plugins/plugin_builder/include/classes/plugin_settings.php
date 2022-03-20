@@ -17,7 +17,7 @@ switch($type ){
 }
 
 function setting_list($plugin_name){
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/settings/settings.json";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/settings/settings.json";
     $result = ["status"=> "success", "data"=> ""];
     if (file_exists($path )){
         $result["data"] = json_decode(file_get_contents($path));
@@ -28,7 +28,7 @@ function setting_list($plugin_name){
 }
 
 function save_settings($plugin_name, $setting_name, $setting_value){
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/settings/settings.json";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/settings/settings.json";
     $result = ["status"=> "success"];
     if (!file_exists($path )){
         $myfile = fopen($path, "w") or die("Unable to open file!");
@@ -63,7 +63,7 @@ function save_settings($plugin_name, $setting_name, $setting_value){
 }
 
 function update_settings($plugin_name, $setting_name, $setting_value){
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/settings/settings.json";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/settings/settings.json";
     $result = ["status"=> "success"];
 
     $data = json_decode(file_get_contents($path));
@@ -88,7 +88,7 @@ function update_settings($plugin_name, $setting_name, $setting_value){
 }
 
 function delete_setting($plugin_name, $setting_name ){
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/settings/settings.json";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/settings/settings.json";
     $result = ["status"=> "success"];
 
     $data = json_decode(file_get_contents($path));

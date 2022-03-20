@@ -97,7 +97,7 @@ function load_dt_table_info($table_name, $plugin_name){
     $db = $GLOBALS["db"];
     $table_info = $db->table_info($table_name );
     
-    $json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/settings/tables/{$table_name}.json";
+    $json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/settings/tables/{$table_name}.json";
     $json_data = [];
     if (file_exists($json_path)){
         $json_data = json_decode(file_get_contents($json_path));

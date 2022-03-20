@@ -58,20 +58,20 @@
         $db->run_query($run_sql );
 
         $html_file = $table_name . ".php";
-        $html_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/interfaces/admin/" . $html_file; 
+        $html_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/interfaces/admin/" . $html_file; 
 
 
         $temp_sql_file = $table_name . "_" . date("y_m_d_h_i_s")  . ".sql";
-        $temp_sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name .  "/temporary/{$temp_sql_file}";
+        $temp_sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name .  "/temporary/{$temp_sql_file}";
 
         $sql_file = $table_name . "_sql.php";
-        $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name .  "/interfaces/php/" . $sql_file;
+        $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name .  "/interfaces/php/" . $sql_file;
         $php_file = $table_name . ".php";
-        $php_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/interfaces/php/" . $php_file;
+        $php_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/interfaces/php/" . $php_file;
         $js_file = $table_name . ".js";
-        $js_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/assets/js/" . $js_file;
+        $js_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/assets/js/" . $js_file;
         $json_file = $table_name . ".json";
-        $json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/settings/tables/" . $json_file;
+        $json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/settings/tables/" . $json_file;
 
         if (file_exists($temp_sql_path )){
             unlink($temp_sql_path );

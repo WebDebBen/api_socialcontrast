@@ -9,18 +9,23 @@
     </div>
     <div class="col-md-2">
         <button class="btn btn-success" type="button" id="datatb_select_table">Select Table</button>
+        <button class="btn btn-default" type="button" id="datatb_new_table">New Table</button>
         <button class="btn btn-primary hide" type="button" id="datatb_check_table">Preview Table</button>
+    </div>
+    <div class="col-md-5 text-right">
+        <button class="btn btn-primary" id="datatb_gen_sql" type="button">View SQL</button> 
+        <button class="btn btn-primary" id="datatb_save_btn" type="button">Save SQL</button>
     </div>
 </div>
 <hr>
 <div class="row mt-1r">
     <div class="col-md-12">
-        <h4>Server and Database</h4>
+        <h4>Database</h4>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-1">Server Type : </div>
-    <div class="col-md-1"><label>PHP</div>
+    <div class="col-md-1 hide">Server Type : </div>
+    <div class="col-md-1 hide"><label>PHP</div>
     <div class="col-md-1">Database type :</div>
     <div class="col-md-1"><label>My SQL</div>
 </div>
@@ -48,10 +53,10 @@
     </div>
 </div>
 <hr>
-<div class="row">
+<div class="row hide">
     <div class="col-md-12"><h5>Action</h5></div>
 </div>
-<div class="row mt-24">
+<div class="row mt-24 hide">
     <div class="col-md-6">
         <button class="btn btn-success hide" type="button" id="datatb_run_btn">Run Now</button>
         <button class="btn btn-primary" type="button" id="datatb_save_btn">Save Table</button>
@@ -59,10 +64,10 @@
     <div class="col-md-6">
         <label class="mr-1r">View: </label>
         <button class="btn btn-primary" type="button" id="datatb_gen_sql">SQL</button>
-        <button class="btn btn-primary" type="button" id="datatb_gen_html">HTML</button>
-        <button class="btn btn-primary" type="button" id="datatb_gen_javascript">Javascript</button>
-        <button class="btn btn-primary" type="button" id="datatb_gen_php">PHP</button>
-        <button class="btn btn-primary" type="button" id="datatb_gen_json">JSON</button>
+        <button class="btn btn-primary hide" type="button" id="datatb_gen_html">HTML</button>
+        <button class="btn btn-primary hide" type="button" id="datatb_gen_javascript">Javascript</button>
+        <button class="btn btn-primary hide" type="button" id="datatb_gen_php">PHP</button>
+        <button class="btn btn-primary hide" type="button" id="datatb_gen_json">JSON</button>
     </div>
 </div>
 
@@ -178,7 +183,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row hide">
                         <h5>Show In</h5>
                         <div class="col-md-12">
                             <div class="form-group row">
@@ -253,11 +258,11 @@
                     <label class="">Default Value</label>
                     <input type="text" class="form-control field-default-value-input">
                 </div>
-                <div class="field-required ml-1r mr-1r">
+                <div class="field-required ml-1r mr-1r hide">
                     <label class="full-width ">Show Table</label>
                     <input type="checkbox" class="field-show-table-input mt-10" checked>
                 </div>
-                <div class="field-required ml-1r mr-1r">
+                <div class="field-required ml-1r mr-1r hide">
                     <label class="full-width">Show Editor</label>
                     <input type="checkbox" class="field-show-editor-input mt-10" checked>
                 </div>

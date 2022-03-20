@@ -17,16 +17,16 @@
                     <h4>Editing Plugin - andreas</h4>
                     <ul class="nav nav-tabs" id="editor-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link" id="rest-api-tab" data-toggle="pill" href="#rest-api-interface" rol="tab" 
+                            <a class="nav-link active" id="rest-api-tab" data-toggle="pill" href="#rest-api-interface" rol="tab" 
                                         aria-controls="rest-api-interface" aria-selected="true">Rest API</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link active" id="rest-api-edit-tab" data-toggle="pill" href="#rest-api-edit-interface" rol="tab" 
                                         aria-controls="rest-api-edit-interface" aria-selected="true">Rest API Edit</a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <a class="nav-link" id="table-builder-tab" data-toggle="pill" href="#table-builder-interface" rol="tab" 
-                                        aria-controls="table-builder-interface" aria-selected="true">Table Builder</a>
+                                        aria-controls="table-builder-interface" aria-selected="true">Database Builder</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="form-builder-tab" data-toggle="pill" href="#form-builder-interface" rol="tab" 
@@ -54,7 +54,7 @@
                         </li>
                     </ul>
                     <div class="tab-content px-1r" id="editor-tabContent">
-                        <div class="tab-pane fade show " id="rest-api-interface" role="tabpanel" aria-labelledby="rest-api-tab">
+                        <div class="tab-pane fade show active" id="rest-api-interface" role="tabpanel" aria-labelledby="rest-api-tab">
                             <div class="card-body p-0">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -63,15 +63,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade show active" id="rest-api-edit-interface" role="tabpanel" aria-labelledby="rest-api-edit-tab">
+                        <!-- <div class="tab-pane fade show active" id="rest-api-edit-interface" role="tabpanel" aria-labelledby="rest-api-edit-tab">
                             <div class="card-body p-0">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <?php include_once("_sub_items/rest_api_edit.php"); ?>
+                                        <?php //include_once("_sub_items/rest_api_edit.php"); ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="tab-pane fade show" id="table-builder-interface" role="tabpanel" aria-labelledby="table-builder-tab">
                             <div class="card-body p-0">
                                 <?php include_once("_sub_items/tables.php"); ?>
@@ -134,9 +134,12 @@
     </div>
 </div>
 
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <script src="/plugins/plugin_builder/assets/js/Sortable.js"></script>
-<script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/rest_api_builder.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/datatable_builder.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/database_script.js"></script>
@@ -155,10 +158,9 @@
             indentUnit: 4,
             indentWithTabs: true
         });
-
+        $("title").html("Editing Plugin - " + $("#plugin_name").val());
         $("#editor_overlay").on("click", hide_overlay );
         $("#editor_close_overlay").on("click", hide_overlay);
-
         $("#save_editor_overlay").on("click", save_plugin_editor );
     });
 

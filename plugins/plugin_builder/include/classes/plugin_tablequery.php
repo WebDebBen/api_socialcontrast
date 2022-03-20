@@ -22,13 +22,13 @@ switch($type ){
 }
 
 function load_query($plugin_name, $query_name){
-    $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/interfaces/query/{$query_name}";
+    $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/interfaces/query/{$query_name}";
     $query_data = file_get_contents($sql_path);
     echo json_encode(["status"=> 'sucess', "data"=> $query_data]);
 }
 
 function load_query_list($plugin_name){
-    $dirs = scandir($_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/interfaces/query/");
+    $dirs = scandir($_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/interfaces/query/");
     $scripts = [];
     foreach($dirs as $item ){
         if ($item != "." && $item != ".." ){
@@ -40,7 +40,7 @@ function load_query_list($plugin_name){
 
 function save_table_query($query_name, $query, $plugin_name ){
     $db = $GLOBALS["db"];
-    $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/interfaces/query/{$query_name}.sql";
+    $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/interfaces/query/{$query_name}.sql";
     $result = $db->run_query_with_error($query);
     if ($result["status"] == "error"){
         echo json_encode(["status"=> "error", "result"=> $result["result"]]);

@@ -28,7 +28,7 @@
             generate_api($item );
         }
         
-        $dir = "../../../plugin_creator/" . $plugin_name . "/api/documentation/"; 
+        $dir = "../../../" . $plugin_name . "/api/documentation/"; 
         if (!file_exists($dir )){
             mkdir($dir, 0700);
         }
@@ -62,7 +62,7 @@
         $table_name = $item->table_name;
         $plugin_name = $_POST["plugin_name"];
         
-        $dir = "../../../plugin_creator/" . $plugin_name . "/api/calls/";
+        $dir = "../../../" . $plugin_name . "/api/calls/";
         $table_path = $dir . $table_name; 
         if (file_exists($table_path )){
             rrmdir($table_path);

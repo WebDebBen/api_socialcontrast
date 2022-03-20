@@ -41,12 +41,17 @@ function display_datatb_table_fields(){
         url: "/plugins/plugin_builder/include/classes/plugin_table_generate.php",
         data: {
             type: "table_info",
-            table: $(this).val()
+            table: $(this).val(),
+            plugin_name: $("#plugin_name").val()
         },
         type: "post",
         dataType: "json",
         success: function(res ){
-            var columns = res["columns"];
+            var table_data = res["table_info"];
+            var json_data=  res["json_data"];
+            var status = res["status"];
+
+            var columns = table_data["columns"];
             $(".ref_field_item").remove();
             for (var i = 0;i < columns.length; i++){
                 var item = columns[i];

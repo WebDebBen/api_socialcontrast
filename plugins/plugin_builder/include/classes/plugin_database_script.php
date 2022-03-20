@@ -22,7 +22,7 @@ switch($type ){
 }
 
 function script_list($plugin_name){
-    $dirs = scandir($_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/temporary");
+    $dirs = scandir($_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/temporary");
     $scripts = [];
     foreach($dirs as $item ){
         if ($item != "." && $item != ".." && strpos($item, ".sql") > 0 ){
@@ -34,7 +34,7 @@ function script_list($plugin_name){
 }
 
 function save_ds_content($plugin_name, $script_name, $content){
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/temporary/{$script_name}.sql";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/temporary/{$script_name}.sql";
     $result = ["status"=> "success"];
     if (!file_exists($path )){
         $result["status"] = "file not exist";
@@ -47,7 +47,7 @@ function save_ds_content($plugin_name, $script_name, $content){
 }
 
 function save_ds_script($plugin_name, $script_name){
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/temporary/{$script_name}.sql";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/temporary/{$script_name}.sql";
     $result = ["status"=> "success"];
     if (file_exists($path )){
         $result["status"] = "duplicated";
@@ -60,7 +60,7 @@ function save_ds_script($plugin_name, $script_name){
 }
 
 function load_ds_content($plugin_name, $script_name ){
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/temporary/{$script_name}.sql";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/temporary/{$script_name}.sql";
     $result = ["status"=> "success", "data"=> ""];
     if (file_exists($path )){
         $result["data"] = file_get_contents($path);
@@ -71,7 +71,7 @@ function load_ds_content($plugin_name, $script_name ){
 }
 
 function delete_ds_script($plugin_name, $script_name){
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/temporary/{$script_name}.sql";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/temporary/{$script_name}.sql";
     $result = ["status"=> "success"];
     if (file_exists($path )){
         unlink($path);

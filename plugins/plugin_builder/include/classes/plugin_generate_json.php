@@ -15,7 +15,7 @@
             ]
         ];
         $api_obj["host"] = $_SERVER["SERVER_NAME"];
-        $api_obj["basePath"] = "/api/plugin_creator/" . $plugin_name;
+        $api_obj["basePath"] = "/api/" . $plugin_name;
 
         $api_obj["tags"] = get_tags_info($table_info );
         $api_obj["paths"] = get_path_info($table_info );

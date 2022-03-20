@@ -32,7 +32,7 @@ function save_commit_item($plugin_name, $commit_name, $commit_desc){
     $query = "insert into commits(plugin_name, name, description) values('{$plugin_name}', '{$commit_name}', '{$commit_desc}')";
     $result = $db->run_query($query);
 
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/commits/{$commit_name}";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/commits/{$commit_name}";
     mkdir($path );
 
     echo json_encode(["status"=> "success"]);
@@ -43,8 +43,8 @@ function set_commit($plugin_name, $commit_name){
     $query = "update commits set is_commited=2 where plugin_name='{$plugin_name}' and name='{$commit_name}'";
     $result = $db->run_query($query);
 
-    $commit_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/commits/{$commit_name}/";
-    $tmp_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/temporary/";
+    $commit_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/commits/{$commit_name}/";
+    $tmp_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/temporary/";
     $dirs = scandir($tmp_path);
 
     foreach($dirs as $item ){
@@ -60,7 +60,7 @@ function delete_commit($plugin_name, $commit_name){
     $query = "delete from commits where plugin_name='{$plugin_name}' and name='{$commit_name}'";
     $result = $db->run_query($query );
 
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/commits/{$commit_name}";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/commits/{$commit_name}";
     if (file_exists($path )){
         rrmdir($path );
     }

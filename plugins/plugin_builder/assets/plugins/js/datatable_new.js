@@ -7,7 +7,86 @@ $(document).ready(function(){
     $("#dt_select_tb_btn").on("click", dt_select_datatable);
     $("#dt_table_data_new").on("click", dt_edit_table_new);
     $("#dt_save_record").on("click", dt_save_record);
+
+    $("#dt_import_excel").on("click", dt_import_excel);
+    $("#dt_export_excel").on("click", dt_export_excel);
+
+    $("#upload").on("change", handleFileSelect);
 });
+
+var ExcelToJSON = function() {
+
+    this.parseExcel = function(file) {
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        var data = e.target.result;
+        var workbook = XLSX.read(data, {
+            type: 'binary'
+        });
+        workbook.SheetNames.forEach(function(sheetName) {
+            // Here is your object
+            var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+            var json_object = JSON.stringify(XL_row_object);
+            handle_dt_excel_data(json_object);
+        })
+      };
+
+      reader.onerror = function(ex) {
+        console.log(ex);
+      };
+
+      reader.readAsBinaryString(file);
+    };
+};
+
+function handle_dt_excel_data(json_data){
+    $.ajax({
+        url: "/plugins/plugin_builder/include/classes/import_excel.php",
+        data:{
+            table: $("#dt_tbname").val(),
+            data: json_data
+        },
+        type: "post",
+        dataType: "json",
+        success: function(data){
+            if (data["status"] == "success"){
+                toastr.success("saved, successfuly");
+                $("#dt_select_tb_btn").trigger("click");
+            }else{
+                toastr.error(data["result"]);
+            }
+        }
+    });
+}
+
+function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+    var xl2json = new ExcelToJSON();
+    xl2json.parseExcel(files[0]);
+}
+
+function dt_import_excel(){
+    $("#upload").trigger("click");
+}
+
+function dt_export_excel(){
+    $.ajax({
+        url: "/plugins/plugin_builder/include/classes/export_excel.php",
+        data:{
+            table: $("#dt_tbname").val(),
+        },
+        type: "post",
+        dataType: "json",
+        success: function(data){
+            if (data["status"] == "success" ){
+                window.open("/plugins/excels/" + data["file"], "_blank");
+            }else{
+                toastr.error("failed");
+            }
+        }
+    });
+}
 
 function dt_save_record(){
     var inputs = $(".dt-edit-input");
@@ -129,6 +208,7 @@ function get_dt_table_fields(table_columns, json_columns){
 }
 
 function init_dt_datatable(table_info, json_data, table_data ){
+
     var json_columns = json_data["columns"];
     var table_columns = table_info["columns"];
     var fields_info = get_dt_table_fields(table_columns, json_columns);
@@ -196,8 +276,8 @@ function init_dt_datatable(table_info, json_data, table_data ){
 			.attr("data-id", table_item["id"])
 			.html("<i class='fa fa-trash'></i> delete").appendTo(td );
     }
-
-    dt_table = $(table ).DataTable();
+    dt_table = $("#dt_table_data").DataTable();
+    
 	$('#dt_table_data tbody').on( 'click', 'tr', function () {
 		if ( $(this).hasClass('selected') ) {
 			$(this).removeClass('selected');

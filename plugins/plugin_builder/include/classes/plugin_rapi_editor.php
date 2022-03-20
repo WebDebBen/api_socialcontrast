@@ -17,7 +17,7 @@ switch($type ){
 }
 
 function script_list($plugin_name){
-    $dirs = scandir($_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/" . $plugin_name . "/api/calls");
+    $dirs = scandir($_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/api/calls");
     $scripts = [];
     foreach($dirs as $item ){
         if ($item != "." && $item != ".." ){
@@ -28,7 +28,7 @@ function script_list($plugin_name){
 }
 
 function save_rapi_content($plugin_name, $api_name, $content){
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/api/calls/{$api_name}/{$api_name}.php";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/api/calls/{$api_name}/{$api_name}.php";
     $result = ["status"=> "success"];
     if (!file_exists($path )){
         $result["status"] = "file not exist";
@@ -41,7 +41,7 @@ function save_rapi_content($plugin_name, $api_name, $content){
 }
 
 function load_rapi_content($plugin_name, $api_name ){
-    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/api/calls/{$api_name}/{$api_name}.php";
+    $path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/api/calls/{$api_name}/{$api_name}.php";
     $result = ["status"=> "success", "data"=> ""];
     if (file_exists($path )){
         $result["content"] = file_get_contents($path);

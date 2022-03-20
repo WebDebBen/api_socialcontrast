@@ -57,7 +57,7 @@ function get_table_info($table, $plugin_name){
     $db = $GLOBALS["db"];
     $table_info = $db->table_info($table );
     
-    $json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/{$plugin_name}/settings/tables/{$table}.json";
+    $json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/settings/tables/{$table}.json";
     $json_data = [];
     if (file_exists($json_path)){
         $json_data = json_decode(file_get_contents($json_path));

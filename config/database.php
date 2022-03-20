@@ -21,6 +21,7 @@
             } else {
                 $this->conn = $con;
             }
+
             return $this->conn;
         }
 
@@ -50,6 +51,15 @@
         function run_query($query ){
             $stmt = $this->conn->query($query );
             return $this->conn->lastInsertId();//mysqli_insert_id($this->conn );
+        }
+
+        function run_query_result($query){
+            $result = $this->conn->query($query );
+            if ($result){
+                return true;
+            }else{
+                return $this->conn->errorInfo();
+            }
         }
 
         function run_query_with_error($query){

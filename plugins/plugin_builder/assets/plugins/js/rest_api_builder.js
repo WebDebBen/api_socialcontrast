@@ -37,7 +37,7 @@ function generate_rest_api(){
             if (data["status"] == "success"){
                 var filename = data["data"]["apidoc"];
                 $("#api_generate_result h3").html("Successfully generated");
-                $("#api_generate_result .api_url").html("<a target='_blank' href='/plugins/plugin_creator/" + $("#plugin_name").val() + "/api/documentation/" + filename + "'>" + filename + "</a>");
+                $("#api_generate_result .api_url").html("<a target='_blank' href='/plugins/" + $("#plugin_name").val() + "/api/documentation/" + filename + "'>" + filename + "</a>");
             }else{
                 $("#api_generate_result h3").html("Failed");
                 $("#api_generate_result .api_url").html("");

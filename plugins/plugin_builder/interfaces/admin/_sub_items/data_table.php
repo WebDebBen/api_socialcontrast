@@ -20,6 +20,10 @@
     </div>
 </div>
 
+<form enctype="multipart/form-data" class="hide">
+    <input id="upload" type=file  name="files[]">
+</form>
+
 <div class="filter-wrap mt-1r" id="filter-wrap"></div>
 <div class="row mt-2r">
     <div class="col-md-12" id="dt_table_wrap">

@@ -29,22 +29,24 @@ function load_plugins(){
 function save_plugin($name ){
     $db = $GLOBALS["db"];
     // check duplicated 
-    $query = "select * from plugins where name='{$name}'";
+    $folder_name = camelCase($name);
+    $query = "select * from system_admin_menu where plugin_name_fk='{$folder_name}'";
     $count = $db->record_count($query);
     if ($count > 0 ){
         echo json_encode(["status"=> "duplicated"]);
     }else{
-        $query = "insert into plugins set name='{$name}'";
+        $query = "insert into system_admin_menu set plugin_name_fk='{$folder_name}', display_name='{$name}', link='crm_dashboard', priority=3, visible=1";
         $db->run_query($query );
 
+        $query = "insrt into system_admin_plugins set plugin_name='{$folder_name}'";
+        $db->run_query($query);
         // create database for the plugin
         /*$db_name = camelCase($name);
         $query = "create database {$db_name}";
         $db->run_query($query );*/
         
         // create new plugin folder
-        $root_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/";
-        $folder_name = camelCase($name);
+        $root_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/";
         $folder_path = $root_path . $folder_name;
         if (file_exists($folder_path )){
             rrmdir($folder_path );
@@ -86,7 +88,7 @@ function delete_plugin($name ){
     $db_name = camelCase($name );
     $query = "drop database {$db_name}";
 
-    $root_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_creator/";
+    $root_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/";
     $folder_name = camelCase($name);
     $folder_path = $root_path . $folder_name;
     if (file_exists($folder_path )){

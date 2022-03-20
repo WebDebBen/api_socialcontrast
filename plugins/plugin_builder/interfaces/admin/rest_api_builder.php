@@ -34,4 +34,3 @@
     </div>
 
 </div>
-<script src="/plugins/plugin_builder/assets/js/rest_api_builder.js"></script>
