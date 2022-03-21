@@ -15,6 +15,9 @@
             case "sql":
                 $result["data"] = generate_content_sql($data );
                 break;
+            case "alter_sql":
+                $result["data"] = generate_content_alter_sql($data);
+                break;
             case "html":
                 $result["data"] = generate_content_html($data ); 
                 break;
@@ -33,6 +36,9 @@
             case "save":
                 $result = save_content($data, $plugin_name );
                 break;
+            case "alter_save":
+                $result = alter_save_content($data, $plugin_name);
+                break;
         } 
         return $result;
     }
@@ -41,15 +47,35 @@
         return run_content($data, $plugin_name );
     }
 
+    function alter_save_content($data, $plugin_name){
+        $table_name = $data["table_name"];
+
+        $sql = generate_content_alter_sql($data, false );
+        $db = $GLOBALS["db"];
+        $db->run_query($sql );
+
+        $sql_file = $table_name . "_" . date("y_m_d_h_i_s")  . ".sql";
+        $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name .  "/temporary/{$sql_file}";
+
+        if (file_exists($sql_path )){
+            unlink($sql_path );
+        }
+        $myfile = fopen($sql_path, "w") or die("Unable to open file!");
+        fwrite($myfile, $sql );
+        fclose($myfile);
+
+        return ["status"=> "success", "data"=> $table_name];
+    }
+
     function run_content($data, $plugin_name = ""){
         $table_name = $data["table_name"];
 
         $tmp_sql = generate_content_tmp_sql($data, false );
         $sql = generate_content_sql($data, false );
-        $html = generate_content_html($data );
-        $js = generate_content_javascript($data );
-        $php = generate_content_php($data );
-        $json = generate_content_json($data );
+        //$html = generate_content_html($data );
+        //$js = generate_content_javascript($data );
+        //$php = generate_content_php($data );
+        //$json = generate_content_json($data );
 
         $drop_sql = "drop table {$table_name}";
         $run_sql = generate_content_sql($data, true );
@@ -57,8 +83,8 @@
         $db->run_query($drop_sql );
         $db->run_query($run_sql );
 
-        $html_file = $table_name . ".php";
-        $html_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/interfaces/admin/" . $html_file; 
+        //$html_file = $table_name . ".php";
+        //$html_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/interfaces/admin/" . $html_file; 
 
 
         $temp_sql_file = $table_name . "_" . date("y_m_d_h_i_s")  . ".sql";
@@ -66,12 +92,12 @@
 
         $sql_file = $table_name . "_sql.php";
         $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name .  "/interfaces/php/" . $sql_file;
-        $php_file = $table_name . ".php";
-        $php_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/interfaces/php/" . $php_file;
-        $js_file = $table_name . ".js";
-        $js_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/assets/js/" . $js_file;
-        $json_file = $table_name . ".json";
-        $json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/settings/tables/" . $json_file;
+        //$php_file = $table_name . ".php";
+        //$php_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/interfaces/php/" . $php_file;
+        //$js_file = $table_name . ".js";
+        //$js_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/assets/js/" . $js_file;
+        //$json_file = $table_name . ".json";
+        //$json_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/" . $plugin_name . "/settings/tables/" . $json_file;
 
         if (file_exists($temp_sql_path )){
             unlink($temp_sql_path );
@@ -87,33 +113,33 @@
         fwrite($myfile, $sql );
         fclose($myfile);
 
-        if (file_exists($html_path )){
-            unlink($html_path );
-        }
-        $myfile = fopen($html_path, "w") or die("Unable to open file!");
-        fwrite($myfile, $html );
-        fclose($myfile);
+        // if (file_exists($html_path )){
+        //     unlink($html_path );
+        // }
+        // $myfile = fopen($html_path, "w") or die("Unable to open file!");
+        // fwrite($myfile, $html );
+        // fclose($myfile);
 
-        if (file_exists($php_path )){
-            unlink($php_path );
-        }
-        $myfile = fopen($php_path, "w") or die("Unable to open file!");
-        fwrite($myfile, $php );
-        fclose($myfile);
+        // if (file_exists($php_path )){
+        //     unlink($php_path );
+        // }
+        // $myfile = fopen($php_path, "w") or die("Unable to open file!");
+        // fwrite($myfile, $php );
+        // fclose($myfile);
 
-        if (file_exists($js_path )){
-            unlink($js_path );
-        }
-        $myfile = fopen($js_path, "w") or die("Unable to open file!");
-        fwrite($myfile, $js );
-        fclose($myfile);
+        // if (file_exists($js_path )){
+        //     unlink($js_path );
+        // }
+        // $myfile = fopen($js_path, "w") or die("Unable to open file!");
+        // fwrite($myfile, $js );
+        // fclose($myfile);
 
-        if (file_exists($json_path )){
-            unlink($json_path );
-        }
-        $myfile = fopen($json_path, "w") or die("Unable to open file!");
-        fwrite($myfile, $json );
-        fclose($myfile);
+        // if (file_exists($json_path )){
+        //     unlink($json_path );
+        // }
+        // $myfile = fopen($json_path, "w") or die("Unable to open file!");
+        // fwrite($myfile, $json );
+        // fclose($myfile);
 
         return ["status"=> "success", "data"=> $table_name];
     }
@@ -160,6 +186,65 @@
         }
 
         return $str;
+    }
+
+    function generate_content_alter_sql($data, $flag = true){
+        $endln = $flag ? "\n" : "";
+        $tab1 = $flag ? "\t" : "";
+
+        $new_columns = isset($data["new_columns"]) ? $data["new_columns"] : [];
+        $alter_columns = isset($data["alter_columns"]) ? $data["alter_columns"] : [];
+        $del_columns = isset($data["del_columns"]) ? $data["del_columns"] : [];
+        $refs = isset($data["refs"]) ? $data["refs"] : [];
+        $drop_refs = isset($data["drop_refs"]) ? $data["drop_refs"] : [];
+        $table_name = $data["table_name"];
+
+        $new_query = "";
+        $flag = true;
+        foreach($new_columns as $key=>$item){
+            extract($item);
+            $comma = $flag ? "" : ",";
+            $flag = false;
+            $new_query .= "{$comma} {$endln}{$tab1} ADD `{$title}` {$type} NULL";
+        }
+
+        $alter_query = "";
+        $flag = true;
+        foreach($alter_columns as $item){
+            extract($item);
+            $comma = $flag ? "" : ",";
+            $flag = false;
+            $alter_query .= "{$comma} {$endln}{$tab1} CHANGE COLUMN `{$origin_field}` `{$field}` {$type}";
+        }
+
+        $del_query = "";
+        $flag = true;
+        foreach($del_columns as $item){
+            $comma = $flag ? "" : ",";
+            $flag = false;
+            $del_query .= "{$comma} {$endln}{$tab1} DROP COLUMN `{$item}`";
+        }
+
+        $ref_query = "";
+        $flag = true;
+        foreach($refs as $item){
+            $comma = $flag ? "" : ",";
+            $flag = false;
+            $ref_query .= "{$comma} {$endls} {$tab1}";
+        }
+
+        $drop_ref_query = "";
+        $flag = true;
+        foreach($drop_refs as $item){
+            $comma = $flag ? "" : ",";
+            $flag = false;
+            $ref_query .= "{$comma} {$endls} {$tab1}";
+        }
+
+        $alter_comma = $del_query != "" && ($alter_query != "" || $new_query != "") ? "," : "";
+        $new_comma = ($del_query != "" || $alter_query != "") && $new_query != "" ? "," : "";
+        $query = "ALTER TABLE {$table_name} {$del_query} {$alter_comma} {$alter_query} {$new_comma} {$new_query}";
+        return $query;
     }
 
     function generate_content_sql($data, $flag = true ){

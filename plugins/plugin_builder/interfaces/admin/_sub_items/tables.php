@@ -228,7 +228,8 @@
 </div>
 
 <div class="hide" id="datatb_table-prop-item-template">
-    <div class="table-prop-item mt-1r">
+    <div class="table-prop-item mt-1r" 
+            data-column="" data-columntype="" data-default="" data-required="" data-reftable="NONE" data-reffield="NONE">
         <div class="fa fa-arrows-alt"></div>
         <div class="field-props-wrap">
             <div class="field-prpos">
@@ -273,9 +274,9 @@
             <div class="field-add-props">
                 <a href="javascript:;" class="add-props-edit">
                     Refrence Info - Table: 
-                    <span class="reference_table_span font-bold">None</span>
+                    <span class="reference_table_span font-bold">NONE</span>
                     , Field: 
-                    <span class="reference_field_span font-bold">None</span>
+                    <span class="reference_field_span font-bold">NONE</span>
                 </a>
             </div>
         </div>

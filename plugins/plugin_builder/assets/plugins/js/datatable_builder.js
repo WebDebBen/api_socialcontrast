@@ -1,5 +1,6 @@
 var sel_item = null;
 var sel_table = "new";
+var del_items = [];
 
 $(document).ready(function(){
     new Sortable(document.getElementById("datatb_table-property"), {
@@ -10,7 +11,9 @@ $(document).ready(function(){
 
     $("#datatb_add-table-prop-item-btn").on("click", add_datatb_column_block );
     $("#datatb_table-property").on("click", ".remove-table-prop-item", function(e){
-        $(this).parent().parent().parent().parent().remove();
+        var parent = $(this).parent().parent().parent().parent();
+        del_items.push($(parent).attr("data-column"));
+        $(parent).remove();
     });
 
     $("#datatb_table-property").on("click", ".add-props-edit", function(e){
@@ -28,6 +31,7 @@ $(document).ready(function(){
     $("#datatb_check_table").on("click", select_datatb_table_name );
     $("#datatb_select_table").on("click", select_datatb_table );
     $("#datatb_table-list-md").on("change", display_datatb_table_fields );
+    $("#datatb_new_table").on("click", select_datatb_new_table );
 
     add_datatb_column_block();
     add_datatb_column_block();
@@ -35,6 +39,15 @@ $(document).ready(function(){
     init_datatb_table_list();
 });
 
+function select_datatb_new_table(){
+    del_items = [];
+    var parent = $("#datatb_table-property");
+    $(parent).html("");
+    $("#datatb_table-name-input").removeAttr("readonly");
+    $("#datatb_primary-key-input").removeAttr("readonly");
+    add_datatb_column_block();
+    add_datatb_column_block();
+}
 
 function display_datatb_table_fields(){
     $.ajax({
@@ -82,14 +95,15 @@ function select_datatb_table(){
             var table_info = res["table_info"];
             var json_data = res["json_data"];
 
-            $("#datatb_table-name-input").val(table_info["table_name"]);
+            $("#datatb_table-name-input").attr("readonly", true).val(table_info["table_name"]);
             var columns = table_info["columns"];
 
             var parent = $("#datatb_table-property");
             $(parent).html("");
+            del_items = [];
             for (var i = 0;i < columns.length; i++){
                 var item = columns[i];
-                var max_length = item["character_maximum_length"];
+                //var max_length = item["character_maximum_length"];
                 var column_name = item["column_name"];
                 if (column_name == "created_id" || column_name == "created_at" || column_name == "updated_id" || column_name == "updated_at") continue;
                 var data_type = item["data_type"];
@@ -98,7 +112,7 @@ function select_datatb_table(){
                 var ref_table = item["referenced_table_name"];
                 var ref_field = item["referenced_column_name"];
                 if (column_key == "PRI"){
-                    $("#datatb_primary-key-input").val(column_name);
+                    $("#datatb_primary-key-input").attr("readonly", true).val(column_name);
                 }else{
                     var template = $("#datatb_table-prop-item-template .table-prop-item").clone();
                     $(template).addClass("datatb_table_item_" + column_name);
@@ -108,13 +122,17 @@ function select_datatb_table(){
                     $(template).find(".field-props-wrap").attr("data-table", ref_table );
                     $(template).find(".field-props-wrap").attr("data-field", ref_field );
                     $(template).find(".field-props-wrap").attr("data-type", data_type); 
-                    $(template).find(".reference_table_span").text(ref_table ? ref_table : "None" );
-                    $(template).find(".reference_field_span").text(ref_field ? ref_field : "None" );
+                    $(template).find(".reference_table_span").text(ref_table ? ref_table : "NONE" );
+                    $(template).find(".reference_field_span").text(ref_field ? ref_field : "NONE" );
+                    $(template).attr("data-column", column_name);
+                    $(template).attr("data-columntype", column_type);
+                    $(template).attr("data-reftable", ref_table ? ref_table : "NONE" );
+                    $(template).attr("data-reffiled", ref_field ? ref_field : "NONE" );
                     $(template).appendTo($(parent));
                 }
             }
 
-            var json_column = json_data["columns"];
+            /*var json_column = json_data["columns"];
             for (var i = 0; i < json_column.length; i++){
                 var item = json_column[i];
                 var column_name = item["title"];
@@ -127,7 +145,7 @@ function select_datatb_table(){
                 if (item["editor_table"] == "false" ){
                     $(".datatb_table_item_" + column_name).find(".field-show-editor-input").removeProp("checked");
                 }
-            }
+            }*/
         }
     });
 }
@@ -213,7 +231,14 @@ function formatHTML(html) {
 }
 
 function generate_content(type ){
-    var json_data = get_datatb_jsondata();
+    var json_data = [];
+    if($("#datatb_table-name-input").attr("readonly") == "readonly"){
+        type="alter_" + type;
+        json_data = get_datatb_alter_jsondata();
+    }else{
+        json_data = get_datatb_jsondata();
+    }
+    
     if (json_data["status"] == false ){
         toastr.error(json_data["error"]);
     }
@@ -231,7 +256,7 @@ function generate_content(type ){
             if (res["status"] == "success" ){
                 if (type == "run" ){
                     window.open( "/admin/plugins/" + $("#plugin_path").val() + "/" + res["data"], "_blank");
-                }else if(type == "save"){
+                }else if(type == "save" || type == "alter_save"){
                     toastr.success("successfuly saved!");
                     $("<option>").attr("value", res["data"]).text(res["data"]).appendTo($("#datatb_table_list_sel"));
                 }else{
@@ -379,6 +404,88 @@ function add_datatb_column_block(){
 
 function validate_name(str ){ 
     return !str.match(/[^a-zA-Z0-9_]/);
+}
+
+function get_datatb_alter_jsondata(){
+    var table_name = $("#datatb_table-name-input").val();
+    if (table_name == "" ){
+        return {"status": false, "error": "Table is required"};
+    }else if (!validate_name(table_name )){
+        return {"status": false, "error": "Table name only can be letter and number"};
+    }
+
+    var new_columns = [];
+    var alter_columns = [];
+    var refs = [];
+    var drop_refs = [];
+    var cols = $("#datatb_table-property .table-prop-item");
+    for(var i = 0;i < cols.length; i++ ){
+        var col = cols[i];
+        var origin_column = $(col).attr("data-column");
+        var origin_columntype = $(col).attr("data-columntype");
+        var origin_reftable = $(col).attr("data-reftable");
+        var origin_reffield = $(col).attr("data-reffield");
+        var title = $(col).find(".field-title-input").val();
+        var type = $(col).find(".field-type-input").val();
+        var requried = $(col).find(".field-required-input").is(":checked");
+        var default_value = $(col).find(".field-default-value-input").val();
+        var show_table = $(col ).find(".field-show-table-input").is(":checked");
+        var editor_table = $(col).find(".field-show-editor-input").is(":checked");
+        var ref_obj = $(col ).find(".field-props-wrap");
+        var ref_table = $(ref_obj).attr("data-table") ? $(ref_obj).attr("data-table") : "";
+        var ref_field = $(ref_obj).attr("data-field") ? $(ref_obj).attr("data-field") : "";
+
+        if (title == "" ){
+            return {"status": false, "error": "Title is required"};
+        }else if (!validate_name(title )){
+            return {"status": false, "error": "Title only can be letter and number"};
+        }
+
+        if (origin_reftable != "" && origin_reffield != ""){
+            if (ref_table == "" || ref_field == ""){
+                drop_refs.push(origin_reffield);
+            }
+        }
+
+        if (ref_table != "" && ref_field != "" ){
+            if (ref_table != origin_reftable || ref_field != origin_reffield){
+                refs.push({field: title, ref_table: ref_table, ref_field: ref_field });
+            }
+        }
+        
+        if (origin_column == ""){
+            new_columns.push({
+                title: title,
+                type: type,
+                requried: requried, 
+                default_value: default_value,
+                show_table: show_table,
+                editor_table: editor_table,
+                ref_table: ref_table,
+                ref_field: ref_field
+            });
+        }else{
+            if (title != origin_column || type != origin_columntype){
+                alter_columns.push({
+                    field: title,
+                    type: type,
+                    origin_field: origin_column
+                });
+            }
+        }
+    }
+
+    return {
+        "status": true,
+        data: {
+            table_name: table_name.toLowerCase(),
+            new_columns: new_columns,
+            alter_columns: alter_columns,
+            del_columns: del_items,
+            drop_refs: drop_refs,
+            refs: refs
+        }
+    }
 }
 
 function get_datatb_jsondata(){

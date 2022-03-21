@@ -9,7 +9,10 @@ $db->getConnection(API_DB_NAME );
 extract($_POST );
 switch($type ){
     case "sql":
-        generate_sql($json_data );
+        generate_sql($json_data);
+        break;
+    case "alter_sql":
+        generate_alter_sql($json_data);
         break;
     case "html":
         generate_html($json_data );
@@ -28,6 +31,9 @@ switch($type ){
         break;
     case "save":
         generate_save($json_data, $plugin_name );
+        break;
+    case "alter_save":
+        generate_alter_save($json_data, $plugin_name);
         break;
     case "table_list":
         get_table_list();
@@ -85,6 +91,11 @@ function generate_sql($data ){
     echo json_encode($sql );
 }
 
+function generate_alter_sql($data){
+    $sql = generate_content($data, "alter_sql");
+    echo json_encode($sql);
+}
+
 function generate_html($data ){
     $sql = generate_content($data, "html");
     echo json_encode($sql );
@@ -113,4 +124,9 @@ function generate_run($data ){
 function generate_save($data, $plugin_name ){ 
     $run = generate_content($data, "save", $plugin_name);
     echo json_encode($run );
+}
+
+function generate_alter_save($data, $plugin_name){
+    $run = generate_content($data, "alter_save", $plugin_name);
+    echo json_encode($run);
 }

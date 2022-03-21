@@ -1,0 +1,1 @@
+ALTER TABLE testing     CHANGE COLUMN `test32` `test321` varchar(255)  

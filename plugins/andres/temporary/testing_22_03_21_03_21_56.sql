@@ -1,0 +1,1 @@
+ALTER TABLE testing   DROP COLUMN `test321` ,   CHANGE COLUMN `sample1` `sample11` varchar(255)  
