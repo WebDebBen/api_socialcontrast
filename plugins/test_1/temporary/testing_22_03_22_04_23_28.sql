@@ -1,0 +1,1 @@
+ALTER TABLE testing    ADD FOREIGN KEY `sample11` REFERENCES `admins`(`id`)

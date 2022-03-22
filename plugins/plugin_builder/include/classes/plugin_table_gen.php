@@ -228,9 +228,10 @@
         $ref_query = "";
         $flag = true;
         foreach($refs as $item){
+            extract($item);
             $comma = $flag ? "" : ",";
             $flag = false;
-            $ref_query .= "{$comma} {$endls} {$tab1}";
+            $ref_query .= "{$comma} {$endln} {$tab1} ADD CONSTRAINT {$field}_fk FOREIGN KEY ({$field}) REFERENCES {$ref_table}({$ref_field})";
         }
 
         $drop_ref_query = "";
@@ -238,12 +239,35 @@
         foreach($drop_refs as $item){
             $comma = $flag ? "" : ",";
             $flag = false;
-            $ref_query .= "{$comma} {$endls} {$tab1}";
+            $drop_ref_query .= "{$comma} {$endln} {$tab1} DROP FOREIGN KEY `{$item}`";
         }
 
-        $alter_comma = $del_query != "" && ($alter_query != "" || $new_query != "") ? "," : "";
-        $new_comma = ($del_query != "" || $alter_query != "") && $new_query != "" ? "," : "";
-        $query = "ALTER TABLE {$table_name} {$del_query} {$alter_comma} {$alter_query} {$new_comma} {$new_query}";
+        $query = "ALTER TABLE {$table_name} ";
+        $comma = "";
+
+        if ($drop_ref_query != ""){
+            $query .= $comma . $drop_ref_query;
+            $comma = ",";
+        }
+
+        if ($del_query != ""){
+            $query .= $comma . $del_query;
+            $comma = ",";
+        }
+
+        if ($alter_query != ""){
+            $query .= $comma . $alter_query;
+            $comma = ",";
+        }
+
+        if ($new_query != ""){
+            $query .= $comma . $new_query;
+            $comma = ",";
+        }
+
+        if ($ref_query != ""){
+            $query .= $comma . $ref_query;
+        }
         return $query;
     }
 

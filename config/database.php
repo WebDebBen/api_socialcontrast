@@ -129,7 +129,7 @@
         }
 
         public function load_plugins(){
-            $query = "show tables where Tables_in_generator = 'plugins'";
+            /*$query = "show tables where Tables_in_generator = 'plugins'";
             $result = $this->conn->query($query );
             if (!$result){
                 $query = "CREATE TABLE `plugins`  (
@@ -138,13 +138,13 @@
                     PRIMARY KEY (`id`) USING BTREE
                   ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci";
                 $this->conn->query($query);
-            }
-            $query = "select * from plugins";
+            }*/
+            $query = "select * from system_admin_plugins";
             $result = $this->conn->query($query );
             if ($result){
                 $plugins = [];
                 while($row = $result->fetch(PDO::FETCH_BOTH)){
-                    array_push($plugins, $row["name"]);
+                    array_push($plugins, $row["plugin_name"]);
                 }
                 return $plugins;
             }else{

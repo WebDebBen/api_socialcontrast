@@ -162,6 +162,7 @@
         $("#editor_overlay").on("click", hide_overlay );
         $("#editor_close_overlay").on("click", hide_overlay);
         $("#save_editor_overlay").on("click", save_plugin_editor );
+        $("#close_editor_overlay").on("click", hide_overlay);
     });
 
     function save_plugin_editor(e){

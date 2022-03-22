@@ -441,7 +441,7 @@ function get_datatb_alter_jsondata(){
             return {"status": false, "error": "Title only can be letter and number"};
         }
 
-        if (origin_reftable != "" && origin_reffield != ""){
+        if (origin_reftable != "" && origin_reffield != "" && origin_reffield != "NONE"){
             if (ref_table == "" || ref_field == ""){
                 drop_refs.push(origin_reffield);
             }
