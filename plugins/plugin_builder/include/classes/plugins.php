@@ -49,6 +49,7 @@ function save_plugin($name ){
 
         // create new plugin folder
         $root_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/";
+
         $folder_path = $root_path . $folder_name;
         if (file_exists($folder_path )){
             rrmdir($folder_path );

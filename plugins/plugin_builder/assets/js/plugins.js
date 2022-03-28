@@ -6,6 +6,10 @@ $(document).ready(function(){
 
 function save_new_plugin(){
   var plugin_name = $("#new_plugin").val();
+  if (plugin_name == ""){
+    toastr.error("Please input the plugin name");
+    return;
+  }
   $.ajax({
     url: "/plugins/plugin_builder/include/classes/plugins.php",
     data: {
@@ -59,28 +63,30 @@ function add_tr(parent, name ){
   //$("<a>").attr("href", "/admin/plugins/edit/" + plugin_name).text("View").appendTo(td);
   $("<a>").attr("href", "/admin/plugins/plugin_builder/plugin_editor/" + plugin_name).text("View").appendTo(td);
   td = $("<td>").addClass("plugin_action").appendTo(tr);
-  $("<button>").addClass("btn btn-danger").text("Delete")
-      .attr("data-name", name )
-      .on("click", function(e){
-        e.preventDefault();
-        if (!confirm("do you really delete this plugin?")) return;
-        var name = $(this).attr("data-name");
-        var parent_tr = $(this).parent().parent();
-        $.ajax({
-          url: "/plugins/plugin_builder/include/classes/plugins.php",
-          data: {
-            type: "delete_plugin",
-            name: name
-          },
-          type: "post",
-          dataType: "json",
-          success: function(res ){
-            if (res["status"] == "success"){
-              $(parent_tr).remove();
-              toastr.success("Deleted, successfuly");
+  if (name != "plugin_builder"){
+    $("<button>").addClass("btn btn-danger").text("Delete")
+        .attr("data-name", name )
+        .on("click", function(e){
+          e.preventDefault();
+          if (!confirm("do you really delete this plugin?")) return;
+          var name = $(this).attr("data-name");
+          var parent_tr = $(this).parent().parent();
+          $.ajax({
+            url: "/plugins/plugin_builder/include/classes/plugins.php",
+            data: {
+              type: "delete_plugin",
+              name: name
+            },
+            type: "post",
+            dataType: "json",
+            success: function(res ){
+              if (res["status"] == "success"){
+                $(parent_tr).remove();
+                toastr.success("Deleted, successfuly");
+              }
             }
-          }
-        });
-      })
-      .appendTo(td);
+          });
+        })
+        .appendTo(td);
+  }
 }
