@@ -50,8 +50,9 @@ function select_datatb_new_table(){
 }
 
 function display_datatb_table_fields(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_table_generate.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_table_generate.php",
         data: {
             type: "table_info",
             table: $(this).val(),
@@ -82,8 +83,9 @@ function display_datatb_table_fields(){
 }
 
 function select_datatb_table(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_table_generate.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_table_generate.php",
         data: {
             type: "table_info",
             plugin_name: $("#plugin_name").val(),
@@ -151,8 +153,9 @@ function select_datatb_table(){
 }
 
 function init_datatb_table_list(){ 
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_table_generate.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_table_generate.php",
         data: {
             type: "table_list"
         },
@@ -242,9 +245,9 @@ function generate_content(type ){
     if (json_data["status"] == false ){
         toastr.error(json_data["error"]);
     }
-
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_table_generate.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_table_generate.php",
         data: {
             json_data: json_data["data"],
             type: type,
@@ -342,9 +345,10 @@ function edit_datatb_field_config(obj ){
     var show_table = $(parent ).find(".field-show-table-input").is(":checked");
     var editor_table = $(parent).find(".field-show-editor-input").is(":checked");
     var ref_table = $(parent).attr("data-table");
+    var plugin_name = $("#plugin_name").val();
     if (ref_table != "" ){
         $.ajax({
-            url: "/plugins/plugin_builder/include/classes/table_generate.php",
+            url: "/plugins/" + plugin_name + "/include/classes/table_generate.php",
             data: {
                 type: "table_info",
                 table: ref_table

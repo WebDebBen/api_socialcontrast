@@ -20,7 +20,7 @@ function save_api_content(){
     var api_name = $("#rapi_edit_tbname").val();
 
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_rapi_editor.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_rapi_editor.php",
         data: {
             type: "save_rapi_content",
             plugin_name: plugin_name,
@@ -39,8 +39,9 @@ function save_api_content(){
 
 function select_api_content(){
     var api_name = $("#rapi_edit_tbname").val();
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_rapi_editor.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_rapi_editor.php",
         data: {
             type: "load_rapi_content",
             plugin_name: $("#plugin_name").val(),
@@ -58,8 +59,9 @@ function select_api_content(){
 
 function select_api_doc(){
     var api_name = $("#rapi_edit_tbname").val();
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_rapi_editor.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_rapi_editor.php",
         data: {
             type: "load_rapi_doc",
             plugin_name: $("#plugin_name").val(),
@@ -76,8 +78,9 @@ function select_api_doc(){
 }
 
 function load_rapi_edit_list(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_rapi_editor.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_rapi_editor.php",
         data: {
             type: "rapi_list",
             plugin_name: $("#plugin_name").val()

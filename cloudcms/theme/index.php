@@ -28,19 +28,20 @@
   <link rel="stylesheet" href="assets/css/jquery.highlight.css">
   <link rel="stylesheet" href="assets/css/toastr.css">
   <link rel="stylesheet" href="assets/css/upload.css">
-  <link rel="stylesheet" href="plugins/codemirror/codemirror.css"> 
+  <link rel="stylesheet" href="plugins/codemirror/codemirror.css">
   <link rel="stylesheet" href="plugins/codemirror/theme/3024-day.css">
-  <link rel="stylesheet" href="plugins/codemirror/theme/3024-night.css"> 
+  <link rel="stylesheet" href="plugins/codemirror/theme/3024-night.css">
   <link rel="stylesheet" href="plugins/codemirror/theme/abcdef.css">
   <link rel="stylesheet" href="plugins/codemirror/theme/ambiance.css">
   <link rel="stylesheet" href="plugins/codemirror/theme/ayu-dark.css">
   <link rel="stylesheet" href="plugins/codemirror/theme/ayu-mirage.css">
+  <!-- <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css"> -->
   <!-- <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css"> -->
   <!-- jQuery -->
   <script src="plugins/jquery/jquery.min.js"></script>
-  
+
   <script src="assets/js/upload.js"></script>
-<!--   
+<!--
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script> -->
 <script language="javascript">
@@ -109,7 +110,7 @@
         </div>
       </li>
 
-      
+
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
@@ -185,14 +186,14 @@
 	// echo '<pre>';
 // 	print_r($_GET);
 // 	echo '</pre>';
-// 	
+//
 // 	echo '<pre>';
 // 	print_r($privileges);
 // 	echo '</pre>';
 
-		
-		
-	
+
+
+
 	$proceed = true;
 	switch($module){
 		case 'gevorest_pos':
@@ -218,7 +219,7 @@
 	}
 
 	if($proceed == true){
-		
+
 		switch($_GET['type']){
 			case 'system':
 				include './cloudcms/system/'.$module.'/interfaces/admin/'.$interface_name.'.php';
@@ -227,14 +228,14 @@
 				include './plugins/'.$module.'/interfaces/admin/'.$interface_name.'.php';
 				break;
 		}
-		
+
 	}
 	else{
 		echo '<div class="container"><div class="alert alert-danger" role="alert">You do not have privileges to view this page</div></div>';
 	}
-    
+
     ?>
-  
+
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
@@ -285,6 +286,7 @@
 
 <!-- Select2 -->
 <script src="plugins/select2/js/select2.full.min.js"></script>
+<!--script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script-->
 <script src="assets/js/jquery.highlight.js"></script>
 <script src="assets/js/toastr.js"></script>
 <script src="assets/js/util.js"></script>

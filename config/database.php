@@ -108,7 +108,9 @@
                     `id` int(11) NOT NULL AUTO_INCREMENT,
                     `plugin_name` varchar(255) NULL DEFAULT NULL,
                     `name` varchar(255) NULL DEFAULT NULL,
+                    `version` int(11) null default null,
                     `description` varchar(255) NULL DEFAULT NULL,
+                    `short_description` varchar(255) NULL DEFAULT NULL,
                     `is_commited` int NULL DEFAULT 1,
                     `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
                     PRIMARY KEY (`id`) USING BTREE
@@ -119,12 +121,18 @@
             $result = $this->conn->query($query );
             if ($result){
                 $plugins = [];
+                $now = date("Y.m");
+                $version = 1;
                 while($row = $result->fetch(PDO::FETCH_BOTH)){
-                    array_push($plugins, ["name"=>$row["name"], "description"=> $row["description"], "is_commited"=> $row["is_commited"]]);
+                    array_push($plugins, ["name"=>$row["name"], "version"=>$row["version"], "short_description"=> $row["short_description"], 
+                                            "description"=> $row["description"], "is_commited"=> $row["is_commited"]]);
+                    if ($now == $row["name"]){
+                        $version = $row["version"];
+                    }
                 }
-                return $plugins;
+                return ["plugins"=>$plugins, "now"=> $now, "version"=> $version < 10 ? "0" . ($version + 1) : ($version + 1)];
             }else{
-                return [];
+                return ["plugins"=>[], "now"=> $now, "version"=> "01" ];
             }
         }
 

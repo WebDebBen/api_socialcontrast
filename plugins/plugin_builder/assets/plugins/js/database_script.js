@@ -6,9 +6,9 @@ $(document).ready(function(){
 function save_new_ds_script(){
     var script_name = $("#new_ds_script_input").val();
     if (script_name == "" ) return;
-
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_database_script.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_database_script.php",
         data: {
             type: "save_ds_script",
             plugin_name: $("#plugin_name").val(),
@@ -28,8 +28,9 @@ function save_new_ds_script(){
 }
 
 function init_database_script(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_database_script.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_database_script.php",
         data: {
             type: "script_list",
             plugin_name: $("#plugin_name").val()
@@ -70,8 +71,9 @@ function add_ds_script_item(text ){
 function edit_ds_content(e){
     e.preventDefault();
     var self = this;
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_database_script.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_database_script.php",
         data: {
             type: "load_ds_content",
             plugin_name: $("#plugin_name").val(),
@@ -98,8 +100,9 @@ function delete_ds_content(){
         return;
     }
     var self = this;
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_database_script.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_database_script.php",
         data: {
             type: "delete_ds_script",
             plugin_name: $("#plugin_name").val(),

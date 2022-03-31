@@ -228,7 +228,8 @@ var controls = [
 ];
 
 var prev_obj = "";
-var upload_url = "/plugins/plugin_builder/include/classes/upload.php";
+var plugin_name = $("#plugin_name").val();
+var upload_url = "/plugins/" + plugin_name + "/include/classes/upload.php";
 
 $(document).ready(function(){
   $("#accor_left").on("click", accor_action );
@@ -458,11 +459,13 @@ $(document).ready(function(){
 
   $("#select_list").on("click", function(ev){
     var type = $("#tb_frm_list").attr("data-type");
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-      url: "/plugins/plugin_builder/include/classes/form_builder.php",
+      url: "/plugins/" + plugin_name + "/include/classes/form_builder.php",
       data: {
         type: "load_" + type + "_data",
-        value: $("#tb_frm_list").val()
+        value: $("#tb_frm_list").val(),
+        plugin_name: plugin_name
       },
       type: "post",
       dataType: "json",
@@ -787,10 +790,12 @@ $(document).ready(function(){
   }
   
   $("#load_table").on("click", function(ev){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-      url: "/plugins/plugin_builder/include/classes/form_builder.php",
+      url: "/plugins/" + plugin_name + "/include/classes/form_builder.php",
       data: {
         type: "table_list",
+        plugin_name: plugin_name
       },
       type: "post",
       dataType: "json",
@@ -805,10 +810,12 @@ $(document).ready(function(){
   });
 
   $("#load_form").on("click", function(ev){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-      url: "/plugins/plugin_builder/include/classes/form_builder.php",
+      url: "/plugins/" + plugin_name + "/include/classes/form_builder.php",
       data: {
         type: "form_list",
+        plugin_name: plugin_name
       },
       type: "post",
       dataType: "json",
@@ -829,13 +836,15 @@ $(document).ready(function(){
       toastr.error("Please select the form element or table name");
       return;
     }
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-      url: "/plugins/plugin_builder/include/classes/form_builder.php",
+      url: "/plugins/" + plugin_name + "/include/classes/form_builder.php",
       data: {
         type: "save_data",
         table_name: $("#tb_frm_name").val(),
         json_data: $("#json_zone").text(),
-        html_data: $("#source").val()
+        html_data: $("#source").val(),
+        plugin_name: plugin_name
       },
       type: "post",
       dataType: "json",

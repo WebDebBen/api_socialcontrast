@@ -24,8 +24,9 @@ function check_api_table_all(){
 }
 
 function generate_rest_api(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_generate.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_generate.php",
         data: {
             plugin_name: $("#plugin_name").val(),
             table_infos: JSON.stringify(table_infos),
@@ -54,8 +55,9 @@ function api_initialize(){
 }
 
 function load_api_table_list(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_showtables.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_showtables.php",
         data: {},
         type: "get",
         dataType: "json",
@@ -83,8 +85,9 @@ function init_api_table_list(data ){
 }
 
 function load_api_table_infos(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_tables.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_tables.php",
         data: {
             tables: JSON.stringify(api_sel_tables)
         },

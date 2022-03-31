@@ -12,6 +12,26 @@ $(document).ready(function(){
     $("#dt_export_excel").on("click", dt_export_excel);
 
     $("#upload").on("change", handleFileSelect);
+
+    $(".dt_column_title").on("click", function(e){
+        $(".dt_column_title").parent().toggleClass("select");
+    });
+
+    $(".dt_columns_visibility ul").on("click", "li", function(e){
+        $(this).toggleClass("selected");
+        var ind = $(this).attr("data-index");
+        if ($(this).hasClass("selected")){
+            $("#dt_table_data thead tr td:nth-child(" + ind + ")").removeClass("hide");
+            $("#dt_table_data tbody tr td:nth-child(" + ind + ")").removeClass("hide");
+        }else{
+            $("#dt_table_data thead tr td:nth-child(" + ind + ")").addClass("hide");
+            $("#dt_table_data tbody tr td:nth-child(" + ind + ")").addClass("hide");
+        }
+    });
+
+    $("#dt_table_data_adv_search").on("click", function(){
+        $("#filter-wrap").toggleClass("hide");
+    });
 });
 
 var ExcelToJSON = function() {
@@ -41,8 +61,9 @@ var ExcelToJSON = function() {
 };
 
 function handle_dt_excel_data(json_data){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/import_excel.php",
+        url: "/plugins/" + plugin_name + "/include/classes/import_excel.php",
         data:{
             table: $("#dt_tbname").val(),
             data: json_data
@@ -71,8 +92,9 @@ function dt_import_excel(){
 }
 
 function dt_export_excel(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/export_excel.php",
+        url: "/plugins/" + plugin_name + "/include/classes/export_excel.php",
         data:{
             table: $("#dt_tbname").val(),
         },
@@ -98,9 +120,9 @@ function dt_save_record(){
         records[title] = value;
     }
     records["id"] = $("#data-dt-id").val();
-    
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_datatable.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_datatable.php",
         data: {
             type: "save_table",
             id: $("#data-dt-id").val(),
@@ -147,7 +169,7 @@ function dt_select_datatable(){
     var plugin_name = $("#plugin_name").val();
 
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_datatable.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_datatable.php",
         data: {
             type: "table_info",
             table_name: table_name,
@@ -165,16 +187,21 @@ function dt_select_datatable(){
 
 function get_dt_table_fields(table_columns, json_columns){
     var fields = [];
+    var ul = $(".dt_columns_ul");
+    $(ul).html("");
     if (!json_columns || json_columns.length == 0){
+        index = 1;
         for(var i = 0; i < table_columns.length; i++){
             var item = table_columns[i];
             var title = item["column_name"];
             if (item["column_key"] != "PRI" && title != "created_at" && title != "created_id" 
                     && title != "updated_at" && title != "updated_id" ){
                 fields.push({title: title, is_edit: "true", is_show: " "});
+                $("<li>").attr("data-index", index++).addClass("selected").text(title).appendTo(ul);
             }
         }
     }else{
+        index = 1;
         for(var i = 0; i < table_columns.length; i++){
             var item = table_columns[i];
             var title = item["column_name"];
@@ -201,6 +228,8 @@ function get_dt_table_fields(table_columns, json_columns){
                 tmp_item["is_show"] = is_show;
                 tmp_item["type"] = item["data_type"];
                 fields.push(tmp_item);
+
+                $("<li>").attr("data-index", index++).addClass("selected").text(ref_column_name).appendTo(ul);
             }
         }
     }
@@ -226,23 +255,23 @@ function init_dt_datatable(table_info, json_data, table_data ){
     for (var i = 0;i < fields_info.length; i++){
         var item = fields_info[i];
         var title = item["title"];
-        if (item["is_show"] == "true"){
+        //if (item["is_show"] == "true"){
             $("<td>").text(title).appendTo(thead_tr);
-        }
+        //}
     }
     $("<td>").text("Action").appendTo(thead_tr);
 
     add_dt_filter_area(fields_info);
     add_dt_field_modal(fields_info);
-
+    var plugin_name = $("#plugin_name").val();
     for (var i = 0; i < table_data.length; i++){
         var table_item = table_data[i];
         var tr = $("<tr>").appendTo(tbody);
         for (var j = 0; j < fields_info.length; j++ ){
-            if (fields_info[j]["is_show"] == "true"){
+            //if (fields_info[j]["is_show"] == "true"){
                 var field_title = fields_info[j]["title"];
                 $("<td>").html("<div class='dt-table-" + field_title + "'>" + table_item[field_title] + "</div>").appendTo(tr);
-            }
+            //}
         }
         var td = $("<td>").appendTo(tr );
 		$("<button>").addClass("btn btn-xs btn-sm btn-primary mr-6 edit-item")
@@ -260,7 +289,7 @@ function init_dt_datatable(table_info, json_data, table_data ){
                 g_sel_dt_tr = $(this).parent().parent();
                 $("#dt_tbname").val();
                 $.ajax({
-                    url: "/plugins/plugin_builder/include/classes/plugin_datatable.php",
+                    url: "/plugins/" + plugin_name + "/include/classes/plugin_datatable.php",
                     data: {
                         type: "delete_data",
                         table_name: $("#dt_tbname").val(),
@@ -291,8 +320,9 @@ function init_dt_datatable(table_info, json_data, table_data ){
 
 function edit_dt_modal_show(id){
     $("#data-dt-id").val(id);
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_datatable.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_datatable.php",
         data: {
             type: "load_data",
             id: $("#data-dt-id").val(),
@@ -366,8 +396,9 @@ function add_dt_field_modal(fields){
 }
 
 function load_relation_table_data(select_obj, table_name, table_field, ref_table_name, ref_column_name){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_datatable.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_datatable.php",
         data: {
             type: "load_relation_data",
             table_name: table_name,
@@ -414,7 +445,7 @@ function add_dt_filter_area(fields){
         var type = item["type"];
         var title = item["title"];
 
-        if (item["is_show"] == "true"){
+        //if (item["is_show"] == "true"){
             switch(type){
                 case "enum":
                     var col = $("<div>").addClass("col-md-2").appendTo(row);
@@ -461,7 +492,7 @@ function add_dt_filter_area(fields){
                     break;
             }
             index++;
-        }
+        //}
     }
 
     $('.datepicker').datepicker({
@@ -521,8 +552,9 @@ function add_dt_filter_area(fields){
 }
 
 function load_dt_table_list(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_datatable.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_datatable.php",
         data: {
             type: "table_list",
         },

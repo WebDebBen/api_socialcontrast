@@ -1,5 +1,5 @@
 <?php
-    if ($_SERVER["SERVER_NAME"] == "api.socialcontrast.com"){
+    if ($_SERVER["SERVER_NAME"] == "api.demosocial.com"){
         define("DB_HOST", "localhost");
         define("DB_USER", "root");
         define("DB_PASSWORD", "");

@@ -4,24 +4,27 @@ $(document).ready(function(){
 });
 
 function save_commit_item(){
-    var commit_name = $("#new_commit_name_input").val();
+    //var commit_name = $("#new_commit_name_input").val();
+    var commit_short_desc = $("#new_commit_short_desc_input").val();
     var commit_desc = $("#new_commit_desc_input").val();
+    var plugin_name = $("#plugin_name").val();
 
-    if (commit_name == "" || commit_desc == "" ) return;
+    if (commit_desc == "" ) return;
 
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_commits.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_commits.php",
         data: {
             type: "save_commit",
-            plugin_name: $("#plugin_name").val(),
-            commit_name: commit_name,
-            commit_desc: commit_desc
+            plugin_name: plugin_name,
+            //commit_name: commit_name,
+            commit_desc: commit_desc,
+            commit_short_desc: commit_short_desc,
         },
         type: "post",
         dataType: "json",
         success: function(res ){
             if (res["status"] == "success"){
-                add_commit_item({name:commit_name, description:commit_desc, is_commited: 1});
+                add_commit_item({name:commit_name, description:commit_desc, short_description: commit_short_desc, is_commited: 1});
                 toastr.success("Added, successfuly");
             }else if(res["status"] == "duplicated"){
                 toastr.error("The commit name is duplicated");
@@ -31,8 +34,9 @@ function save_commit_item(){
 }
 
 function load_commit_list(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_commits.php",
+        url: "/plugins/" + plugin_name+ "/include/classes/plugin_commits.php",
         data: {
             type: "commit_list",
             plugin_name: $("#plugin_name").val()
@@ -50,8 +54,10 @@ function load_commit_list(){
 function init_commit_list(data ){
     var parent = $("#commit_tbody");
     $(parent).find("tr.commit-tr").remove();
-    for (var i = 0; i < data.length; i++ ){
-        add_commit_item(data[i])
+    $("#new_commit_version").val(data["name"] + "." + data["version"])
+    var plugins = data["plugins"];
+    for (var i = 0; i < plugins.length; i++ ){
+        add_commit_item(plugins[i])
     }
 }
 
@@ -59,13 +65,19 @@ function add_commit_item(data){
     var parent = $("#commit_tbody");
     var tr = $("<tr>").appendTo(parent );
     var td = $("<td>").appendTo(tr );
-    $("<span>").text(data["name"]).appendTo(td);
+    $("<span>").text(data["name"] + "." + data["version"]).appendTo(td);
+    var td = $("<td>").appendTo(tr );
+    $("<span>").text(data["short_description"]).appendTo(td);
     var td = $("<td>").appendTo(tr );
     $("<span>").text(data["description"]).appendTo(td);
 
     td = $("<td>").appendTo(tr);
     if (data["is_commited"] == 1 || data["is_commited"] == "1" ){
-        $("<button>").attr("type", "button").attr("data-name", data["name"] ).attr("data-description", data["description"] )
+        $("<button>").attr("type", "button")
+            .attr("data-name", data["name"] )
+            .attr("data-name", data["version"] )
+            .attr("data-description", data["description"] )
+            .attr("data-short_description", data["short_description"] )
             .on("click", set_commit_item )
             .text("Commit").addClass("btn btn-primary btn-commit").appendTo(td);
     }
@@ -79,8 +91,9 @@ function set_commit_item(){
         return;
     }
     var self = this;
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_commits.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_commits.php",
         data: {
             type: "set_commit",
             plugin_name: $("#plugin_name").val(),
@@ -104,9 +117,10 @@ function delete_commit_item(){
     if (!confirm("do you really delete?")){
         return;
     }
+    var plugin_name = $("#plugin_name").val();
     var self = this;
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_commits.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_commits.php",
         data: {
             type: "delete_commit",
             plugin_name: $("#plugin_name").val(),

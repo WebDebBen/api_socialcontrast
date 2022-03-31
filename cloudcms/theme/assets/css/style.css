@@ -501,3 +501,62 @@ table{
   font-size: 18px !important;
   padding-left: 16px !important;
 }
+
+
+.dt_columns_visibility{
+  position: relative;
+  z-index: 1;
+}
+
+.dt_column_title{
+  height: 30px;
+  width: 180px;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.dt_column_title::after{
+  display: inline-block;
+  margin-left: .255em;
+  vertical-align: .255em;
+  content: "";
+  border-top: .3em solid;
+  border-right: .3em solid transparent;
+  border-bottom: 0;
+  border-left: .3em solid transparent;
+}
+
+.dt_columns_visibility ul{
+  position: absolute;
+  left: 0;
+  width: 180px;
+  background: white;
+  box-shadow: 1px 1px 6px grey;
+  border-radius: 3px;
+  padding: 0;
+  top: 30px;
+  overflow: hidden;
+  display: none;
+}
+
+.dt_columns_visibility.select ul{
+  display: block;
+}
+
+.dt_columns_visibility ul li {
+  list-style: none;
+  padding: 5px 10px 5px;
+  background: white;
+  color: #333;
+  cursor: pointer;
+}
+
+.dt_columns_visibility ul li:hover{
+  background-color: gray !important;
+}
+
+.dt_columns_visibility ul li.selected {
+  background: #333;
+  color: white;
+}

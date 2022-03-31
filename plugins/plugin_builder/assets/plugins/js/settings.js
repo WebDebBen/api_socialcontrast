@@ -9,7 +9,7 @@ function save_setting_item(){
     if (st_name == "" || st_value == "" ) return;
 
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_settings.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_settings.php",
         data: {
             type: "save_settings",
             plugin_name: $("#plugin_name").val(),
@@ -35,8 +35,9 @@ function update_setting_item(){
     var st_value = $(tr).find(".setting_value_input").val();
     if (st_name == "" || st_value == "" ) return;
     var self = this;
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_settings.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_settings.php",
         data: {
             type: "update_settings",
             plugin_name: $("#plugin_name").val(),
@@ -62,8 +63,9 @@ function update_setting_item(){
 }
 
 function init_settings_data(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_settings.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_settings.php",
         data: {
             type: "setting_list",
             plugin_name: $("#plugin_name").val()
@@ -127,8 +129,9 @@ function delete_setting_item(){
         return;
     }
     var self = this;
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_settings.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_settings.php",
         data: {
             type: "delete_setting_item",
             plugin_name: $("#plugin_name").val(),

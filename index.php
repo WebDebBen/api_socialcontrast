@@ -1,6 +1,6 @@
 <?php
 
-	error_reporting(0); // disable errors
+	error_reporting(1); // disable errors
 	session_start();
 	include_once 'config/config.php';
 	include_once 'config/database.php'; 

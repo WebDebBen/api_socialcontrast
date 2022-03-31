@@ -2,7 +2,7 @@ var tq_editor;
 $(document).ready(function(){
     $("#run_tq_query").on("click", function(e){
         $.ajax({
-            url: "/plugins/plugin_builder/include/classes/plugin_tablequery.php",
+            url: "/plugins/" + plugin_name + "/include/classes/plugin_tablequery.php",
             data: {
                 type: "run_query",
                 query: $("#tablequery_code_area").val()
@@ -21,9 +21,9 @@ $(document).ready(function(){
             toastr.error("Please input the Query Name");
             return;
         }
-
+        var plugin_name = $("#plugin_name").val();
         $.ajax({
-            url: "/plugins/plugin_builder/include/classes/plugin_tablequery.php",
+            url: "/plugins/" + plugin_name + "/include/classes/plugin_tablequery.php",
             data: {
                 type: "save_query",
                 query_name: query_name,
@@ -52,9 +52,9 @@ $(document).ready(function(){
             toastr.error("Please input the Query Name");
             return;
         }
-
+        var plugin_name = $("#plugin_name").val();
         $.ajax({
-            url: "/plugins/plugin_builder/include/classes/plugin_tablequery.php",
+            url: "/plugins/" + plugin_name + "/include/classes/plugin_tablequery.php",
             data: {
                 type: "load_query",
                 query_name: query_name,
@@ -72,8 +72,9 @@ $(document).ready(function(){
 });
 
 function init_tq_query_list(){
+    var plugin_name = $("#plugin_name").val();
     $.ajax({
-        url: "/plugins/plugin_builder/include/classes/plugin_tablequery.php",
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_tablequery.php",
         data: {
             type: "load_query_list",
             plugin_name: $("#plugin_name").val(),
