@@ -5,7 +5,8 @@
 	include_once '../../../../config/database.php';
 
 	require_once("./plugin_generate_json.php");
-
+    $db = new Database();
+    $db->getConnection();
     switch($request_method)
 	{
 		case 'GET':
@@ -19,46 +20,66 @@
 	function handle_get_method(){}
 
     function handle_post_method(){
-        $table_infos = $_POST["table_infos"];
-        $plugin_name = $_POST["plugin_name"];
+        if ($_POST["type"] == "full_api"){
+            $table_infos = $_POST["table_infos"];
+            $plugin_name = $_POST["plugin_name"];
+            $table_infos = json_decode($table_infos );
 
-        $table_infos = json_decode($table_infos );
+            foreach($table_infos as $item ){
+                generate_api($item );
+            }
+            
+            $dir = "../../../" . $plugin_name . "/api/documentation/"; 
+            if (!file_exists($dir )){
+                mkdir($dir, 0700);
+            }
 
-        foreach($table_infos as $item ){
-            generate_api($item );
+            $api_doc = generate_json($table_infos, $plugin_name );
+            $time = date("Ymdhis");
+            $file_name ="apidocs_" . $time . ".json";
+            $path =  $dir . "/" . $file_name;
+            $myfile = fopen($path, "w") or die("Unable to open file!");
+            fwrite($myfile, json_encode($api_doc));
+            fclose($myfile);
+
+            echo json_encode([
+                "status"=> "success",
+                "data"=> [
+                    "apidoc"=> $file_name
+                ]
+            ]);
+        }else if($_POST["type"]){
+            extract($_POST);
+            $db = $GLOBALS["db"];
+            $table_info = $db->table_info($query_name);
+            $table_info = json_decode(json_encode($table_info), false);
+            generate_api($table_info, false);
+            
+            $dir = "../../../" . $plugin_name . "/api/documentation/"; 
+            if (!file_exists($dir )){
+                mkdir($dir, 0700);
+            }
+
+            $api_doc = generate_json([$table_info], $plugin_name, false );
+            $time = date("Ymdhis");
+            $file_name ="apidocs_" . $time . ".json";
+            $path =  $dir . "/" . $file_name;
+            $myfile = fopen($path, "w") or die("Unable to open file!");
+            fwrite($myfile, json_encode($api_doc));
+            fclose($myfile);
+
+            echo json_encode([
+                "status"=> "success",
+                "data"=> [
+                    "apidoc"=> $file_name
+                ]
+            ]);
         }
-        
-        $dir = "../../../" . $plugin_name . "/api/documentation/"; 
-        if (!file_exists($dir )){
-            mkdir($dir, 0700);
-        }
-
-        /*$api_doc = generate_json($table_infos );
-        $time = date("Ymdhis");
-        $file_name ="apidocs_" . $time . ".php";
-        $path =  $folder_name . "/" . $file_name;
-        $myfile = fopen($path, "w") or die("Unable to open file!");
-        fwrite($myfile, json_encode($api_doc));
-        fclose($myfile);*/
-
-        $api_doc = generate_json($table_infos, $plugin_name );
-        $time = date("Ymdhis");
-        $file_name ="apidocs_" . $time . ".json";
-        $path =  $dir . "/" . $file_name;
-        $myfile = fopen($path, "w") or die("Unable to open file!");
-        fwrite($myfile, json_encode($api_doc));
-        fclose($myfile);
-
-        echo json_encode([
-            "status"=> "success",
-            "data"=> [
-                "apidoc"=> $file_name
-            ]
-        ]);
     }
     
-    function generate_api($item ){
-        $columns = $item->columns; 
+    function generate_api($item, $flag = true ){
+        $item = json_decode(json_encode($item), FALSE);
+        $columns = $item->columns;
         $table_name = $item->table_name;
         $plugin_name = $_POST["plugin_name"];
         
@@ -70,31 +91,32 @@
 
         mkdir($table_path, 0700);
         
-        // create create.php
-        $content = generate_create_php($table_name );
-        $file_name = $table_path . "/create.php";
-        $myfile = fopen($file_name, "w") or die("Unable to open file!");
-        fwrite($myfile, $content);
-        fclose($myfile);
+        if ($flag){
+            // create create.php
+            $content = generate_create_php($table_name );
+            $file_name = $table_path . "/create.php";
+            $myfile = fopen($file_name, "w") or die("Unable to open file!");
+            fwrite($myfile, $content);
+            fclose($myfile);
 
-        $content = generate_update_php($table_name );
-        $file_name = $table_path . "/update.php";
-        $myfile = fopen($file_name, "w") or die("Unable to open file!");
-        fwrite($myfile, $content);
-        fclose($myfile);
+            $content = generate_update_php($table_name );
+            $file_name = $table_path . "/update.php";
+            $myfile = fopen($file_name, "w") or die("Unable to open file!");
+            fwrite($myfile, $content);
+            fclose($myfile);
 
-        $content = generate_delete_php($table_name );
-        $file_name = $table_path . "/delete.php";
-        $myfile = fopen($file_name, "w") or die("Unable to open file!");
-        fwrite($myfile, $content);
-        fclose($myfile);
+            $content = generate_delete_php($table_name );
+            $file_name = $table_path . "/delete.php";
+            $myfile = fopen($file_name, "w") or die("Unable to open file!");
+            fwrite($myfile, $content);
+            fclose($myfile);
 
-        $content = generate_addupdate_php($table_name );
-        $file_name = $table_path . "/addupdate.php";
-        $myfile = fopen($file_name, "w") or die("Unable to open file!");
-        fwrite($myfile, $content);
-        fclose($myfile);
-
+            $content = generate_addupdate_php($table_name );
+            $file_name = $table_path . "/addupdate.php";
+            $myfile = fopen($file_name, "w") or die("Unable to open file!");
+            fwrite($myfile, $content);
+            fclose($myfile);
+        }
         
         $content = generate_read_php($table_name );
         $file_name = $table_path . "/read.php";
@@ -102,7 +124,7 @@
         fwrite($myfile, $content);
         fclose($myfile);
 
-        $content = generate_model_php($table_name, $columns );
+        $content = generate_model_php($table_name, $columns, $flag );
         $file_name = $table_path . "/$table_name.php";
         $myfile = fopen($file_name, "w") or die("Unable to open file!");
         fwrite($myfile, $content);
@@ -232,7 +254,7 @@
         return $php;
     }
 
-    function generate_model_php($table_name, $columns ){
+    function generate_model_php($table_name, $columns, $flag = true ){
         $table_class = dashesToCamelCase($table_name );
 
         $php = "<?php \n";
@@ -245,10 +267,12 @@
         $php .= add_tab_endline("}");
         
         $php .= _model_read_php($columns );
-        $php .= _model_create_php($columns );
-        $php .= _model_update_php($columns );
-        $php .= _model_delete_php($columns );
-        $php .= _model_add_or_update($columns );
+        if ($flag ){
+            $php .= _model_create_php($columns );
+            $php .= _model_update_php($columns );
+            $php .= _model_delete_php($columns );
+            $php .= _model_add_or_update($columns );
+        }
         $php .= _model_get_record($columns );
         $php .= _model_table_join_data();
         $php .= _model_check_date();

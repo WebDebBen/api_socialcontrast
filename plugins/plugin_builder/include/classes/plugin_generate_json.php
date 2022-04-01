@@ -1,5 +1,5 @@
 <?php
-    function generate_json($table_info, $plugin_name ){
+    function generate_json($table_info, $plugin_name, $flag = true ){
         $api_obj = [];
         $api_obj["swagger"] = '2.0';
         $api_obj["info"] = [
@@ -18,7 +18,7 @@
         $api_obj["basePath"] = "/api/" . $plugin_name;
 
         $api_obj["tags"] = get_tags_info($table_info );
-        $api_obj["paths"] = get_path_info($table_info );
+        $api_obj["paths"] = get_path_info($table_info, $flag );
         $api_obj["definitions"] = get_definition_info($table_info );
 
         return $api_obj;
@@ -36,14 +36,16 @@
         return $tags;
     }
 
-    function get_path_info($table_info ){
+    function get_path_info($table_info, $path, $flag = true ){
         $paths_obj = [];
         foreach($table_info as $item ){
             $paths_obj['/' . trim($item->table_name) . '/read'] = get_read_path_info($item );
-            $paths_obj['/' . trim($item->table_name) . '/create'] = get_create_path_info($item );
-            $paths_obj['/' . trim($item->table_name) . '/update'] = get_update_path_info($item );
-            $paths_obj['/' . trim($item->table_name) . '/delete'] = get_delete_path_info($item );
-            $paths_obj['/' . trim($item->table_name) . '/addupdate'] = get_addupdate_path_info($item );
+            if ($flag){
+                $paths_obj['/' . trim($item->table_name) . '/create'] = get_create_path_info($item );
+                $paths_obj['/' . trim($item->table_name) . '/update'] = get_update_path_info($item );
+                $paths_obj['/' . trim($item->table_name) . '/delete'] = get_delete_path_info($item );
+                $paths_obj['/' . trim($item->table_name) . '/addupdate'] = get_addupdate_path_info($item );
+            }
         }
         return $paths_obj;
     }

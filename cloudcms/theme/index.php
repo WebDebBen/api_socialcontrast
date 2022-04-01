@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="assets/css/jquery.highlight.css">
   <link rel="stylesheet" href="assets/css/toastr.css">
   <link rel="stylesheet" href="assets/css/upload.css">
+  <link rel="stylesheet" href="assets/css/bootstrap-multiselect.css">
   <link rel="stylesheet" href="plugins/codemirror/codemirror.css">
   <link rel="stylesheet" href="plugins/codemirror/theme/3024-day.css">
   <link rel="stylesheet" href="plugins/codemirror/theme/3024-night.css">
@@ -41,6 +42,8 @@
   <script src="plugins/jquery/jquery.min.js"></script>
 
   <script src="assets/js/upload.js"></script>
+  <script src="plugins/popover.js"></script>
+  <script src="assets/js/bootstrap-multiselect.js"></script>
 <!--
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script> -->

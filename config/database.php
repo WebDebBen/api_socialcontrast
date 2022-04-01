@@ -137,16 +137,6 @@
         }
 
         public function load_plugins(){
-            /*$query = "show tables where Tables_in_generator = 'plugins'";
-            $result = $this->conn->query($query );
-            if (!$result){
-                $query = "CREATE TABLE `plugins`  (
-                    `id` int(11) NOT NULL AUTO_INCREMENT,
-                    `name` varchar(255) NULL DEFAULT NULL,
-                    PRIMARY KEY (`id`) USING BTREE
-                  ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci";
-                $this->conn->query($query);
-            }*/
             $query = "select * from system_admin_plugins";
             $result = $this->conn->query($query );
             if ($result){

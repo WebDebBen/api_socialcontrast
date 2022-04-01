@@ -2,12 +2,36 @@
     <div class="col-md-1 text-right">
         <label class="form-label">Query List</label>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <select class="form-control" id="tq_query_list"></select>
     </div>
-    <div class="col-md-1 mb-1r">
+    <div class="col-md-2 mb-1r">
         <button class="btn btn-default" id="load_tq_query" type="button">Load Query</button>
     </div>
+</div>
+<div class="row">
+    <div class="col-md-1 text-right">
+        <label class="form-label">Table List</label>
+    </div>
+    <div class="col-md-3">
+        <select class="form-control" id="tq_table_list"></select>
+    </div>
+    <div class="col-md-2 mb-1r">
+        <button class="btn btn-default" id="add_table_tq_query" type="button">Add To Query</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1 text-right">
+        <label class="form-label">Columns List</label>
+    </div>
+    <div class="col-md-3">
+        <select class="form-control multiselect-ui" id="tq_column_list" multiple="true"></select>
+    </div>
+    <div class="col-md-2 mb-1r">
+        <button class="btn btn-default" id="add_column_tq_query" type="button">Add To Query</button>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-12">
         <textarea name="" id="tablequery_code_area" class="tablequery_code_area form-control"></textarea>
     </div>
@@ -16,6 +40,7 @@
 <div class="row mt-1r">
     <div class="col-md-8 mb-1r text-left">
         <button class="btn btn-primary" id="run_tq_query" type="button">Run Query</button>
+        <p id="reapi_doc_tq"></p>
     </div>
     <div class="col-md-2">
         <input type="text" class="form-control" id="tq_query_name">

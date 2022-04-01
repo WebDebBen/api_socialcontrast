@@ -28,6 +28,7 @@ function generate_rest_api(){
     $.ajax({
         url: "/plugins/" + plugin_name + "/include/classes/plugin_generate.php",
         data: {
+            type: "full_api",
             plugin_name: $("#plugin_name").val(),
             table_infos: JSON.stringify(table_infos),
             tables: JSON.stringify(api_sel_tables )

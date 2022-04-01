@@ -1,4 +1,12 @@
 var tq_editor;
+var tq_query_json = {
+    query: "",
+    table: "",
+    columns: "",
+    joins: {
+    }
+};
+
 $(document).ready(function(){
     $("#run_tq_query").on("click", function(e){
         $.ajax({
@@ -36,12 +44,10 @@ $(document).ready(function(){
                 var parent = $("#tablequery-wrap");
                 $(parent).html("");
                 if (res["status"] == "error"){
-                    //$("<p>").html(res["result"][2]).appendTo(parent);
                     toastr.error(res["result"][2]);
                 }else{
-                    toastr.success("saved, successfuly");
+                    tq_make_rest_api($("#plugin_name").val(), query_name );   
                 }
-                init_tq_query_list();
             }
         });
     });
@@ -68,8 +74,117 @@ $(document).ready(function(){
         });
     });
 
+    $("#tq_table_list").on("change", init_tq_column_list);
+    $("#add_table_tq_query").on("click", add_table_tq_query );
+    $("#add_column_tq_query").on("click", add_column_tq_query );
     init_tq_query_list();
+    init_tq_table_list();
 });
+
+function tq_make_rest_api(plugin_name, query_name ){
+    $.ajax({
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_generate.php",
+        data: {
+            type: "query_api",
+            plugin_name: $("#plugin_name").val(),
+            query_name: query_name
+        },
+        type: "post",
+        dataType: "json",
+        success: function(data ){ 
+            if (data["status"] == "success"){
+                var filename = data["data"]["apidoc"];
+                toastr.success("Successfully generated");
+                $("#reapi_doc_tq").html("<a target='_blank' href='/plugins/" + $("#plugin_name").val() + "/api/documentation/" + filename + "'>" + filename + "</a>");
+                init_tq_query_list();
+            }else{
+                toastr.error("failed to generated API");
+            }
+        }
+    });
+
+}
+
+function add_table_tq_query(){
+    var table_name = $("#tq_table_list").val();
+    var curPos = document.getElementById("tablequery_code_area").selectionStart;
+    let x = $("#tablequery_code_area").val();
+    $("#tablequery_code_area").val(
+        x.slice(0, curPos) + table_name + x.slice(curPos));
+}
+
+function add_column_tq_query(){
+    var column_list = $("#tq_column_list").val();
+    var str = "";
+    var comma = " ";
+    for(var i = 0; i < column_list.length; i++ ){
+        str = str + comma + column_list[i];
+        comma = ",";
+    }
+    var curPos = document.getElementById("tablequery_code_area").selectionStart;
+    let x = $("#tablequery_code_area").val();
+    $("#tablequery_code_area").val(
+        x.slice(0, curPos) + str + x.slice(curPos));
+}
+
+function init_tq_table_list(){
+    var plugin_name = $("#plugin_name").val();
+    $.ajax({
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_tablequery.php",
+        data: {
+            type: "load_table_list",
+            plugin_name: $("#plugin_name").val(),
+        },
+        type: "post",
+        dataType: "json",
+        success: function(res){
+            res = res["data"];
+            var select = $("#tq_table_list");
+            $(select).html("");
+            for (var i = 0; i < res.length; i++){
+                $("<option>").attr("val", res[i]).text(res[i]).appendTo(select);
+            }
+            init_tq_column_list();
+        }
+    }); 
+}
+
+function init_tq_column_list(){
+    var table_name = $("#tq_table_list").val();
+    var plugin_name = $("#plugin_name").val();
+    $.ajax({
+        url: "/plugins/" + plugin_name + "/include/classes/plugin_tablequery.php",
+        data: {
+            type: "load_column_list",
+            table_name: table_name
+        },
+        type: "post",
+        dataType: "json",
+        success: function(res){
+            res = res["data"];
+            var select = $("#tq_column_list");
+            $(select).html("");
+            var columns = res["columns"];
+            for (var i = 0; i < columns.length; i++){
+                var item = columns[i];
+                var column_name = item["column_name"];
+                if (column_name != "created_at" && column_name != "created_id" && column_name != "updated_at" && column_name != "updated_id" ){ 
+                    $("<option>").attr("val", column_name).text(column_name).appendTo(select);
+                }
+            }
+
+            //$("#tq_column_list + .btn-group").remove();
+            if ($(".multiselect-container").length > 0){
+                $("#tq_column_list").parent().parent().html($("#tq_column_list").clone())
+            }
+            $('#tq_column_list').multiselect({
+                enableClickableOptGroups: true,
+                includeSelectAllOption:true,
+                nonSelectedText: 'Select language'
+            });
+        }
+    }); 
+}
 
 function init_tq_query_list(){
     var plugin_name = $("#plugin_name").val();

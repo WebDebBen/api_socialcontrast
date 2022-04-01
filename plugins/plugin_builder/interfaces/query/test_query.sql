@@ -1,0 +1,1 @@
+select  password,stocktaking_enabled,salesman_id,active from admins

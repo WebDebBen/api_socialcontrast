@@ -560,3 +560,8 @@ table{
   background: #333;
   color: white;
 }
+
+
+.multiselect-native-select > .btn-group{
+  z-index: 1111;
+}
