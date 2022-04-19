@@ -75,19 +75,19 @@ function save_plugin($name ){
         mkdir($folder_path . "/temporary");
 
         // create menu files
-        $plugin_builder_setting_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_builder/settings/";
-        $interface_path = $plugin_builder_setting_path . "interfaces.php";
-        $menu_path = $plugin_builder_setting_path . "menu.php";
-        $interface_content = file_get_contents($interface_path);
-        $menu_content = file_get_contents($menu_path);
+        // $plugin_builder_setting_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_builder/settings/";
+        // $interface_path = $plugin_builder_setting_path . "interfaces.php";
+        // $menu_path = $plugin_builder_setting_path . "menu.php";
+        // $interface_content = file_get_contents($interface_path);
+        // $menu_content = file_get_contents($menu_path);
 
-        $plugin_interface_path = $folder_path . "/settings/interfaces.php";
-        $plugin_menu_path = $folder_path . "/settings/menu.php";
-        $myfile = fopen($plugin_interface_path, "w");
-        fwrite($myfile, $interface_content);
-        fclose($myfile);
+        // $plugin_interface_path = $folder_path . "/settings/interfaces.php";
+        // $plugin_menu_path = $folder_path . "/settings/menu.php";
+        // $myfile = fopen($plugin_interface_path, "w");
+        // fwrite($myfile, $interface_content);
+        // fclose($myfile);
         
-        $endln = "\n";
+        /*$endln = "\n";
         $tab1 = "\t";
         $menu_content = "<?php";
             $menu_content .= $endln . $tab1 . "\$menu_array = array();";
@@ -99,7 +99,11 @@ function save_plugin($name ){
         $menu_content .= "?>";
         $myfile = fopen($plugin_menu_path, "w");
         fwrite($myfile, $menu_content);
-        fclose($myfile);
+        fclose($myfile);*/
+
+        $source_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_builder/settings/";
+        $dest_path = $folder_path . "/settings/";
+        duplicate_content($source_path, $dest_path);
 
         // put assets files
         $source_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/plugin_builder/assets/css/";
@@ -141,7 +145,7 @@ function save_plugin($name ){
 function duplicate_content($source_path, $dest_path, $extension = false){
     $dirs = scandir($source_path );
     foreach($dirs as $item ){
-        if ($item != "." && $item != ".." && $item != "" && $item != "js" && $item != "css"){
+        if ($item != "." && $item != ".." && $item != "" && $item != "js" && $item != "css" && is_dir($source_path . "/" . $item) == false ){
             if ($extension == false || ($extension  != false && strpos($item, $extension))){
                 $content = file_get_contents($source_path . $item );
                 $myfile = fopen($dest_path . $item, "w");

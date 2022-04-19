@@ -17,7 +17,7 @@
         <div class="accor_left" id="accor_left"><i class="fa fa-align-justify"></i></div>
         <form class="form-horizontal flex-comp" id="components">
             <fieldset>
-                <div class="tab-content">
+                <div class="tab-content no_border">
                     <label class="label-control">Elements</label>
                     <div class="tab-pane active" id="1">
                         <div class="form-group component" data-id="text_obj">

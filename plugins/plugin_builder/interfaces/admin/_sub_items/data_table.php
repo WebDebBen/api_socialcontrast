@@ -32,7 +32,7 @@
         <label>Datatable List</label>
     </div>
     <div class="col-md-3">
-        <input type="text" id="dt_datatable_list" class="form-control">
+        <select id="dt_datatable_list" class="form-control"></select>
     </div>
     <div class="col-md-1">
         <button type="button" class="btn btn-default" id="dt_datatable_load">Load</button>
@@ -46,7 +46,7 @@
         <label>Table/Views List</label>
     </div>
     <div class="col-md-3">
-        <input type="text" id="dt_table_view_list" class="form-control">
+        <select id="dt_table_view_list" class="form-control"></select>
     </div>
     <div class="col-md-1">
         <button type="button" class="btn btn-default" id="dt_table_view_load">Load</button>
@@ -58,55 +58,59 @@
 </div>
 <div class="row mb-1r">
     <div class="col-md-12">
-        <button type="button" class="btn btn-primary form-control" id="add_dt_new_column">+</button>
+        <button type="button" class="btn btn-primary form-control" id="add_dtn_new_column">+</button>
     </div>
 </div>
 <div class="row mb-1r">
     <div class="col-md-2 text-right"><label>Datatable Name</label></div>
     <div class="col-md-2">
-        <input type="text" class="form-control" id="dt_datatable_name">
+        <input type="text" class="form-control" id="dtn_datatable_name">
     </div>
     <div class="col-md-1">
-        <button class="btn btn-primary" id="dt_datatable_save_btn">Save</button>
+        <button type="button" class="btn btn-primary" id="dtn_datatable_save_btn">Save</button>
     </div>
 </div>
-
-<!-- <form enctype="multipart/form-data" class="hide">
-    <input id="upload" type=file  name="files[]">
-</form>
-
-<div class="filter-wrap mt-1r hide" id="filter-wrap"></div>
-<div class="row mt-2r">
-    <div class="col-md-12" id="dt_table_wrap">
-        <table cellpadding="0" cellspacing="0" class="display" id="dt_table_data" width="100%">
-            <thead>
-                <tr>
-                </tr>
-            </thead>
-            <tbody id='dt_table_data_body'>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<div class="modal column-detail-modal" tabindex="-1" role="dialog" id="dt-edit-modal">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="dt_table_title_modal">Table</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form class="form">
-                <div class="modal-body" id="dt_edit_modal_body">
+<input type="hidden" id="dtn_table_view_origin_name">
+<div class="hide" id="dtn-datatb_table-prop-item-template">
+    <div class="table-prop-item mt-1r">
+        <div class="fa fa-arrows-alt"></div>
+        <div class="field-props-wrap">
+            <div class="field-prpos">
+                <div class="field-title">
+                    <label class="">Label</label>
+                    <input type="text" class="form-control field-title-input">
                 </div>
-            </form>
-            <div class="modal-footer">
-                <input type="hidden" id="data-dt-id" value="-1"/>
-                <button type="button" class="btn btn-primary" id="dt_save_record">Save</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <div class="field-type ml-1r mr-1r">
+                    <label class="">Type</label>
+                    <select class="form-control field-type-input">
+                        <option data-type="varchar" value="varchar(255)">Text</option>
+                        <option data-type="varchar" value="varchar(200)">Medium Text</option>
+                        <option data-type="int" value="int(11)">Integer</option>
+                        <option data-type="double" value="double">Double</option>
+                        <option data-type="varchar" value="varchar(100)">Password</option>
+                        <option data-type="text" value="text">Text Area</option>
+                        <option data-type="varchar" value="varchar(300)">Image</option>
+                        <option data-type="tinyint" value="tinyint">Check</option>
+                        <option data-type="date" value="date">Date</option>
+                        <option data-type="datetime" value="datetime">Datetime</option>
+                    </select>
+                </div>
+                <div class="field-title">
+                    <label class="">Default Value</label>
+                    <input type="text" class="form-control field-default-value-input">
+                </div>
+                <div class="field-required ml-1r mr-1r">
+                    <label class="full-width ">Visible</label>
+                    <input type="checkbox" class="field-visible-table-input mt-10" checked>
+                </div>
+                <div class="field-required ml-1r mr-1r">
+                    <label class="full-width">Show In Advanced Search</label>
+                    <input type="checkbox" class="field-show-advanced-search-input mt-10" checked>
+                </div>
+                <div class="field-action">
+                    <button class="btn btn-danger mt-24 remove-table-prop-item" type="button">Remove</button>
+                </div>
             </div>
         </div>
     </div>
-</div> -->
+</div>

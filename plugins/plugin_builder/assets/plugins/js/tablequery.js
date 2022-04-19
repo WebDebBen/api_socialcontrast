@@ -174,9 +174,10 @@ function init_tq_column_list(){
             }
 
             //$("#tq_column_list + .btn-group").remove();
-            if ($(".multiselect-container").length > 0){
+            if ($(".multiselect-container").parent().hasClass("multiselect-native-select")){
                 $("#tq_column_list").parent().parent().html($("#tq_column_list").clone())
             }
+            
             $('#tq_column_list').multiselect({
                 enableClickableOptGroups: true,
                 includeSelectAllOption:true,

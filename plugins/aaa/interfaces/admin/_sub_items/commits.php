@@ -3,7 +3,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th class="commit_version">Version</th>
+                    <th class="commit_version">Commit Name</th>
                     <th class="commit_short_description">Short Description</th>
                     <th class="commit_description">Description</th>
                     <th class="commit_action"></th>

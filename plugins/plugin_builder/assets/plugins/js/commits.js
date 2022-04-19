@@ -24,7 +24,8 @@ function save_commit_item(){
         dataType: "json",
         success: function(res ){
             if (res["status"] == "success"){
-                add_commit_item({name:commit_name, description:commit_desc, short_description: commit_short_desc, is_commited: 1});
+                //add_commit_item({name:commit_name, description:commit_desc, short_description: commit_short_desc, is_commited: 1});
+                load_commit_list();
                 toastr.success("Added, successfuly");
             }else if(res["status"] == "duplicated"){
                 toastr.error("The commit name is duplicated");
@@ -45,7 +46,8 @@ function load_commit_list(){
         dataType: "json",
         success: function(data ){
             if (data["status"] == "success"){
-                init_commit_list(data["result"]);
+                var result = data["result"];
+                init_commit_list(result);
             }
         }
     });
@@ -54,7 +56,8 @@ function load_commit_list(){
 function init_commit_list(data ){
     var parent = $("#commit_tbody");
     $(parent).find("tr.commit-tr").remove();
-    $("#new_commit_version").val(data["name"] + "." + data["version"])
+    var tmp_version = parseInt(data["version"]) < 10 ? "0" + data["version"] : data["version"];
+    $("#new_commit_version").val(data["name"] + "." + tmp_version)
     var plugins = data["plugins"];
     for (var i = 0; i < plugins.length; i++ ){
         add_commit_item(plugins[i])
@@ -63,9 +66,16 @@ function init_commit_list(data ){
 
 function add_commit_item(data){
     var parent = $("#commit_tbody");
-    var tr = $("<tr>").appendTo(parent );
+    var tr = $("<tr>").addClass("commit-tr").appendTo(parent );
     var td = $("<td>").appendTo(tr );
-    $("<span>").text(data["name"] + "." + data["version"]).appendTo(td);
+    var tmp_version = parseInt(data["version"]) < 10 ? "0" + data["version"] : data["version"];
+    var name = "";
+    if (data["is_commited"] == 1 || data["is_commited"] == "1"){
+        name = data["name"] + "." + tmp_version;
+    }else{
+        name = "<a href='/plugins/" + $("#plugin_name").val() + "/commits/" + data["name"] + "." + tmp_version + ".zip'>" + data["name"] + "." + tmp_version + "</a>";
+    }
+    $("<span>").html(name).appendTo(td);
     var td = $("<td>").appendTo(tr );
     $("<span>").text(data["short_description"]).appendTo(td);
     var td = $("<td>").appendTo(tr );
@@ -75,13 +85,15 @@ function add_commit_item(data){
     if (data["is_commited"] == 1 || data["is_commited"] == "1" ){
         $("<button>").attr("type", "button")
             .attr("data-name", data["name"] )
-            .attr("data-name", data["version"] )
+            .attr("data-version", data["version"] )
             .attr("data-description", data["description"] )
             .attr("data-short_description", data["short_description"] )
             .on("click", set_commit_item )
             .text("Commit").addClass("btn btn-primary btn-commit").appendTo(td);
     }
-    $("<button>").attr("type", "button").attr("data-name", data["name"])
+    $("<button>").attr("type", "button")
+        .attr("data-name", data["name"])
+        .attr("data-version", data["version"])
         .on("click", delete_commit_item )
         .text("Delete").addClass("btn btn-danger").appendTo(td);
 }
@@ -97,7 +109,8 @@ function set_commit_item(){
         data: {
             type: "set_commit",
             plugin_name: $("#plugin_name").val(),
-            commit_name: $(this).attr("data-name")
+            commit_name: $(this).attr("data-name"),
+            commit_version: $(this).attr("data-version")
         },
         type: "post",
         dataType: "json",
@@ -124,7 +137,8 @@ function delete_commit_item(){
         data: {
             type: "delete_commit",
             plugin_name: $("#plugin_name").val(),
-            commit_name: $(this).attr("data-name")
+            commit_name: $(this).attr("data-name"),
+            commit_version: $(this).attr("data-version")
         },
         type: "post",
         dataType: "json",

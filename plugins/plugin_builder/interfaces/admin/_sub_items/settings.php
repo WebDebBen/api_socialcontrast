@@ -4,7 +4,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th class="st_name">Name</th>
+                    <th class="st_name">Name1</th>
                     <th class="st_name">Value</th>
                     <th class="st_action"></th>
                 </tr>

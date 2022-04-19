@@ -1,9 +1,5 @@
 <?php
-
-	$menu_array = array();
-	$menu_array[] = array('id' => 'plugins', 'parent' => '', 'name' => 'Plugins', 'link' => 'plugins');
-	$menu_array[] = array('id' => 'rest_api_builder', 'parent' => '', 'name' => 'Rest API Builder', 'link' => 'rest_api_builder');
-	$menu_array[] = array('id' => 'table_builder', 'parent' => '', 'name' => 'Table Builder', 'link' => 'table_builder');
-	$menu_array[] = array('id' => 'form_builder', 'parent' => '', 'name' => 'Form Builder', 'link' => 'form_builder');
+	$json_path = "menu.json";
+	$menu_array = json_decode(file_get_contents($json_path));
 	echo json_encode($menu_array);
 ?>

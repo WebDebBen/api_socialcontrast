@@ -62,6 +62,7 @@ function load_query_list($plugin_name){
 function save_table_query($query_name, $query, $plugin_name ){
     $db = $GLOBALS["db"];
     $sql_path = $_SERVER["DOCUMENT_ROOT"] . "/plugins/{$plugin_name}/interfaces/query/{$query_name}.sql";
+
     $result = $db->run_query_with_error($query);
     if ($result["status"] == "error"){
         echo json_encode(["status"=> "error", "result"=> $result["result"]]);

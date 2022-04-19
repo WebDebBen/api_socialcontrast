@@ -99,6 +99,22 @@
             return $data;
         }
 
+        function load_records_object($query){
+            $result = $this->conn->query($query );
+            $data = [];
+            if($result){
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)){
+                    $item = [];
+                    foreach($row as $key=>$value){
+                        //array_push($item, ["key"=> $key, "value"=> $value]);
+                        $item[$key] = $value;
+                    }
+                    array_push($data, $item );
+                }
+            }
+            return $data;
+        }
+
         public function load_commit_list($plugin_name){
             $query = "show tables where Tables_in_generator = 'commits'";
             $result = $this->conn->query($query );
@@ -122,7 +138,7 @@
             if ($result){
                 $plugins = [];
                 $now = date("Y.m");
-                $version = 1;
+                $version = 0;
                 while($row = $result->fetch(PDO::FETCH_BOTH)){
                     array_push($plugins, ["name"=>$row["name"], "version"=>$row["version"], "short_description"=> $row["short_description"], 
                                             "description"=> $row["description"], "is_commited"=> $row["is_commited"]]);
@@ -130,7 +146,7 @@
                         $version = $row["version"];
                     }
                 }
-                return ["plugins"=>$plugins, "now"=> $now, "version"=> $version < 10 ? "0" . ($version + 1) : ($version + 1)];
+                return ["plugins"=>$plugins, "now"=> $now, "version"=> ($version + 1)];
             }else{
                 return ["plugins"=>[], "now"=> $now, "version"=> "01" ];
             }
