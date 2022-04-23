@@ -66,7 +66,7 @@ function add_tr(parent, name, type ){
   $("<span>").text(name).appendTo(td);
   td = $("<td>").addClass("plugin_view").appendTo(tr);
   //$("<a>").attr("href", "/admin/plugins/edit/" + plugin_name).text("View").appendTo(td);
-  $("<a>").attr("href", type == "system" ? "/system/plugins/" + plugin_name + "/plugin_editor/" : "/admin/plugins/" + plugin_name + "/plugin_editor/").text("View").appendTo(td);
+  $("<a>").attr("href", "/admin/plugins/" + plugin_name + "/plugin_editor/").text("View").appendTo(td);
   td = $("<td>").addClass("plugin_action").appendTo(tr);
   if (name != "plugin_builder"){
     $("<button>").addClass("btn btn-danger").text("Delete")

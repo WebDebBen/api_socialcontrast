@@ -44,27 +44,33 @@
         	
         	$sqlQuery = "SELECT 
 								t1.*,
-								t2.id as parent_id     
-							FROM system_admin_menu t1 
-							LEFT JOIN system_admin_menu t2 ON t1.parent = t2.id AND t2.visible = 1 
+								t2.id as parent_id,
+								sp.plugin_type
+							FROM system_menu t1 
+							LEFT JOIN system_menu t2 ON t1.parent_id = t2.id AND t2.visible = 1 
+							left join system_plugins sp on t1.plugin_name_fk=sp.plugin_name
 							GROUP BY t1.id 
-							ORDER BY priority ASC";
+							ORDER BY t1.id ASC";
 			$stmt = $this->conn->prepare($sqlQuery);
-            $stmt->execute();
+            $stmt->execute(); 
         	while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         		extract($row);
-        		
-        		
+				$sub_link = $plugin_type == "plugin" ? 
+					ROOT_URL . '/admin/plugins/'.$row['plugin_name_fk'].'/' : 
+					ROOT_URL . '/admin/system/'.$row['plugin_name_fk'].'/';
         		$e = array(
                 			"parent" => $parent_id,
                 			"namecode" => $id,
                 			"name" => $display_name,
-                			"link" => ROOT_URL . '/admin/plugins/'.$row['plugin_name_fk'].'/'.$link 
-            				);
+                			"link" => $sub_link . $link );
 
             	array_push($Arr["records"], $e);
-            	
-            	$json_url = './plugins/' . $row['plugin_name_fk'] . '/settings/menu.php';
+
+            	//$json_url = './plugins/' . $row['plugin_name_fk'] . '/settings/menu.php';
+				$json_url = $plugin_type == "plugin" ?
+					'./plugins/' . $row['plugin_name_fk'] . '/settings/menu.php':
+					'./cloudcms/system/plugins/' . $row['plugin_name_fk'] . '/settings/menu.php';
+
         		if($row['plugin_name_fk'] != '' && file_exists($json_url)){
         			$json_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" .$json_url;
 					$ch = curl_init();
@@ -85,14 +91,13 @@
 								"parent" => $parent_id,
 								"namecode" => $keyarray->id,
 								"name" => $keyarray->name,
-								"link" => ROOT_URL . '/admin/plugins/'.$row['plugin_name_fk'].'/'.$keyarray->link 
+								//"link" => ROOT_URL . '/admin/plugins/'.$row['plugin_name_fk'].'/'.$keyarray->link 
+								"link" => $sub_link . $keyarray->link 
 								);
-
 						array_push($Arr["records"], $e);
 					}
-					
         		}
-        	}	
+        	}
         	return json_encode($Arr["records"]);
         }
 		public function getPlugins(){
@@ -101,7 +106,7 @@
         	
         	$sqlQuery = "SELECT 
 								t1.*     
-							FROM system_admin_plugins t1";
+							FROM system_plugins t1";
 			$stmt = $this->conn->prepare($sqlQuery);
             $stmt->execute();
         	while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){

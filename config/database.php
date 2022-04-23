@@ -153,12 +153,12 @@
         }
 
         public function load_plugins(){
-            $query = "select * from system_admin_plugins";
+            $query = "select * from system_plugins";
             $result = $this->conn->query($query );
             if ($result){
                 $plugins = [];
                 while($row = $result->fetch(PDO::FETCH_BOTH)){
-                    array_push($plugins, $row["plugin_name"]);
+                    array_push($plugins, ["name"=>$row["plugin_name"], "plugin_type"=> $row["plugin_type"]]);
                 }
                 return $plugins;
             }else{

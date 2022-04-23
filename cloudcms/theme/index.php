@@ -49,13 +49,13 @@
   <!-- <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css"> -->
   <!-- <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css"> -->
   <!-- jQuery -->
-  <script src="plugins/jquery/jquery.min.js"></script>
+<script src="plugins/jquery/jquery.min.js"></script>
 
-  <script src="assets/js/upload.js"></script>
-  <script src="plugins/popover.js"></script>
-  <script src="assets/js/bootstrap-multiselect.js"></script>
-
+<script src="assets/js/upload.js"></script>
+<script src="plugins/popover.js"></script>
+<script src="assets/js/bootstrap-multiselect.js"></script>
 <script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="assets/js/jquery.nestable.js"></script>
 <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
@@ -243,18 +243,16 @@
 			}
 			break;
 	}
-
 	if($proceed == true){
 
 		switch($_GET['type']){
 			case 'system':
-				include './cloudcms/system/'.$module.'/interfaces/admin/'.$interface_name.'.php';
+				include './cloudcms/system/plugins/'.$module.'/interfaces/admin/'.$interface_name.'.php';
 				break;
 			default:
 				include './plugins/'.$module.'/interfaces/admin/'.$interface_name.'.php';
 				break;
 		}
-
 	}
 	else{
 		echo '<div class="container"><div class="alert alert-danger" role="alert">You do not have privileges to view this page</div></div>';

@@ -1,7 +1,7 @@
 <?php 
 	class SystemAdminMenu{
 	private $conn;
-	private $table_name = "system_admin_menu";
+	private $table_name = "system_menu";
 	private $page_len = 10;
 	public function __construct($db ){
 		$this->conn = $db;
