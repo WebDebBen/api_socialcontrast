@@ -786,3 +786,31 @@ table{
 .frmadv_preview_acc_body{
   padding: 0.5rem 1rem;
 }
+
+
+.ai_jqflolder_list {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.ai_jqflolder_list >div {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.ai_jqflolder_list >div i.fa-folder {
+  color: #dfb138;
+  margin-right: 0.2rem;
+  font-size: 24px;
+}
+
+.ai_jqflolder_list >div i.fa-file {
+  color: #66c37e;
+  margin-right: 0.2rem;
+  font-size: 24px;
+}
+
+.ai_list_item.active{
+  background: #9cd4dd;
+}

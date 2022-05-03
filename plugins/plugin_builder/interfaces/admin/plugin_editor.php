@@ -205,7 +205,7 @@
 <script src="/plugins/plugin_builder/assets/plugins/js/datatable_edit.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/datatable_preview.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/menu.js"></script>
-<script src="/plugins/plugin_builder/assets/plugins/js/admin_interface.js"></script>
+<script src="/plugins/plugin_builder/assets/plugins/js/admin_interfaces.js"></script>
 <script src="/plugins/plugin_builder/assets/plugins/js/form_builder_adv.js"></script>
 
 <script>

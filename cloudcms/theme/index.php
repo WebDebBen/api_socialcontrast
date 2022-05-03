@@ -37,6 +37,7 @@
   <link rel="stylesheet" href="plugins/codemirror/theme/ayu-dark.css">
   <link rel="stylesheet" href="plugins/codemirror/theme/ayu-mirage.css">
   <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="assets/css/jqtree.css">
 
 <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> -->
@@ -50,7 +51,7 @@
   <!-- <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css"> -->
   <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
-
+<script src="assets/js/jstree.js"></script>
 <script src="assets/js/upload.js"></script>
 <script src="plugins/popover.js"></script>
 <script src="assets/js/bootstrap-multiselect.js"></script>
